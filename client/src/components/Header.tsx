@@ -1,30 +1,44 @@
 import './Header.css';
-// import { Link, Outlet } from 'react-router-dom'; // Refer to react routing instructions
+import { Link, Outlet } from 'react-router-dom'; // Refer to react routing instructions
 
-export function Header() {
+export default function Header() {
   return (
-    <div>
-      <nav className="navbar navbar-expand-sm navbar-dark bg-dark shadow-sm">
-        <div className="navbar-collapse">
-          <ul className="navbar-nav mr-auto">
-            {/* TODO: Make these links to About and Catalog, with className "title" */}
-
-            <li className="nav-item nav-link">
-              {/* <Link className="title" to="/about">
-                About
-              </Link> */}
-            </li>
-            <li className="nav-item nav-link">
-              {/* <Link className="title" to="/">
-                Catalog
-              </Link> */}
-            </li>
-          </ul>
+    <>
+      <nav className="header">
+        <div className="logo">
+          <img src="/Grocery-Guru-logo.png" id="logo" />
         </div>
+        <ul className="nav-links">
+          <li>
+            <Link to="">Sign Up</Link>
+          </li>
+          <li>
+            <Link to="">Login</Link>
+          </li>
+        </ul>
       </nav>
-      {/* Render the Outlet here. */}
-      {/* <Outlet /> */}
-    </div>
+      <Outlet />
+    </>
   );
 }
 //
+//   <div className="navbar-collapse">
+//     <p>Hello Kaitlin!</p>
+//     <ul className="navbar-nav mr-auto">
+//       {/* TODO: Make these links to About and Catalog, with className "title" */}
+
+//       <li className="nav-item nav-link">
+//         {/* <Link className="title" to="/about">
+//           About
+//         </Link> */}
+//       </li>
+//       <li className="nav-item nav-link">
+//         {/* <Link className="title" to="/">
+//           Catalog
+//         </Link> */}
+//       </li>
+//     </ul>
+//   </div>
+// </nav>
+// {/* Render the Outlet here. */}
+// {/* <Outlet /> */}

@@ -1,27 +1,15 @@
 // import { useEffect, useState } from 'react';
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import BrowseRecipes from './pages/BrowseRecipes';
 
 export default function App() {
-  // const [serverData, setServerData] = useState('');
-
-  // useEffect(() => {
-  //   async function readServerData() {
-  //     const resp = await fetch('/api/hello');
-  //     const data = await resp.json();
-
-  //     console.log('Data from server:', data);
-
-  //     setServerData(data.message);
-  //   }
-
-  //   readServerData();
-  // }, []);
-
   return (
-    <p>hi</p>
-    // <>
-    //   <h1>{serverData}</h1>
-    // </>
+    <Routes>
+      <Route path="/" element={<Header />}>
+        <Route index element={<BrowseRecipes />} />
+      </Route>
+    </Routes>
   );
 }
 
