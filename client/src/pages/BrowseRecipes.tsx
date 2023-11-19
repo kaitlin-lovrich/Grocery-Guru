@@ -8,11 +8,11 @@ export default function BrowseRecipes() {
   const [allRecipes, setAllRecipes] = useState<Recipe[]>();
 
   useEffect(() => {
-    async function readServerData() {
+    async function loadBrowseRecipes() {
       const recipes = await fetchRecipes();
       setAllRecipes(recipes);
     }
-    readServerData();
+    loadBrowseRecipes();
   }, []);
 
   return (

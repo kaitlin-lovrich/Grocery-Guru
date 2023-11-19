@@ -10,17 +10,23 @@ export default function RecipePage() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
 
   useEffect(() => {
-    async function loadRecipeData(recipeId: number) {
+    async function loadRecipePage(recipeId: number) {
       const recipe = await fetchRecipePage(recipeId);
       setSelectedRecipe(recipe);
     }
-    loadRecipeData(Number(recipeId));
+    loadRecipePage(Number(recipeId));
   }, [recipeId]);
 
+  if (!selectedRecipe) return null;
+  const { title, description, recipeImage, instructions } = selectedRecipe;
   return (
     <div className="recipe-page">
-      <h1>Recipe Page</h1>
-      {selectedRecipe?.title}
+      <h1>{title}</h1>
+      <p>{description}</p>
+      <div className="recipe-item-container">
+        <img src={recipeImage} />
+      </div>
+      <p>{instructions}</p>
     </div>
   );
 }
