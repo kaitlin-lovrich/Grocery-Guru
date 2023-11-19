@@ -1,5 +1,5 @@
 import './Header.css';
-import { Link, Outlet } from 'react-router-dom'; // Refer to react routing instructions
+import { Link, Outlet } from 'react-router-dom';
 
 export default function Header() {
   return (

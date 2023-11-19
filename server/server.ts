@@ -2,7 +2,7 @@
 import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
-import { ClientError, errorMiddleware } from './lib/index.js';
+import { type Recipe, ClientError, errorMiddleware } from './lib/index.js';
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -27,6 +27,41 @@ app.use(express.json());
 
 app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello, World!' });
+});
+
+app.get('/api/browse-recipes', async (req, res, next) => {
+  try {
+    const sql = `
+      select *
+        from "Recipes"
+    `;
+    const response = await db.query<Recipe>(sql);
+    res.json(response.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/recipes/:recipeId', async (req, res, next) => {
+  try {
+    const recipeId = Number(req.params.recipeId);
+    if (!recipeId)
+      throw new ClientError(400, 'productId must be a positive integer');
+    const sql = `
+      select *
+        from "Recipes"
+        where "recipeId" = $1
+    `;
+    const response = await db.query<Recipe>(sql, [recipeId]);
+    if (!response.rows[0])
+      throw new ClientError(
+        404,
+        `cannot find recipe with recipeId ${recipeId}`
+      );
+    res.json(response.rows[0]);
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**

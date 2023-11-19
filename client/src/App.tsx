@@ -2,12 +2,14 @@
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import BrowseRecipes from './pages/BrowseRecipes';
+import RecipePage from './pages/RecipePage';
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Header />}>
         <Route index element={<BrowseRecipes />} />
+        <Route path="" element={<RecipePage />} />
       </Route>
     </Routes>
   );
