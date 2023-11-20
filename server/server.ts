@@ -2,7 +2,12 @@
 import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
-import { type Recipe, ClientError, errorMiddleware } from './lib/index.js';
+import {
+  type Recipe,
+  ClientError,
+  errorMiddleware,
+  Ingredient,
+} from './lib/index.js';
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -58,6 +63,14 @@ app.get('/api/recipes/:recipeId', async (req, res, next) => {
         404,
         `cannot find recipe with recipeId ${recipeId}`
       );
+    const sql2 = `
+      select *
+        from "Ingredients"
+        join "RecipeIngredients" using ("ingredientId")
+        where "recipeId" = $1
+    `;
+    const response2 = await db.query<Ingredient>(sql2, [recipeId]);
+    response.rows[0].ingredients = response2.rows;
     res.json(response.rows[0]);
   } catch (err) {
     next(err);

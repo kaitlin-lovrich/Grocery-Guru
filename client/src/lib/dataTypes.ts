@@ -12,6 +12,7 @@ export type Recipe = {
   title: string;
   description: string;
   recipeImage: string;
+  ingredients: Ingredient[];
   instructions: string;
   createdAt: string;
 };

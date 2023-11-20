@@ -6,11 +6,19 @@ export type User = {
   createdAt: any;
 };
 
+export type Ingredient = {
+  ingredientId: number;
+  name: string;
+  measurement: string;
+  packageType: string;
+};
+
 export type Recipe = {
   recipeId: number;
   userId: number;
   title: string;
   description: string;
+  ingredients: Ingredient[];
   recipeImage: string;
   instructions: string;
   createdAt: string;
@@ -19,13 +27,6 @@ export type Recipe = {
 export type GroceryList = {
   grocerListId: number;
   userId: number;
-};
-
-export type Ingredient = {
-  ingredientId: number;
-  name: string;
-  measurement: string;
-  packageType: string;
 };
 
 export type RecipeIngredient = {

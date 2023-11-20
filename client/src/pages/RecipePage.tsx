@@ -18,15 +18,31 @@ export default function RecipePage() {
   }, [recipeId]);
 
   if (!selectedRecipe) return null;
-  const { title, description, recipeImage, instructions } = selectedRecipe;
+  const { title, description, recipeImage, ingredients, instructions } =
+    selectedRecipe;
+
+  const ingredientList = ingredients.map((ingredient) => {
+    return <li key={ingredient.ingredientId}>{ingredient.name}</li>;
+  });
+
+  const instructionsArray = instructions.split('\n');
+  const instructionsList = instructionsArray.map((item) => {
+    return <li key={item}>{item}</li>;
+  });
+
   return (
     <div className="recipe-page">
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <div className="recipe-item-container">
-        <img src={recipeImage} />
+      <div className="recipe-page-content">
+        <h1 className="recipe-title">{title}</h1>
+        <p>{description}</p>
+        <div className="recipe-image">
+          <img src={recipeImage} />
+        </div>
+        <h2 className="recipe-h2">Ingredients</h2>
+        <ul>{ingredientList}</ul>
+        <h2 className="recipe-h2">Instructions</h2>
+        <ol className="instructions">{instructionsList}</ol>
       </div>
-      <p>{instructions}</p>
     </div>
   );
 }

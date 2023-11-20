@@ -17,65 +17,55 @@ insert into "Recipes" ("recipeId", "title", "description", "recipeImage", "instr
       'PBJ Sandwich',
       'A delicious peanut butter & jelly sandwich spread jelly on top of peanut butter and assemble sandwich spread jelly on top of peanut butter and assemble sandwich.',
       '/images/grilled-peanut-butter-jelly-sandwich.jpg',
-      '
-      1. Toast 2 slices of bread.\n
-      2. Spread peanut butter on each slice.\n
-      3. Spread jelly on top of peanut butter and assemble sandwich.\n
-      '
+      'Toast 2 slices of bread.
+      Spread peanut butter on each slice.
+      Spread jelly on top of peanut butter and assemble sandwich.'
     ),
     (
       '2',
       'Peanut Butter Sandwich',
       'A delicious peanut butter sandwich a delicious peanut butter sandwich a delicious peanut butter sandwich a delicious peanut butter sandwich.',
       '/images/peanut-butter-sandwich.jpg',
-      '
-      1. Toast 2 slices of bread.\n
-      2. Spread peanut butter on each slice.\n
-      3. Assemble sandwich.\n
-      '
+      'Toast 2 slices of bread.
+      Spread peanut butter on each slice.
+      Assemble sandwich.'
     ),
     (
       '3',
       'Tangy Turkey Sandwich',
       'A delicious and tangy turkey sandwich a delicious and tangy turkey sandwich a delicious and tangy turkey sandwich a delicious and tangy turkey sandwich a delicious and tangy turkey sandwich.',
       '/images/tangy-turkey-sandwich.jpg',
-      '
-      1. Toast 2 slices of bread.\n
-      2. Spread mayo and mustard of choice on each slice.\n
-      3. Add arugula on one slice.\n
-      4. Place a slice of provolone cheese ontop of the arugula.\n
-      5. Place about 5 pepperochini rings ontop of the cheese.\n
-      6. Place 4 slices of deli sliced turkey breast ontop of peppers.\n
-      7. Place another slice of cheese ontop of the turkey.\n
-      8. Sprinkle remaining bread with fresh cracked black pepper, oregano and himalayan pink salt.\n
-      3. Assemble sandwich.\n
-      '
+      'Toast 2 slices of bread.
+      Spread mayo and mustard of choice on each slice.
+      Add arugula on one slice.
+      Place a slice of provolone cheese ontop of the arugula.
+      Place about 5 pepperochini rings ontop of the cheese.
+      Place 4 slices of deli sliced turkey breast ontop of peppers.
+      Place another slice of cheese ontop of the turkey.
+      Sprinkle remaining bread with fresh cracked black pepper, oregano and himalayan pink salt.
+      Assemble sandwich.'
     ),
     (
       '4',
       'Eggplant Parmesean',
       'Eggplant parmesean to impress your vegetarian friends eggplant parmesean to impress your vegetarian friends eggplant parmesean to impress your vegetarian friends eggplant parmesean to impress your vegetarian friends eggplant parmesean to impress your vegetarian friends.',
       '/images/eggplant-parmesan.jpg',
-      '
-      1. Slice eggplant into 1/4 inch slices.\n
-      2. Heavily salt each slice and place on a cloth so draw water out of the eggplant. Let sit 30 mins.\n
-      3. In a bowl, combine flour and seaonings.\n
-      '
+      'Slice eggplant into 1/4 inch slices.
+      Heavily salt each slice and place on a cloth so draw water out of the eggplant. Let sit 30 mins.
+      In a bowl, combine flour and seaonings.'
     ),
     (
       '5',
       'One-Pot Mac' || E'n' || E'Beer-Cheese',
       'This mac and cheese recipe is cheesy, tangy, spicy and super creamy. The secret is cooking it all in one pot! Cooking your pasta in the sauce releases the starches from the pasta into your sauce to naturally thicken to make for a creamier sauce! This recipe uses gets its tang from the sriracha sauce but also makes for a spicy dish. Prepare at your own risk. You have been warned.',
       '/images/macaroni-and-cheese.jpg',
-      '
-      1. Melt butter in pot on medium-low heat. Once melted, mix in flour.\n
-      2. Continue stirring for about 1 min until mix just starts to change color. Aim for light golden brown.\n
-      3. Pour in beer and stir often for 2-3 minutes.\n
-      4. Slowly stir in coconut milk. Small pours at a time at first, then dump the whole can in and stir.\n
-      5. Add in water, seasonings, sauces and bring to boil.\n
-      6. Stir in pasta and cook for 1 minute minus the directions on the box.\n
-      7. Turn off heat, stir in cheese and parsley and enjoy!\n
-      '
+      'Melt butter in pot on medium-low heat. Once melted, mix in flour.
+      Continue stirring for about 1 min until mix just starts to change color. Aim for light golden brown.
+      Pour in beer and stir often for 2-3 minutes.
+      Slowly stir in coconut milk. Small pours at a time at first, then dump the whole can in and stir.
+      Add in water, seasonings, sauces and bring to boil.
+      Stir in pasta and cook for 1 minute minus the directions on the box.
+      Turn off heat, stir in cheese and parsley and enjoy!'
     );
 
 insert into "Ingredients" ("ingredientId", "name", "measurement", "packageType")
