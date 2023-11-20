@@ -1,0 +1,53 @@
+.recipe-page {
+  max-width: 1280px;
+  margin: 6rem auto;
+  height: 100vh;
+}
+
+.recipe-page-content {
+  margin: 3rem;
+  padding: 3rem;
+  background-color: rgb(255, 255, 255);
+  border: solid 2px rgb(230, 184, 156);
+  box-shadow: rgb(230, 184, 156, 0.5) 5px 5px 5px;
+}
+
+.recipe-title {
+  font-family: Sansita, sans-serif;
+  font-weight: 300;
+  font-size: 2rem;
+  color: rgb(50, 83, 61);
+}
+
+.recipe-image {
+  max-width: 500px;
+  max-height: 600px;
+}
+
+.recipe-image > img {
+  width: 100%;
+  height: 100%;
+}
+
+.recipe-h2 {
+  font-family: Sansita, sans-serif;
+  font-weight: 300;
+  color: rgb(50, 83, 61);
+}
+
+@media screen and (width <= 768px) {
+  .recipe-page {
+    margin: 3rem auto;
+    height: auto;
+  }
+
+  .recipe-page-content {
+    margin: 1rem;
+    padding: 2rem;
+  }
+
+  .recipe-image {
+    min-height: 150px;
+    min-width: 50px;
+  }
+}
