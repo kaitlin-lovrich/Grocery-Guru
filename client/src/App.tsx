@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import BrowseRecipes from './pages/BrowseRecipes';
 import RecipePage from './pages/RecipePage';
+import GroceryList from './pages/GroceryList';
 
 export default function App() {
   return (
@@ -10,6 +11,8 @@ export default function App() {
       <Route path="/" element={<Header />}>
         <Route index element={<BrowseRecipes />} />
         <Route path="recipes/:recipeId" element={<RecipePage />} />
+        <Route path="grocery-list/:groceryListId" element={<GroceryList />} />
+        <Route />
       </Route>
     </Routes>
   );

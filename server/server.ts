@@ -7,6 +7,8 @@ import {
   ClientError,
   errorMiddleware,
   Ingredient,
+  GroceryList,
+  GroceryItems,
 } from './lib/index.js';
 
 const connectionString =
@@ -57,8 +59,8 @@ app.get('/api/recipes/:recipeId', async (req, res, next) => {
         from "Recipes"
         where "recipeId" = $1
     `;
-    const response = await db.query<Recipe>(sql, [recipeId]);
-    if (!response.rows[0])
+    const recipeRes = await db.query<Recipe>(sql, [recipeId]);
+    if (!recipeRes.rows[0])
       throw new ClientError(
         404,
         `cannot find recipe with recipeId ${recipeId}`
@@ -69,9 +71,38 @@ app.get('/api/recipes/:recipeId', async (req, res, next) => {
         join "RecipeIngredients" using ("ingredientId")
         where "recipeId" = $1
     `;
-    const response2 = await db.query<Ingredient>(sql2, [recipeId]);
-    response.rows[0].ingredients = response2.rows;
-    res.json(response.rows[0]);
+    const ingredientRes = await db.query<Ingredient>(sql2, [recipeId]);
+    if (!ingredientRes.rows)
+      throw new ClientError(
+        404,
+        `cannot find ingredients with recipeId ${recipeId}`
+      );
+    recipeRes.rows[0].ingredients = ingredientRes.rows;
+    res.json(recipeRes.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/grocery-list/:groceryListId', async (req, res, next) => {
+  try {
+    const groceryListId = Number(req.params.groceryListId);
+    const sql = `
+    select *
+      from "GroceryLists"
+      where "groceryListId" = $1
+    `;
+    const groceryListRes = await db.query<GroceryList>(sql, [groceryListId]);
+
+    const sql2 = `
+      select *
+        from "Ingredients"
+        join "GroceryItems" using ("ingredientId")
+        where "groceryListId" = $1
+    `;
+    const groceryItemRes = await db.query<GroceryItems>(sql2, [groceryListId]);
+    groceryListRes.rows[0].groceryItems = groceryItemRes.rows;
+    res.json(groceryListRes.rows[0]);
   } catch (err) {
     next(err);
   }

@@ -5,9 +5,12 @@ export default function Header() {
   return (
     <>
       <nav className="header">
-        <div className="logo">
-          <img src="/Grocery-Guru-logo.png" id="logo" />
-        </div>
+        <Link to="/" className="link-logo">
+          <div className="logo">
+            <img src="/Grocery-Guru-logo.png" id="logo" />
+          </div>
+        </Link>
+
         <ul className="nav-links">
           <li>
             <Link to="">Sign Up</Link>
@@ -17,6 +20,24 @@ export default function Header() {
           </li>
         </ul>
       </nav>
+      <div className="sub-header">
+        <div className="search-bar">
+          <p>Search</p>
+        </div>
+        <div className="nav3buttons">
+          <ul>
+            <li>
+              <Link to="grocery-list/:groceryListId">GroceryList</Link>
+            </li>
+            <li>
+              <Link to="/saved-recipes">Saved Recipes</Link>
+            </li>
+            <li>
+              <Link to="/">Browse Recipes</Link>
+            </li>
+          </ul>
+        </div>
+      </div>
       <Outlet />
     </>
   );

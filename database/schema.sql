@@ -46,7 +46,8 @@ CREATE TABLE "RecipeIngredients" (
 CREATE TABLE "GroceryItems" (
   "groceryItemsId" serial PRIMARY KEY,
   "groceryListId" integer,
-  "ingredientId" integer
+  "ingredientId" integer,
+  "quantity" text
 );
 
 COMMENT ON COLUMN "Recipes"."description" IS 'Recipe description';

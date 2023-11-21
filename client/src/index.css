@@ -8,6 +8,7 @@ body {
   box-sizing: border-box;
   color: rgb(133, 133, 133);
   letter-spacing: 0.1rem;
+  font-family: Ruluko, sans-serif;
 }
 
 a {
@@ -24,4 +25,8 @@ a:hover {
 .page-heading {
   font-family: Sansita, sans-serif;
   font-weight: 300;
+}
+
+ul {
+  list-style-type: none;
 }

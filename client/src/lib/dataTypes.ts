@@ -6,22 +6,6 @@ export type User = {
   createdAt: any;
 };
 
-export type Recipe = {
-  recipeId: number;
-  userId: number;
-  title: string;
-  description: string;
-  recipeImage: string;
-  ingredients: Ingredient[];
-  instructions: string;
-  createdAt: string;
-};
-
-export type GroceryList = {
-  grocerListId: number;
-  userId: number;
-};
-
 export type Ingredient = {
   ingredientId: number;
   name: string;
@@ -29,15 +13,36 @@ export type Ingredient = {
   packageType: string;
 };
 
-export type RecipeIngredient = {
-  recipeIngredientsId: number;
+export type Recipe = {
   recipeId: number;
-  ingredientId: number;
-  quantity: string;
+  userId: number;
+  title: string;
+  description: string;
+  ingredients: Ingredient[];
+  recipeImage: string;
+  instructions: string;
+  createdAt: string;
 };
 
 export type GroceryItems = {
   groceryItemsId: number;
   groceryListId: number;
   ingredientId: number;
+  measurement: string;
+  name: string;
+  packageType: string;
+  quantity: string;
+};
+
+export type GroceryList = {
+  grocerListId: number;
+  userId: number;
+  groceryItems: GroceryItems[];
+};
+
+export type RecipeIngredient = {
+  recipeIngredientsId: number;
+  recipeId: number;
+  ingredientId: number;
+  quantity: string;
 };

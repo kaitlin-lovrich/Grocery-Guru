@@ -24,9 +24,17 @@ export type Recipe = {
   createdAt: string;
 };
 
+export type GroceryItems = {
+  groceryItemsId: number;
+  groceryListId: number;
+  ingredientId: number;
+  quantity: string;
+};
+
 export type GroceryList = {
   grocerListId: number;
   userId: number;
+  groceryItems: GroceryItems[];
 };
 
 export type RecipeIngredient = {
@@ -34,10 +42,4 @@ export type RecipeIngredient = {
   recipeId: number;
   ingredientId: number;
   quantity: string;
-};
-
-export type GroceryItems = {
-  groceryItemsId: number;
-  groceryListId: number;
-  ingredientId: number;
 };

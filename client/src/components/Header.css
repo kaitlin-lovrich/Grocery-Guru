@@ -16,6 +16,10 @@
   align-items: center;
 }
 
+a.link-logo {
+  border-bottom: none;
+}
+
 ul.nav-links {
   font-family: Ruluko, sans-serif;
   font-size: 1.2rem;
@@ -25,4 +29,31 @@ ul.nav-links {
   width: 15rem;
   padding-inline-start: 0;
   list-style-type: none;
+}
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-bar {
+  border: solid 1px rgb(230, 184, 156);
+  border-radius: 5px;
+  background-color: white;
+  margin: 3rem;
+  min-width: 250px;
+  flex-basis: 25%;
+  justify-content: center;
+}
+
+.nav-buttons {
+  flex-basis: 50%;
+}
+
+.nav3buttons > ul {
+  display: flex;
+  margin: 3.2rem 0;
+  min-width: 450px;
+  justify-content: space-evenly;
+  padding-inline-start: 0;
 }

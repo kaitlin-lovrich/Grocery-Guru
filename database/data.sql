@@ -162,7 +162,15 @@ insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
     ('5', '19', '1'), -- gruyere cheese
     ('5', '20', '1'); -- parsley
 
-
+insert into "Users" ("userId")
+  values ('1');
+insert into "GroceryLists" ("groceryListId", "userId")
+  values ('1', '1');
+insert into "GroceryItems" ("groceryListId", "ingredientId", "quantity")
+  values
+    ('1', '1', '5'),
+    ('1', '2', '4'),
+    ('1', '3', '3');
 -- For Ingredients table:
 -- packageTypes: 'seasoning', 'jar', 'bottle', 'package', 'loaf', 'can', 'null'
 -- measurment: 'ounce', 'slice', ''
