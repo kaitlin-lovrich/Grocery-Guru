@@ -1,5 +1,4 @@
-.form-page {
-  max-width: 1280px;
-  margin: 6rem auto;
-  height: 100vh;
+.user-auth-form {
+  display: flex;
+  flex-direction: column;
 }

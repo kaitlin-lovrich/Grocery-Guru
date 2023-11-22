@@ -21,10 +21,10 @@ export default function RegistrationForm() {
   }
 
   return (
-    <div className="form-page">
+    <div className="page">
       <div className="content-container">
         <h2 className="page-title">Sign Up!</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="user-auth-form">
           <label>
             Username
             <input type="text" name="username" required />

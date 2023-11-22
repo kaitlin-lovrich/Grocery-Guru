@@ -163,10 +163,15 @@ app.get(
         join "GroceryItems" using ("ingredientId")
         where "groceryListId" = $1
     `;
+      console.log('groceryListId', groceryListId);
+      console.log('userId', req.user?.userId);
       const groceryItemRes = await db.query<GroceryItems>(sql2, [
         groceryListId,
       ]);
+      console.log('groceryItemRes.rows', groceryItemRes.rows);
+      console.log('groceryListRes.rows', groceryListRes.rows);
       groceryListRes.rows[0].groceryItems = groceryItemRes.rows;
+
       res.json(groceryListRes.rows[0]);
     } catch (err) {
       next(err);

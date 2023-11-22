@@ -16,7 +16,11 @@ export async function fetchRecipePage(recipeId: number): Promise<Recipe> {
 export async function fetchGroceryList(
   groceryListId: number
 ): Promise<GroceryList> {
-  const res = await fetch(`/api/grocery-list/${groceryListId}`);
+  const res = await fetch(`/api/grocery-list/${groceryListId}`, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    },
+  });
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();
 }

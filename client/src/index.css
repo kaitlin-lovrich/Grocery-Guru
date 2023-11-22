@@ -11,6 +11,12 @@ body {
   font-family: Ruluko, sans-serif;
 }
 
+.page {
+  max-width: 1280px;
+  margin: 6rem auto;
+  height: 100vh;
+}
+
 .content-container {
   margin: 3rem;
   padding: 3rem;

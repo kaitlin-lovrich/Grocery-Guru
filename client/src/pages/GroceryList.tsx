@@ -30,11 +30,20 @@ export default function GroceryList() {
   });
 
   return (
-    <div className="grocery-list-page">
-      <div className="grocery-list-pagecontent">
-        <h1 className="grocery-list-title">Grocery List</h1>
-        <ul>{groceryList}</ul>
+    <div className="page">
+      <div className="content-container">
+        <h1 className="page-title">Grocery List</h1>
+        {shownGroceryList ? <ul>{groceryList}</ul> : <EmptyGroceryList />}
       </div>
     </div>
+  );
+}
+
+function EmptyGroceryList() {
+  return (
+    <span>
+      Grocery empty. Add some stuff by checking off an ingredient on a recipe's
+      page or click 'Add Ingredient' below!
+    </span>
   );
 }

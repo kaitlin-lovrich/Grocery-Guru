@@ -26,18 +26,20 @@ export default function LoginForm({ setSignedIn }: LoginFormProps) {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username
-          <input type="text" name="username" required />
-        </label>
-        <label>
-          Password
-          <input type="password" name="password" required />
-        </label>
-        <button type="submit">Sign In</button>
-      </form>
+    <div className="page">
+      <div className="content-container">
+        <form onSubmit={handleSubmit} className="page-title">
+          <label>
+            Username
+            <input type="text" name="username" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" required />
+          </label>
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -162,8 +162,8 @@ insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
     ('5', '19', '1'), -- gruyere cheese
     ('5', '20', '1'); -- parsley
 
-insert into "Users" ("userId")
-  values ('1');
+insert into "Users" ("userId", "username", "hashedPassword")
+  values ('1', 'Kait', '$argon2id$v=19$m=4096,t=3,p=1$OSCiWex0sLLwUW8pcbc8Sw$+z+IqIeVc6TYttEyhKUMu+MOZv/1AsWwFDTTz3zLaSI');
 insert into "GroceryLists" ("groceryListId", "userId")
   values ('1', '1');
 insert into "GroceryItems" ("groceryListId", "ingredientId", "quantity")

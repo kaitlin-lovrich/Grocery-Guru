@@ -11,10 +11,13 @@ export function authMiddleware(
   next: NextFunction
 ) {
   // The token will be in the Authorization header with the format `Bearer ${token}`
+  console.log('Authorizing');
   const token = req.get('authorization')?.split('Bearer ')[1];
+  console.log(token);
   if (!token) {
     throw new ClientError(401, 'authentication required');
   }
   req.user = jwt.verify(token, secret) as Request['user'];
+  console.log('verified');
   next();
 }
