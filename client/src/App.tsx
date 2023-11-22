@@ -1,17 +1,23 @@
-// import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import BrowseRecipes from './pages/BrowseRecipes';
 import RecipePage from './pages/RecipePage';
 import GroceryList from './pages/GroceryList';
+import { useState } from 'react';
+import RegistrationForm from './pages/RegistrationForm';
+import LoginForm from './pages/Login';
 
 export default function App() {
+  const [groceryListId] = useState<number>(1);
+
   return (
     <Routes>
-      <Route path="/" element={<Header />}>
+      <Route path="/" element={<Header groceryListId={groceryListId} />}>
         <Route index element={<BrowseRecipes />} />
         <Route path="recipes/:recipeId" element={<RecipePage />} />
         <Route path="grocery-list/:groceryListId" element={<GroceryList />} />
+        <Route path="auth/sign-up" element={<RegistrationForm />} />
+        <Route path="auth/login" element={<LoginForm />} />
         <Route />
       </Route>
     </Routes>

@@ -10,7 +10,7 @@ CREATE TABLE "Users" (
   "userId" serial PRIMARY KEY,
   "userAvatar" text,
   "username" text,
-  "password" text,
+  "hashedPassword" text,
   "createdAt" timestamptz
 );
 

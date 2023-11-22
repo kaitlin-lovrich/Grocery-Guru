@@ -7,14 +7,15 @@ import { useParams } from 'react-router-dom';
 export default function GroceryList() {
   const { groceryListId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
+  Number(groceryListId);
 
   useEffect(() => {
     async function loadGroceryListPage(groceryListId: number) {
-      const groceryList = await fetchGroceryList(1);
+      const groceryList = await fetchGroceryList(groceryListId);
       setShownGroceryList(groceryList);
-      console.log(Number(groceryListId), typeof Number(groceryListId));
+      console.log(groceryListId, typeof groceryListId);
     }
-    loadGroceryListPage(1);
+    loadGroceryListPage(Number(groceryListId));
   }, [groceryListId]);
 
   if (!shownGroceryList) return null;
@@ -24,7 +25,7 @@ export default function GroceryList() {
       <li
         key={
           item.ingredientId
-        }>{`${item.quantity} ${item.measurement} ${item.name}`}</li>
+        }>{`${item.quantity} ${item.name} ${item.packageType}`}</li>
     );
   });
 

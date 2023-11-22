@@ -2,13 +2,18 @@
 import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
+import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import {
   type Recipe,
   ClientError,
   errorMiddleware,
+  authMiddleware,
   Ingredient,
   GroceryList,
   GroceryItems,
+  Auth,
+  User,
 } from './lib/index.js';
 
 const connectionString =
@@ -20,6 +25,9 @@ const db = new pg.Pool({
     rejectUnauthorized: false,
   },
 });
+
+const hashKey = process.env.TOKEN_SECRET;
+if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
 
 const app = express();
 
@@ -34,6 +42,55 @@ app.use(express.json());
 
 app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello, World!' });
+});
+
+app.post('/api/auth/sign-up', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    if (!username || !password) {
+      throw new ClientError(400, 'username and password are required fields');
+    }
+    const hashedPassword = await argon2.hash(password);
+    const sql = `
+      insert into "Users" ("username", "hashedPassword")
+      values ($1, $2)
+      returning *
+    `;
+    const userRes = await db.query<User>(sql, [username, hashedPassword]);
+    const [user] = userRes.rows;
+    res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/auth/login', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    if (!username || !password) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const sql = `
+    select "userId",
+           "hashedPassword"
+      from "Users"
+     where "username" = $1
+  `;
+    const userRes = await db.query<User>(sql, [username]);
+    const [user] = userRes.rows;
+    if (!user) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const { userId, hashedPassword } = user;
+    if (!(await argon2.verify(hashedPassword, password))) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const payload = { userId, username };
+    const token = jwt.sign(payload, hashKey);
+    res.json({ token, user: payload });
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/api/browse-recipes', async (req, res, next) => {
@@ -84,29 +141,38 @@ app.get('/api/recipes/:recipeId', async (req, res, next) => {
   }
 });
 
-app.get('/api/grocery-list/:groceryListId', async (req, res, next) => {
-  try {
-    const groceryListId = Number(req.params.groceryListId);
-    const sql = `
+app.get(
+  '/api/grocery-list/:groceryListId',
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const groceryListId = Number(req.params.groceryListId);
+      const sql = `
     select *
       from "GroceryLists"
-      where "groceryListId" = $1
+      where "groceryListId" = $1 and "userId" = $2
     `;
-    const groceryListRes = await db.query<GroceryList>(sql, [groceryListId]);
+      const groceryListRes = await db.query<GroceryList>(sql, [
+        groceryListId,
+        req.user?.userId,
+      ]);
 
-    const sql2 = `
+      const sql2 = `
       select *
         from "Ingredients"
         join "GroceryItems" using ("ingredientId")
         where "groceryListId" = $1
     `;
-    const groceryItemRes = await db.query<GroceryItems>(sql2, [groceryListId]);
-    groceryListRes.rows[0].groceryItems = groceryItemRes.rows;
-    res.json(groceryListRes.rows[0]);
-  } catch (err) {
-    next(err);
+      const groceryItemRes = await db.query<GroceryItems>(sql2, [
+        groceryListId,
+      ]);
+      groceryListRes.rows[0].groceryItems = groceryItemRes.rows;
+      res.json(groceryListRes.rows[0]);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 /**
  * Serves React's index.html if no api route matches.

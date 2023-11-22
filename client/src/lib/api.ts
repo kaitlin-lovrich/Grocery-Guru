@@ -20,3 +20,15 @@ export async function fetchGroceryList(
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();
 }
+
+export async function fetchRegistrationForm(req: object) {
+  const res = await fetch('/api/auth/sign-up', req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchLoginForm(req: object) {
+  const res = await fetch('/api/auth/login', req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}

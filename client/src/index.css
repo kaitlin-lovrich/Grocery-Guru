@@ -18,8 +18,9 @@ a {
 
 a:hover {
   color: rgb(50, 83, 61);
-  border-bottom: solid 2px rgb(237, 147, 144);
+  border-bottom: solid 3px rgb(237, 147, 144);
   cursor: pointer;
+  font-weight: 600;
 }
 
 .page-heading {

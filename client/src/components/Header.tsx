@@ -1,7 +1,19 @@
+import { useEffect, useState } from 'react';
 import './Header.css';
 import { Link, Outlet } from 'react-router-dom';
 
-export default function Header() {
+type HeaderProps = {
+  groceryListId: number;
+  signedIn: boolean;
+  setSignedIn: () => void;
+};
+
+export default function Header({ groceryListId }: HeaderProps) {
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    setSignedIn(!!sessionStorage.getItem('token'));
+  }, [signedIn]);
+
   return (
     <>
       <nav className="header">
@@ -13,10 +25,14 @@ export default function Header() {
 
         <ul className="nav-links">
           <li>
-            <Link to="">Sign Up</Link>
+            {signedIn ? (
+              <Link to="">Hi!</Link>
+            ) : (
+              <Link to="auth/sign-up">Sign Up</Link>
+            )}
           </li>
           <li>
-            <Link to="">Login</Link>
+            {signedIn ? <a>Logout</a> : <Link to="auth/login">Login</Link>}
           </li>
         </ul>
       </nav>
@@ -27,7 +43,7 @@ export default function Header() {
         <div className="nav3buttons">
           <ul>
             <li>
-              <Link to="grocery-list/:groceryListId">GroceryList</Link>
+              <Link to={`grocery-list/${groceryListId}`}>GroceryList</Link>
             </li>
             <li>
               <Link to="/saved-recipes">Saved Recipes</Link>

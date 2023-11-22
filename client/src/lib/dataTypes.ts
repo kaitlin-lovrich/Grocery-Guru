@@ -2,7 +2,7 @@ export type User = {
   userId: number;
   userAvatar: string;
   username: string;
-  password: string;
+  hashedPassword: string;
   createdAt: any;
 };
 
@@ -45,4 +45,9 @@ export type RecipeIngredient = {
   recipeId: number;
   ingredientId: number;
   quantity: string;
+};
+
+export type Auth = {
+  username: string;
+  password: string;
 };

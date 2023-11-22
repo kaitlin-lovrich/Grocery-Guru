@@ -50,6 +50,10 @@
   width: 200px;
 }
 
+.recipe-item > p:hover {
+  border-bottom: solid 3px rgb(237, 147, 144);
+}
+
 @media screen and (width <=768px) {
   .browse-recipes-page {
     margin: 3rem auto;
