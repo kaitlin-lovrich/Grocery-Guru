@@ -1,5 +1,6 @@
 import { FormEvent } from 'react';
 import { fetchRegistrationForm } from '../lib/api';
+import './Forms.css';
 
 export default function RegistrationForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -20,18 +21,21 @@ export default function RegistrationForm() {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username
-          <input type="text" name="username" required />
-        </label>
-        <label>
-          Password
-          <input type="password" name="password" required />
-        </label>
-        <button type="submit">Register</button>
-      </form>
+    <div className="form-page">
+      <div className="content-container">
+        <h2 className="page-title">Sign Up!</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Username
+            <input type="text" name="username" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" required />
+          </label>
+          <button type="submit">Register</button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -4,19 +4,13 @@
   height: 100vh;
 }
 
-.recipe-page-content {
+.white-background-container {
   margin: 3rem;
   padding: 3rem;
   background-color: rgb(255, 255, 255);
   border: solid 2px rgb(230, 184, 156);
   box-shadow: rgb(230, 184, 156, 0.5) 5px 5px 5px;
-}
-
-.recipe-title {
-  font-family: Sansita, sans-serif;
-  font-weight: 300;
-  font-size: 2rem;
-  color: rgb(50, 83, 61);
+  border-radius: 5px;
 }
 
 .recipe-image {

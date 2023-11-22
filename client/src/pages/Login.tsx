@@ -1,7 +1,11 @@
 import { FormEvent } from 'react';
 import { fetchLoginForm } from '../lib/api';
 
-export default function LoginForm() {
+type LoginFormProps = {
+  setSignedIn: (token: boolean) => void;
+};
+
+export default function LoginForm({ setSignedIn }: LoginFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -14,6 +18,7 @@ export default function LoginForm() {
       };
       const { user, token } = await fetchLoginForm(req);
       sessionStorage.setItem('token', token);
+      setSignedIn(!!sessionStorage.getItem('token'));
       console.log('Signed In', user, '; received token:', token);
     } catch (err) {
       alert(`Error signing in: ${err}`);

@@ -11,6 +11,15 @@ body {
   font-family: Ruluko, sans-serif;
 }
 
+.content-container {
+  margin: 3rem;
+  padding: 3rem;
+  background-color: rgb(255, 255, 255);
+  border: solid 2px rgb(230, 184, 156);
+  box-shadow: rgb(230, 184, 156, 0.5) 5px 5px 5px;
+  border-radius: 5px;
+}
+
 a {
   text-decoration: none;
   color: rgb(133, 133, 133);
@@ -28,6 +37,23 @@ a:hover {
   font-weight: 300;
 }
 
+.page-title {
+  font-family: Sansita, sans-serif;
+  font-weight: 300;
+  font-size: 2rem;
+  color: rgb(50, 83, 61);
+}
+
 ul {
   list-style-type: none;
+}
+
+form > label > input {
+  border-radius: 3px;
+  padding: 0.5rem;
+}
+
+form > button {
+  border-radius: 3px;
+  padding: 0.5rem;
 }

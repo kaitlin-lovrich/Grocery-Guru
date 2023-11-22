@@ -32,8 +32,8 @@ export default function RecipePage() {
 
   return (
     <div className="recipe-page">
-      <div className="recipe-page-content">
-        <h1 className="recipe-title">{title}</h1>
+      <div className="content-container">
+        <h1 className="page-title">{title}</h1>
         <p>{description}</p>
         <div className="recipe-image">
           <img src={recipeImage} />

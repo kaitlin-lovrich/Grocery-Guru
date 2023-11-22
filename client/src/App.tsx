@@ -9,15 +9,27 @@ import LoginForm from './pages/Login';
 
 export default function App() {
   const [groceryListId] = useState<number>(1);
+  const [signedIn, setSignedIn] = useState(false);
 
   return (
     <Routes>
-      <Route path="/" element={<Header groceryListId={groceryListId} />}>
+      <Route
+        path="/"
+        element={
+          <Header
+            signedIn={signedIn}
+            setSignedIn={setSignedIn}
+            groceryListId={groceryListId}
+          />
+        }>
         <Route index element={<BrowseRecipes />} />
         <Route path="recipes/:recipeId" element={<RecipePage />} />
         <Route path="grocery-list/:groceryListId" element={<GroceryList />} />
         <Route path="auth/sign-up" element={<RegistrationForm />} />
-        <Route path="auth/login" element={<LoginForm />} />
+        <Route
+          path="auth/login"
+          element={<LoginForm setSignedIn={setSignedIn} />}
+        />
         <Route />
       </Route>
     </Routes>
