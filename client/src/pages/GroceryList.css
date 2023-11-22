@@ -4,12 +4,8 @@
   height: 100vh;
 }
 
-.grocery-list-pagecontent {
-  margin: 3rem;
-  padding: 3rem;
-  background-color: rgb(255, 255, 255);
-  border: solid 2px rgb(230, 184, 156);
-  box-shadow: rgb(230, 184, 156, 0.5) 5px 5px 5px;
+.grocery-list {
+  max-width: 500px;
 }
 
 .grocery-list-title {

@@ -13,7 +13,7 @@ body {
 
 .page {
   max-width: 1280px;
-  margin: 6rem auto;
+  margin: 1rem auto;
   height: 100vh;
 }
 
@@ -52,4 +52,16 @@ a:hover {
 
 ul {
   list-style-type: none;
+}
+
+@media screen and (width <=768px) {
+  .page {
+    margin: 3rem auto;
+    height: auto;
+  }
+
+  .content-container {
+    margin: 1rem;
+    padding: 2rem;
+  }
 }

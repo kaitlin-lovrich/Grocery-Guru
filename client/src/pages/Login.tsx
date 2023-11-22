@@ -26,9 +26,9 @@ export default function LoginForm({ setSignedIn }: LoginFormProps) {
   }
 
   return (
-    <div className="page">
-      <div className="content-container">
-        <h1 className="page-title">Sign In</h1>
+    <div className="page form-page">
+      <div className="content-container form-container">
+        <h1 className="page-title form-title">Sign In</h1>
         <form onSubmit={handleSubmit} className="user-auth-form">
           <label>
             Username

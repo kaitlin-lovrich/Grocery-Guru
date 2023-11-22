@@ -21,9 +21,9 @@ export default function RegistrationForm() {
   }
 
   return (
-    <div className="page">
-      <div className="content-container">
-        <h2 className="page-title">Sign Up!</h2>
+    <div className="page form-page">
+      <div className="content-container form-container">
+        <h2 className="page-title form-title">Sign Up</h2>
         <form onSubmit={handleSubmit} className="user-auth-form">
           <label>
             Username
@@ -33,7 +33,9 @@ export default function RegistrationForm() {
             Password
             <input type="password" name="password" required />
           </label>
-          <button type="submit">Register</button>
+          <div>
+            <button type="submit">Register</button>
+          </div>
         </form>
       </div>
     </div>

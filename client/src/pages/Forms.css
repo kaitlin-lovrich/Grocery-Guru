@@ -1,6 +1,23 @@
 .user-auth-form {
   display: flex;
   flex-direction: column;
+  width: 250px;
+}
+
+.form-page {
+  display: flex;
+  justify-content: center;
+}
+
+.form-container {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.form-title {
+  text-align: ;
 }
 
 form > * {
@@ -35,4 +52,15 @@ form > div > button {
   background-color: rgb(252, 246, 243);
   border: solid 2px rgb(237, 147, 144);
   -webkit-text-stroke: 1px rgb(50, 83, 61);
+}
+
+form > label > input:focus-visible,
+form > div > button:focus-visible {
+  border: rgb(50, 83, 61) 1px solid;
+  outline: rgb(50, 83, 61) 1.5px solid;
+}
+
+form > div > button:hover,
+form > label > input:hover {
+  border: rgb(50, 83, 61) 2.5px solid;
 }

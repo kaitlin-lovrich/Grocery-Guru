@@ -148,9 +148,9 @@ app.get(
     try {
       const groceryListId = Number(req.params.groceryListId);
       const sql = `
-    select *
-      from "GroceryLists"
-      where "groceryListId" = $1 and "userId" = $2
+      select *
+        from "GroceryLists"
+        where "groceryListId" = $1 and "userId" = $2
     `;
       const groceryListRes = await db.query<GroceryList>(sql, [
         groceryListId,
@@ -165,12 +165,12 @@ app.get(
     `;
       console.log('groceryListId', groceryListId);
       console.log('userId', req.user?.userId);
-      const groceryItemRes = await db.query<GroceryItems>(sql2, [
+      const groceryItemsRes = await db.query<GroceryItems>(sql2, [
         groceryListId,
       ]);
-      console.log('groceryItemRes.rows', groceryItemRes.rows);
+      console.log('groceryItemRes.rows', groceryItemsRes.rows);
       console.log('groceryListRes.rows', groceryListRes.rows);
-      groceryListRes.rows[0].groceryItems = groceryItemRes.rows;
+      groceryListRes.rows[0].groceryItems = groceryItemsRes.rows;
 
       res.json(groceryListRes.rows[0]);
     } catch (err) {
@@ -178,6 +178,32 @@ app.get(
     }
   }
 );
+
+app.post('/api/grocery-list', authMiddleware, async (req, res, next) => {
+  try {
+    const { groceryListId, ingredientId, quantity } = req.body;
+    if (
+      !groceryListId ||
+      Number.isNaN(ingredientId) ||
+      Number.isNaN(quantity)
+    ) {
+      throw new ClientError(400, `Invalid property`);
+    }
+    const sql2 = `
+        insert into "GroceryItems" ("groceryListId", "ingredientId", "quantity")
+          values ($1, $2, $3)
+          returning*;
+      `;
+    const groceryItemsRes = await db.query<GroceryItems>(sql2, [
+      groceryListId,
+      ingredientId,
+      quantity,
+    ]);
+    res.json(groceryItemsRes.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
 
 /**
  * Serves React's index.html if no api route matches.

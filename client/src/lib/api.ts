@@ -1,4 +1,4 @@
-import { GroceryList, Recipe } from './dataTypes.js';
+import { GroceryItems, GroceryList, Recipe } from './dataTypes.js';
 
 // tried to do try catch but got an error underlining Promise<Recipe[]>
 export async function fetchRecipes(): Promise<Recipe[]> {
@@ -33,6 +33,19 @@ export async function fetchRegistrationForm(req: object) {
 
 export async function fetchLoginForm(req: object) {
   const res = await fetch('/api/auth/login', req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchAddToGroceryList(
+  req: object
+): Promise<GroceryItems> {
+  const res = await fetch('/api/grocery-list', {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    },
+    body: JSON.stringify(req),
+  });
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();
 }

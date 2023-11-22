@@ -31,7 +31,7 @@ export default function RecipePage() {
   });
 
   return (
-    <div className="recipe-page">
+    <div className="page">
       <div className="content-container">
         <h1 className="page-title">{title}</h1>
         <p>{description}</p>

@@ -31,7 +31,7 @@ export default function GroceryList() {
 
   return (
     <div className="page">
-      <div className="content-container">
+      <div className="content-container grocery-list">
         <h1 className="page-title">Grocery List</h1>
         {shownGroceryList ? <ul>{groceryList}</ul> : <EmptyGroceryList />}
       </div>
