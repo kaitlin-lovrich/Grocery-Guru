@@ -23,7 +23,7 @@ export default function App() {
           />
         }>
         <Route index element={<BrowseRecipes />} />
-        <Route path="recipes/:recipeId" element={<RecipePage />} />
+        <Route path="recipes/:recipeId" element={<RecipePage groceryListId={groceryListId} />} />
         <Route path="grocery-list/:groceryListId" element={<GroceryList />} />
         <Route path="auth/sign-up" element={<RegistrationForm />} />
         <Route

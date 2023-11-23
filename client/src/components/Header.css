@@ -35,17 +35,24 @@ ul.nav-links {
 .sub-header {
   display: flex;
   justify-content: space-between;
+  margin: 0 0 0 3rem;
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
 }
 
 .search-bar {
   border: solid 1px rgb(230, 184, 156);
   border-radius: 5px;
   background-color: white;
-  margin: 3rem;
   min-width: 250px;
   flex-basis: 25%;
-  justify-content: center;
   padding-left: 1rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
 }
 
 .nav-buttons {
@@ -58,4 +65,10 @@ ul.nav-links {
   min-width: 450px;
   justify-content: space-evenly;
   padding-inline-start: 0;
+}
+
+@media screen and (width <=768px) {
+  .nav3buttons > ul {
+    margin: 0 0 2rem;
+  }
 }

@@ -1,11 +1,15 @@
 import './RecipePage.css';
-import { type Recipe } from '../lib/dataTypes.js';
-import { fetchRecipePage } from '../lib/api.js';
+import { Ingredient, type Recipe } from '../lib/dataTypes.js';
+import { fetchAddToGroceryList, fetchRecipePage } from '../lib/api.js';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 
-export default function RecipePage() {
+type RecipePageProps = {
+  groceryListId: number;
+};
+
+export default function RecipePage({ groceryListId }: RecipePageProps) {
   const { recipeId } = useParams();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
 
@@ -21,8 +25,23 @@ export default function RecipePage() {
   const { title, description, recipeImage, ingredients, instructions } =
     selectedRecipe;
 
+  function handleCheck(ingredient: Ingredient) {
+    fetchAddToGroceryList({ groceryListId, ...ingredient });
+  }
+
   const ingredientList = ingredients.map((ingredient) => {
-    return <li key={ingredient.ingredientId}>{ingredient.name}</li>;
+    return (
+      <>
+        <li key={ingredient.ingredientId}>
+          <div>
+            <label>
+              <input type="checkbox" onClick={() => handleCheck(ingredient)} />
+              {`${ingredient.quantity} ${ingredient.name}`}
+            </label>
+          </div>
+        </li>
+      </>
+    );
   });
 
   const instructionsArray = instructions.split('\n');

@@ -113,7 +113,7 @@ insert into "Ingredients" ("ingredientId", "name", "measurement", "packageType")
     ('27', 'cold pressed coconut oil', 'ounce', 'jar'),
     ('28', 'canola oil', 'ounce', 'bottle'),
     -- other
-    ('29', 'beer', 'ounce', 'can'),
+    ('29', 'beer', '', 'can'),
     ('33', 'water', 'ounce', '');
 
 

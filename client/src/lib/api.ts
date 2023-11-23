@@ -41,8 +41,10 @@ export async function fetchAddToGroceryList(
   req: object
 ): Promise<GroceryItems> {
   const res = await fetch('/api/grocery-list', {
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      'content-type': 'application/json',
     },
     body: JSON.stringify(req),
   });

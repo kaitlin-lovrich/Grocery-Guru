@@ -48,10 +48,14 @@ export default function Header({
           </li>
         </ul>
       </nav>
+
       <div className="sub-header">
-        <div className="search-bar">
-          <p>Search</p>
+        <div className="search-bar-container">
+          <div className="search-bar">
+            <p>Search</p>
+          </div>
         </div>
+
         <div className="nav3buttons">
           <ul>
             <li>

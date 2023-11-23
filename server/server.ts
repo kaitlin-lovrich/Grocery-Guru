@@ -205,6 +205,7 @@ app.post('/api/grocery-list', authMiddleware, async (req, res, next) => {
   }
 });
 
+
 /**
  * Serves React's index.html if no api route matches.
  *

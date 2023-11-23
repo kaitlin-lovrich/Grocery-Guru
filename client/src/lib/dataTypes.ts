@@ -11,6 +11,7 @@ export type Ingredient = {
   name: string;
   measurement: string;
   packageType: string;
+  quantity: number;
 };
 
 export type Recipe = {
