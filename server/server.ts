@@ -200,7 +200,28 @@ app.post('/api/grocery-list', authMiddleware, async (req, res, next) => {
       ingredientId,
       quantity,
     ]);
+    console.log(groceryItemsRes.rows);
     res.json(groceryItemsRes.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/add-ingredient', authMiddleware, async (req, res, next) => {
+  try {
+    const { name, measurement, packageType } = req.body;
+    const sql = `
+      insert into "Ingredients" ("name", "measurement", "packageType")
+        values ($1, $2, $3)
+        returning *;
+    `;
+    const addIngredientRes = await db.query<Ingredient>(sql, [
+      name,
+      measurement,
+      packageType,
+    ]);
+    console.log('addIngredientRes', addIngredientRes.rows[0]);
+    res.json(addIngredientRes.rows[0]);
   } catch (err) {
     next(err);
   }

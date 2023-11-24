@@ -115,7 +115,7 @@ insert into "Ingredients" ("ingredientId", "name", "measurement", "packageType")
     -- other
     ('29', 'beer', '', 'can'),
     ('33', 'water', 'ounce', '');
-
+alter sequence "Ingredients_ingredientId_seq" restart with 50;
 
 insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
   values
@@ -144,7 +144,7 @@ insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
     -- One-Pot Mac'n'Beer-Cheese
     ('5', '36', '1'), -- butter
     ('5', '13', '1'), -- flour
-    ('5', '29', '1.5'), -- beer
+    ('5', '29', '1'), -- beer
     ('5', '32', '1'), -- coconut milk
     ('5', '33', '1'), -- water
     ('5', '21', '1'), -- garlic powder
