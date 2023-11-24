@@ -15,6 +15,7 @@ import {
   Auth,
   User,
 } from './lib/index.js';
+import { nextTick } from 'node:process';
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -99,8 +100,8 @@ app.get('/api/browse-recipes', async (req, res, next) => {
       select *
         from "Recipes"
     `;
-    const response = await db.query<Recipe>(sql);
-    res.json(response.rows);
+    const recipesRes = await db.query<Recipe>(sql);
+    res.json(recipesRes.rows);
   } catch (err) {
     next(err);
   }
@@ -204,7 +205,6 @@ app.post('/api/grocery-list', authMiddleware, async (req, res, next) => {
     next(err);
   }
 });
-
 
 /**
  * Serves React's index.html if no api route matches.

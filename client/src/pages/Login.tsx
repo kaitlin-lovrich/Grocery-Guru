@@ -1,11 +1,16 @@
 import { FormEvent } from 'react';
 import { fetchLoginForm } from '../lib/api';
+import { User } from '../lib/dataTypes';
 
 type LoginFormProps = {
   setSignedIn: (token: boolean) => void;
+  setCurrentUser: (user: User) => void;
 };
 
-export default function LoginForm({ setSignedIn }: LoginFormProps) {
+export default function LoginForm({
+  setSignedIn,
+  setCurrentUser,
+}: LoginFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -18,7 +23,9 @@ export default function LoginForm({ setSignedIn }: LoginFormProps) {
       };
       const { user, token } = await fetchLoginForm(req);
       sessionStorage.setItem('token', token);
+      // sessionStorage.setItem('User', user);
       setSignedIn(!!sessionStorage.getItem('token'));
+      setCurrentUser(user);
       console.log('Signed In', user, '; received token:', token);
     } catch (err) {
       alert(`Error signing in: ${err}`);
@@ -26,7 +33,7 @@ export default function LoginForm({ setSignedIn }: LoginFormProps) {
   }
 
   return (
-    <div className="page form-page">
+    <div className="page">
       <div className="content-container form-container">
         <h1 className="page-title form-title">Sign In</h1>
         <form onSubmit={handleSubmit} className="user-auth-form">

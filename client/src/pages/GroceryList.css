@@ -1,10 +1,10 @@
-.grocery-list {
-  max-width: 500px;
-}
-
 .grocery-list-title {
   font-family: Sansita, sans-serif;
   font-weight: 300;
   font-size: 2rem;
   color: rgb(50, 83, 61);
+}
+
+.checkbox {
+  background-color: rgb(237, 147, 144);
 }

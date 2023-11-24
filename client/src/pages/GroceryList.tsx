@@ -13,13 +13,12 @@ export default function GroceryList() {
     async function loadGroceryListPage(groceryListId: number) {
       const groceryList = await fetchGroceryList(groceryListId);
       setShownGroceryList(groceryList);
-      console.log(groceryListId, typeof groceryListId);
     }
     loadGroceryListPage(Number(groceryListId));
   }, [groceryListId]);
 
   function handleAddIngredientButton() {
-    setShowIngredientForm(true);
+    setShowIngredientForm(!showIngredientForm);
   }
 
   if (!shownGroceryList) return null;
@@ -34,6 +33,7 @@ export default function GroceryList() {
                 type="checkbox"
                 id={`${item.ingredientId}`}
                 name={item.name}
+                className="checkbox"
               />
               {`${item.quantity} ${item.name} ${item.packageType}`}
             </label>
@@ -50,21 +50,33 @@ export default function GroceryList() {
         <form id="grocery-list-form">
           <ul>{groceryList}</ul>
         </form>
-        <div>
-          <button type="button" onClick={() => handleAddIngredientButton()}>
-            + Add Ingredient
-          </button>
-        </div>
-        {AddIngredient && <AddIngredient />}
+        {!showIngredientForm && (
+          <AddIngredientButton onClick={() => handleAddIngredientButton()} />
+        )}
+        {showIngredientForm && <AddIngredientForm />}
       </div>
     </div>
   );
 }
 
-function AddIngredient() {
+type AddIngredientButtonProps = {
+  onClick: () => void;
+};
+
+function AddIngredientButton({ onClick }: AddIngredientButtonProps) {
+  return (
+    <div>
+      <button type="button" onClick={onClick}>
+        + Add Ingredient
+      </button>
+    </div>
+  );
+}
+
+function AddIngredientForm() {
   return (
     <>
-      <form>
+      <form className="content-container">
         <label>
           Quantity
           <input type="number" />
@@ -77,7 +89,9 @@ function AddIngredient() {
           Name
           <input type="text" />
         </label>
-        <button>+ Add to Grocery List</button>
+        <div>
+          <button type="submit">+ Add to Grocery List</button>
+        </div>
       </form>
     </>
   );
