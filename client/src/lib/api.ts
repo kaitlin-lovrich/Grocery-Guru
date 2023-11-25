@@ -18,7 +18,7 @@ export async function fetchGroceryList(
 ): Promise<GroceryList> {
   const res = await fetch(`/api/grocery-list/${groceryListId}`, {
     headers: {
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
@@ -43,7 +43,7 @@ export async function fetchAddToGroceryList(
   const res = await fetch('/api/grocery-list', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-type': 'application/json',
     },
     body: JSON.stringify(req),
@@ -56,7 +56,7 @@ export async function fetchAddIngredient(req: object): Promise<Ingredient> {
   const res = await fetch('/api/add-ingredient', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-type': 'application/json',
     },
     body: JSON.stringify(req),

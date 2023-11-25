@@ -1,5 +1,9 @@
 import './GroceryList.css';
-import { type GroceryList } from '../lib/dataTypes.js';
+import {
+  Ingredient,
+  type GroceryList,
+  GroceryItems,
+} from '../lib/dataTypes.js';
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
@@ -28,6 +32,10 @@ export default function GroceryList() {
 
   function handleAddIngredientButton() {
     setShowIngredientForm(!showIngredientForm);
+  }
+
+  function handleSetShownGroceryList(newIngredientItem: Ingredient) {
+    setShownGroceryList((prev) => [...prev, newIngredientItem]);
   }
 
   if (!shownGroceryList) return null;
@@ -63,7 +71,12 @@ export default function GroceryList() {
           <AddIngredientButton onClick={() => handleAddIngredientButton()} />
         )}
         {showIngredientForm && (
-          <AddIngredientForm groceryListId={groceryListId} />
+          <AddIngredientForm
+            groceryListId={groceryListId}
+            onAdd={(newIngredientItem) =>
+              handleSetShownGroceryList(newIngredientItem)
+            }
+          />
         )}
       </div>
     </div>
@@ -86,9 +99,10 @@ function AddIngredientButton({ onClick }: AddIngredientButtonProps) {
 
 type AddIngredientFormProps = {
   groceryListId: number;
+  onAdd: (ingredient: Ingredient) => void;
 };
 
-function AddIngredientForm({ groceryListId }: AddIngredientFormProps) {
+function AddIngredientForm({ groceryListId, onAdd }: AddIngredientFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -98,8 +112,11 @@ function AddIngredientForm({ groceryListId }: AddIngredientFormProps) {
       const ingredient = await fetchAddIngredient(ingredientData);
       console.log('ingredient', ingredient);
       const quantity = ingredientData.quantity;
-      await fetchAddToGroceryList({ groceryListId, ...ingredient, quantity });
-      // setShownGroceryList();
+      await fetchAddToGroceryList({
+        groceryListId,
+        ...ingredient,
+        quantity,
+      });
     } catch (err) {
       alert(`Error adding Ingredient: ${err}`);
     }
@@ -107,7 +124,10 @@ function AddIngredientForm({ groceryListId }: AddIngredientFormProps) {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="content-container">
+      <form
+        onSubmit={handleSubmit}
+        onClick={onAdd}
+        className="content-container">
         <label>
           Quantity
           <input type="text" name="quantity" />

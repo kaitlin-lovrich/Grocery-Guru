@@ -1,16 +1,19 @@
-import { FormEvent } from 'react';
+import { FormEvent, useContext } from 'react';
 import { fetchLoginForm } from '../lib/api';
-import { User } from '../lib/dataTypes';
+// import { User } from '../lib/dataTypes';
+import { AppContext } from '../components/AppContext';
 
-type LoginFormProps = {
-  setSignedIn: (token: boolean) => void;
-  setCurrentUser: (user: User) => void;
-};
+// type LoginFormProps = {
+//   setSignedIn: (token: boolean) => void;
+//   setuser: (user: User) => void;
+// };
+// setuser,
+// setSignedIn,
+// : LoginFormProps
 
-export default function LoginForm({
-  setSignedIn,
-  setCurrentUser,
-}: LoginFormProps) {
+export default function LoginForm() {
+  const { handleSignIn } = useContext(AppContext);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -22,10 +25,11 @@ export default function LoginForm({
         body: JSON.stringify(userData),
       };
       const { user, token } = await fetchLoginForm(req);
-      sessionStorage.setItem('token', token);
-      // sessionStorage.setItem('User', user);
-      setSignedIn(!!sessionStorage.getItem('token'));
-      setCurrentUser(user);
+      localStorage.setItem('token', token);
+      // localStorage.setItem('User', user);
+      // setSignedIn(!!localStorage.getItem('token'));
+      // setuser(user);
+      handleSignIn({ user, token });
       console.log('Signed In', user, '; received token:', token);
     } catch (err) {
       alert(`Error signing in: ${err}`);

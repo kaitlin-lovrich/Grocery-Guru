@@ -12,7 +12,7 @@ import {
   Ingredient,
   GroceryList,
   GroceryItems,
-  Auth,
+  Login,
   User,
 } from './lib/index.js';
 import { nextTick } from 'node:process';
@@ -47,7 +47,7 @@ app.get('/api/hello', (req, res) => {
 
 app.post('/api/auth/sign-up', async (req, res, next) => {
   try {
-    const { username, password } = req.body as Partial<Auth>;
+    const { username, password } = req.body as Partial<Login>;
     if (!username || !password) {
       throw new ClientError(400, 'username and password are required fields');
     }
@@ -67,7 +67,7 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
 
 app.post('/api/auth/login', async (req, res, next) => {
   try {
-    const { username, password } = req.body as Partial<Auth>;
+    const { username, password } = req.body as Partial<Login>;
     if (!username || !password) {
       throw new ClientError(401, 'invalid login');
     }

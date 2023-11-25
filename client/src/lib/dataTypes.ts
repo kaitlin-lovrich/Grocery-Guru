@@ -48,7 +48,12 @@ export type RecipeIngredient = {
   quantity: string;
 };
 
-export type Auth = {
+export type Login = {
   username: string;
   password: string;
+};
+
+export type Auth = {
+  user: User;
+  token: string;
 };
