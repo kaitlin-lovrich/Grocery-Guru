@@ -1,15 +1,6 @@
 import { FormEvent, useContext } from 'react';
 import { fetchLoginForm } from '../lib/api';
-// import { User } from '../lib/dataTypes';
 import { AppContext } from '../components/AppContext';
-
-// type LoginFormProps = {
-//   setSignedIn: (token: boolean) => void;
-//   setuser: (user: User) => void;
-// };
-// setuser,
-// setSignedIn,
-// : LoginFormProps
 
 export default function LoginForm() {
   const { handleSignIn } = useContext(AppContext);
@@ -26,9 +17,6 @@ export default function LoginForm() {
       };
       const { user, token } = await fetchLoginForm(req);
       localStorage.setItem('token', token);
-      // localStorage.setItem('User', user);
-      // setSignedIn(!!localStorage.getItem('token'));
-      // setuser(user);
       handleSignIn({ user, token });
       console.log('Signed In', user, '; received token:', token);
     } catch (err) {

@@ -12,8 +12,8 @@ import { AppContext } from './components/AppContext';
 const tokenKey = 'react-context-jwt';
 
 export default function App() {
+
   const [groceryListId] = useState<number>(1);
-  // const [signedIn, setSignedIn] = useState(false);
   const [user, setuser] = useState<User>();
   const [token, setToken] = useState<string>();
 
@@ -59,6 +59,3 @@ export default function App() {
     </AppContext.Provider>
   );
 }
-
-// LoginForm setSignedIn={setSignedIn} setuser={setuser}
-// Header signedIn={signedIn} setSignedIn={setSignedIn} user={user as User}

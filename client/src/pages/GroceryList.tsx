@@ -34,7 +34,7 @@ export default function GroceryList() {
     setShowIngredientForm(!showIngredientForm);
   }
 
-  function handleSetShownGroceryList(newIngredientItem: Ingredient) {
+  function handleSave(newIngredientItem: Ingredient) {
     setShownGroceryList((prev) => [...prev, newIngredientItem]);
   }
 
@@ -73,9 +73,7 @@ export default function GroceryList() {
         {showIngredientForm && (
           <AddIngredientForm
             groceryListId={groceryListId}
-            onAdd={(newIngredientItem) =>
-              handleSetShownGroceryList(newIngredientItem)
-            }
+            onSave={(newIngredientItem) => handleSave(newIngredientItem)}
           />
         )}
       </div>
@@ -99,10 +97,10 @@ function AddIngredientButton({ onClick }: AddIngredientButtonProps) {
 
 type AddIngredientFormProps = {
   groceryListId: number;
-  onAdd: (ingredient: Ingredient) => void;
+  onSave: (ingredient: Ingredient) => void;
 };
 
-function AddIngredientForm({ groceryListId, onAdd }: AddIngredientFormProps) {
+function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -112,7 +110,7 @@ function AddIngredientForm({ groceryListId, onAdd }: AddIngredientFormProps) {
       const ingredient = await fetchAddIngredient(ingredientData);
       console.log('ingredient', ingredient);
       const quantity = ingredientData.quantity;
-      await fetchAddToGroceryList({
+      const newIngredientItem = await fetchAddToGroceryList({
         groceryListId,
         ...ingredient,
         quantity,
@@ -126,7 +124,7 @@ function AddIngredientForm({ groceryListId, onAdd }: AddIngredientFormProps) {
     <>
       <form
         onSubmit={handleSubmit}
-        onClick={onAdd}
+        onClick={() => onSave(newIngredientItem)}
         className="content-container">
         <label>
           Quantity
