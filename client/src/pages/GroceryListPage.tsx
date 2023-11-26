@@ -31,13 +31,11 @@ export default function GroceryListPage() {
   }
 
   function handleSave(newGroceryItem: Ingredient) {
-    setShownGroceryList((prev) => {
-      return {
-        ...prev,
-        groceryListId,
-        groceryItems: [[...[prev?.groceryItems]], newGroceryItem],
-      };
-    });
+    setShownGroceryList((prev) => ({
+      ...prev,
+      groceryListId,
+      groceryItems: [...prev.groceryItems, newGroceryItem],
+    }));
   }
 
   if (!shownGroceryList) return null;
