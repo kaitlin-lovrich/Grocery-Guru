@@ -1,9 +1,15 @@
 import { FormEvent, useContext } from 'react';
 import { fetchLoginForm } from '../lib/api';
 import { AppContext } from '../components/AppContext';
+import { useNavigate } from 'react-router-dom';
 
-export default function LoginForm() {
+type LoginFormProps = {
+  groceryListId: number;
+};
+
+export default function LoginForm({ groceryListId }: LoginFormProps) {
   const { handleSignIn } = useContext(AppContext);
+  const navigate = useNavigate();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,6 +25,10 @@ export default function LoginForm() {
       localStorage.setItem('token', token);
       handleSignIn({ user, token });
       console.log('Signed In', user, '; received token:', token);
+      navigate(`../../grocery-list/${groceryListId}`, {
+        relative: 'path',
+        replace: true,
+      });
     } catch (err) {
       alert(`Error signing in: ${err}`);
     }

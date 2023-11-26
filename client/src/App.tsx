@@ -54,7 +54,10 @@ export default function App() {
             element={<GroceryListPage />}
           />
           <Route path="auth/sign-up" element={<RegistrationForm />} />
-          <Route path="auth/login" element={<LoginForm />} />
+          <Route
+            path="auth/login"
+            element={<LoginForm groceryListId={groceryListId} />}
+          />
           <Route />
         </Route>
       </Routes>
