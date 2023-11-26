@@ -1,14 +1,14 @@
 import './GroceryList.css';
 import {
-  Ingredient,
+  type Ingredient,
   type GroceryList,
-  GroceryItems,
+  type GroceryItems,
 } from '../lib/dataTypes.js';
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
   fetchGroceryList,
-} from '../lib/api';
+} from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ import { useParams } from 'react-router-dom';
 //   setGroceryListId: ;
 // };
 
-export default function GroceryList() {
+export default function GroceryListPage() {
   const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
   const [showIngredientForm, setShowIngredientForm] = useState(false);
@@ -34,8 +34,12 @@ export default function GroceryList() {
     setShowIngredientForm(!showIngredientForm);
   }
 
-  function handleSave(newIngredientItem: Ingredient) {
-    setShownGroceryList((prev) => [...prev, newIngredientItem]);
+  function handleSave(newGroceryItem: Ingredient) {
+    setShownGroceryList((prev) => ({
+      ...prev,
+      groceryListId,
+      groceryItems: [...prev.groceryItems, newGroceryItem],
+    }));
   }
 
   if (!shownGroceryList) return null;
@@ -73,7 +77,7 @@ export default function GroceryList() {
         {showIngredientForm && (
           <AddIngredientForm
             groceryListId={groceryListId}
-            onSave={(newIngredientItem) => handleSave(newIngredientItem)}
+            onSave={(newGroceryItem) => handleSave(newGroceryItem)}
           />
         )}
       </div>
@@ -106,15 +110,15 @@ function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
     try {
       const formData = new FormData(event.currentTarget);
       const ingredientData = Object.fromEntries(formData.entries());
-      console.log('ingredientData', ingredientData);
       const ingredient = await fetchAddIngredient(ingredientData);
-      console.log('ingredient', ingredient);
       const quantity = ingredientData.quantity;
-      const newIngredientItem = await fetchAddToGroceryList({
+      const newGroceryItem = await fetchAddToGroceryList({
         groceryListId,
         ...ingredient,
         quantity,
       });
+      onSave({ ...ingredientData, ...newGroceryItem });
+      console.log('newGroceryItem', newGroceryItem);
     } catch (err) {
       alert(`Error adding Ingredient: ${err}`);
     }
@@ -122,13 +126,10 @@ function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        onClick={() => onSave(newIngredientItem)}
-        className="content-container">
+      <form onSubmit={handleSubmit} className="content-container">
         <label>
           Quantity
-          <input type="text" name="quantity" />
+          <input type="number" name="quantity" />
         </label>
         <label>
           Measurement

@@ -29,14 +29,14 @@ export type GroceryItems = {
   groceryItemsId: number;
   groceryListId: number;
   ingredientId: number;
-  measurement: string;
   name: string;
+  measurement: string;
   packageType: string;
-  quantity: string;
+  quantity: number;
 };
 
 export type GroceryList = {
-  grocerListId: number;
+  groceryListId: number;
   userId: number;
   groceryItems: GroceryItems[];
 };
@@ -45,7 +45,7 @@ export type RecipeIngredient = {
   recipeIngredientsId: number;
   recipeId: number;
   ingredientId: number;
-  quantity: string;
+  quantity: number;
 };
 
 export type Login = {

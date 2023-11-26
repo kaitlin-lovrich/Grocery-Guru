@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import BrowseRecipes from './pages/BrowseRecipes';
 import RecipePage from './pages/RecipePage';
-import GroceryList from './pages/GroceryList';
+import GroceryListPage from './pages/GroceryListPage';
 import { useEffect, useState } from 'react';
 import RegistrationForm from './pages/RegistrationForm';
 import LoginForm from './pages/Login';
@@ -12,7 +12,6 @@ import { AppContext } from './components/AppContext';
 const tokenKey = 'react-context-jwt';
 
 export default function App() {
-
   const [groceryListId] = useState<number>(1);
   const [user, setuser] = useState<User>();
   const [token, setToken] = useState<string>();
@@ -50,7 +49,10 @@ export default function App() {
             path="recipes/:recipeId"
             element={<RecipePage groceryListId={groceryListId} />}
           />
-          <Route path="grocery-list/:groceryListId" element={<GroceryList />} />
+          <Route
+            path="grocery-list/:groceryListId"
+            element={<GroceryListPage />}
+          />
           <Route path="auth/sign-up" element={<RegistrationForm />} />
           <Route path="auth/login" element={<LoginForm />} />
           <Route />
