@@ -10,7 +10,7 @@ CREATE TABLE "Users" (
   "userId" serial PRIMARY KEY,
   "userAvatar" text,
   "username" text,
-  "password" text,
+  "hashedPassword" text,
   "createdAt" timestamptz
 );
 
@@ -40,13 +40,14 @@ CREATE TABLE "RecipeIngredients" (
   "recipeIngredientsId" serial PRIMARY KEY,
   "recipeId" integer,
   "ingredientId" integer,
-  "quantity" text
+  "quantity" integer
 );
 
 CREATE TABLE "GroceryItems" (
   "groceryItemsId" serial PRIMARY KEY,
   "groceryListId" integer,
-  "ingredientId" integer
+  "ingredientId" integer,
+  "quantity" integer
 );
 
 COMMENT ON COLUMN "Recipes"."description" IS 'Recipe description';

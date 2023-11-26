@@ -1,48 +1,66 @@
-// import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import BrowseRecipes from './pages/BrowseRecipes';
 import RecipePage from './pages/RecipePage';
+import GroceryListPage from './pages/GroceryListPage';
+import { useEffect, useState } from 'react';
+import RegistrationForm from './pages/RegistrationForm';
+import LoginForm from './pages/Login';
+import { Auth, User } from './lib/dataTypes';
+import { AppContext } from './components/AppContext';
+
+const tokenKey = 'react-context-jwt';
 
 export default function App() {
+  const [groceryListId] = useState<number>(1);
+  const [user, setuser] = useState<User>();
+  const [token, setToken] = useState<string>();
+
+  useEffect(() => {
+    const auth = localStorage.getItem(tokenKey);
+    if (auth) {
+      const a = JSON.parse(auth);
+      setuser(a.user);
+      setToken(a.token);
+    }
+  }, []);
+
+  function handleSignIn(auth: Auth) {
+    localStorage.setItem(tokenKey, JSON.stringify(auth));
+    setuser(auth.user);
+    setToken(auth.token);
+  }
+
+  function handleSignOut() {
+    localStorage.removeItem(tokenKey);
+    setuser(undefined);
+    setToken(undefined);
+    console.log('Signed out');
+  }
+
+  const contextValue = { user, token, handleSignIn, handleSignOut };
+
   return (
-    <Routes>
-      <Route path="/" element={<Header />}>
-        <Route index element={<BrowseRecipes />} />
-        <Route path="recipes/:recipeId" element={<RecipePage />} />
-      </Route>
-    </Routes>
+    <AppContext.Provider value={contextValue}>
+      <Routes>
+        <Route path="/" element={<Header groceryListId={groceryListId} />}>
+          <Route index element={<BrowseRecipes />} />
+          <Route
+            path="recipes/:recipeId"
+            element={<RecipePage groceryListId={groceryListId} />}
+          />
+          <Route
+            path="grocery-list/:groceryListId"
+            element={<GroceryListPage />}
+          />
+          <Route path="auth/sign-up" element={<RegistrationForm />} />
+          <Route
+            path="auth/login"
+            element={<LoginForm groceryListId={groceryListId} />}
+          />
+          <Route />
+        </Route>
+      </Routes>
+    </AppContext.Provider>
   );
 }
-
-// React's Default App.tsx:
-// export default function App() {
-//   const [serverData, setServerData] = useState('');
-
-//   useEffect(() => {
-//     async function readServerData() {
-//       const resp = await fetch('/api/hello');
-//       const data = await resp.json();
-
-//       console.log('Data from server:', data);
-
-//       setServerData(data.message);
-//     }
-
-//     readServerData();
-//   }, []);
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank" rel="noreferrer">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>{serverData}</h1>
-//     </>
-//   );
-// }

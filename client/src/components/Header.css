@@ -7,7 +7,7 @@
 }
 
 .logo {
-  width: 15rem;
+  width: 11rem;
 }
 
 #logo {
@@ -16,13 +16,85 @@
   align-items: center;
 }
 
+a.link-logo {
+  border-bottom: none;
+}
+
 ul.nav-links {
   font-family: Ruluko, sans-serif;
-  font-size: 1.2rem;
   display: flex;
   justify-content: space-evenly;
   align-items: end;
-  width: 15rem;
+  width: 12rem;
+  min-width: 130px;
   padding-inline-start: 0;
   list-style-type: none;
 }
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 0 3rem;
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-bar {
+  border: solid 1px rgb(230, 184, 156);
+  border-radius: 5px;
+  background-color: white;
+  min-width: 250px;
+  flex-basis: 25%;
+  padding-left: 1rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.nav-buttons {
+  flex-basis: 50%;
+}
+
+.nav3buttons > ul {
+  display: flex;
+  margin: 3.2rem 0;
+  justify-content: space-evenly;
+  padding-inline-start: 0;
+}
+
+.nav3buttons > ul > li {
+  padding: 0 1rem;
+  min-width: fit-content;
+}
+
+@media screen and (width < 768px) {
+  .sub-header {
+    margin: 1rem;
+    flex-direction: column;
+  }
+
+  .nav3buttons > ul {
+    justify-content: space-around;
+    margin: 1.2rem 0;
+  }
+
+  .nav3buttons > ul > li {
+    padding: 0 0.5rem;
+  }
+}
+
+@media screen and (width >= 768px) {
+  .sub-header {
+    margin: 0 2rem;
+  }
+}
+
+/*
+@media screen and (width >= 992px) {
+}
+
+@media screen and (width >= 1200px) {
+} */

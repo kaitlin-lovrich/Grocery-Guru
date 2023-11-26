@@ -38,11 +38,13 @@ type RecipeItemProps = {
 function RecipeItem({ recipe }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
   return (
-    <div className="recipe-item">
-      <img src={recipeImage} />
-      <p>
-        <Link to={`/recipes/${recipeId}`}>{title}</Link>
-      </p>
-    </div>
+    <>
+      <Link to={`/recipes/${recipeId}`}>
+        <div className="recipe-item">
+          <img src={recipeImage} />
+          <p>{title}</p>
+        </div>
+      </Link>
+    </>
   );
 }

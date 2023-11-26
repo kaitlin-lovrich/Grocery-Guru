@@ -113,9 +113,9 @@ insert into "Ingredients" ("ingredientId", "name", "measurement", "packageType")
     ('27', 'cold pressed coconut oil', 'ounce', 'jar'),
     ('28', 'canola oil', 'ounce', 'bottle'),
     -- other
-    ('29', 'beer', 'ounce', 'can'),
+    ('29', 'beer', '', 'can'),
     ('33', 'water', 'ounce', '');
-
+alter sequence "Ingredients_ingredientId_seq" restart with 50;
 
 insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
   values
@@ -144,7 +144,7 @@ insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
     -- One-Pot Mac'n'Beer-Cheese
     ('5', '36', '1'), -- butter
     ('5', '13', '1'), -- flour
-    ('5', '29', '1.5'), -- beer
+    ('5', '29', '1'), -- beer
     ('5', '32', '1'), -- coconut milk
     ('5', '33', '1'), -- water
     ('5', '21', '1'), -- garlic powder
@@ -162,7 +162,15 @@ insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
     ('5', '19', '1'), -- gruyere cheese
     ('5', '20', '1'); -- parsley
 
-
+insert into "Users" ("userId", "username", "hashedPassword")
+  values ('1', 'Kait', '$argon2id$v=19$m=4096,t=3,p=1$OSCiWex0sLLwUW8pcbc8Sw$+z+IqIeVc6TYttEyhKUMu+MOZv/1AsWwFDTTz3zLaSI');
+insert into "GroceryLists" ("groceryListId", "userId")
+  values ('1', '1');
+insert into "GroceryItems" ("groceryListId", "ingredientId", "quantity")
+  values
+    ('1', '1', '5'),
+    ('1', '2', '4'),
+    ('1', '3', '3');
 -- For Ingredients table:
 -- packageTypes: 'seasoning', 'jar', 'bottle', 'package', 'loaf', 'can', 'null'
 -- measurment: 'ounce', 'slice', ''

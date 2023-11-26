@@ -8,6 +8,24 @@ body {
   box-sizing: border-box;
   color: rgb(133, 133, 133);
   letter-spacing: 0.1rem;
+  font-family: Ruluko, sans-serif;
+}
+
+.page {
+  margin: auto;
+  max-width: 1280px;
+  height: 100vh;
+  padding: 0 1rem;
+}
+
+.content-container {
+  background-color: rgb(255, 255, 255);
+  border: solid 2px rgb(230, 184, 156);
+  box-shadow: rgb(230, 184, 156, 0.5) 5px 5px 5px;
+  border-radius: 5px;
+  min-width: 330px;
+  max-width: 700px;
+  min-height: 300px;
 }
 
 a {
@@ -17,11 +35,88 @@ a {
 
 a:hover {
   color: rgb(50, 83, 61);
-  border-bottom: solid 2px rgb(237, 147, 144);
+  border-bottom: solid 3px rgb(237, 147, 144);
   cursor: pointer;
+  font-weight: 600;
 }
 
 .page-heading {
   font-family: Sansita, sans-serif;
   font-weight: 300;
+}
+
+.page-title {
+  font-family: Sansita, sans-serif;
+  font-weight: 300;
+  font-size: 2rem;
+  color: rgb(50, 83, 61);
+}
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
+button {
+  border-radius: 3px;
+  padding: 0.3rem 2.3rem;
+  font-family: Sansita, sans-serif;
+  font-size: 1.4rem;
+  color: rgb(243, 116, 174);
+  background-color: rgb(252, 246, 243);
+  border: solid 2px rgb(237, 147, 144);
+  -webkit-text-stroke: 1px rgb(50, 83, 61);
+  transition: font-size 0.1s 0.1s;
+  margin: 1rem;
+}
+
+button:hover {
+  border: rgb(50, 83, 61) 2.5px solid;
+  font-size: 1.5rem;
+  color: rgb(216, 207, 175);
+  background-color: rgb(243, 116, 174);
+  cursor: pointer;
+}
+
+@media screen and (width < 768px) {
+  .page {
+    margin: auto;
+  }
+
+  .content-container {
+    padding: 0.5rem;
+  }
+}
+
+@media screen and (width >= 768px) {
+  .page {
+    margin: 0.5rem auto;
+  }
+
+  .content-container {
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+}
+
+@media screen and (width >= 992px) {
+  .page {
+    margin: 1rem auto;
+  }
+
+  .content-container {
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+}
+
+@media screen and (width >= 1200px) {
+  .page {
+    max-width: 1280px;
+  }
+
+  .content-container {
+    margin: 3rem auto;
+    padding: 3rem;
+  }
 }
