@@ -1,9 +1,5 @@
 import './GroceryList.css';
-import {
-  type Ingredient,
-  type GroceryList,
-  type GroceryItems,
-} from '../lib/dataTypes.js';
+import { type Ingredient, type GroceryList } from '../lib/dataTypes.js';
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
@@ -35,11 +31,13 @@ export default function GroceryListPage() {
   }
 
   function handleSave(newGroceryItem: Ingredient) {
-    setShownGroceryList((prev) => ({
-      ...prev,
-      groceryListId,
-      groceryItems: [...prev.groceryItems, newGroceryItem],
-    }));
+    setShownGroceryList((prev) => {
+      return {
+        ...prev,
+        groceryListId,
+        groceryItems: [[...[prev?.groceryItems]], newGroceryItem],
+      };
+    });
   }
 
   if (!shownGroceryList) return null;
