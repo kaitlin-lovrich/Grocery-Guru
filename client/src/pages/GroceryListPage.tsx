@@ -8,10 +8,6 @@ import {
 import { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-// type GroceryListProps = {
-//   setGroceryListId: ;
-// };
-
 export default function GroceryListPage() {
   const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
