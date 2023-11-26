@@ -8,10 +8,6 @@ import {
 import { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-// type GroceryListProps = {
-//   setGroceryListId: ;
-// };
-
 export default function GroceryListPage() {
   const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
@@ -31,13 +27,11 @@ export default function GroceryListPage() {
   }
 
   function handleSave(newGroceryItem: Ingredient) {
-    setShownGroceryList((prev) => {
-      return {
-        ...prev,
-        groceryListId,
-        groceryItems: [[...[prev?.groceryItems]], newGroceryItem],
-      };
-    });
+    setShownGroceryList((prev) => ({
+      ...prev,
+      groceryListId,
+      groceryItems: [...prev.groceryItems, newGroceryItem],
+    }));
   }
 
   if (!shownGroceryList) return null;
