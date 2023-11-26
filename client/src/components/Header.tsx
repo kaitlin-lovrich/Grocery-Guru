@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import './Header.css';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AppContext } from './AppContext';
 
 type HeaderProps = {
@@ -9,6 +9,15 @@ type HeaderProps = {
 
 export default function Header({ groceryListId }: HeaderProps) {
   const { user, handleSignOut } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  function handleNavLogOut() {
+    navigate('../../', {
+      relative: 'path',
+      replace: true,
+    });
+    handleSignOut();
+  }
 
   return (
     <>
@@ -28,7 +37,7 @@ export default function Header({ groceryListId }: HeaderProps) {
           </li>
           <li>
             {user ? (
-              <a onClick={handleSignOut}>Logout</a>
+              <a onClick={handleNavLogOut}>Logout</a>
             ) : (
               <Link to="auth/login">Login</Link>
             )}
