@@ -1,8 +1,11 @@
 import { FormEvent } from 'react';
 import { fetchRegistrationForm } from '../lib/api';
 import './Forms.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function RegistrationForm() {
+  const navigate = useNavigate();
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -15,6 +18,10 @@ export default function RegistrationForm() {
       };
       const user = await fetchRegistrationForm(req);
       console.log('Registered', user);
+      navigate('../../auth/login/', {
+        relative: 'path',
+        replace: true,
+      });
     } catch (err) {
       alert(`Error registering user: ${err}`);
     }
