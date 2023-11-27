@@ -11,6 +11,7 @@ export type Ingredient = {
   name: string;
   measurement: string;
   packageType: string;
+  quantity: number;
 };
 
 export type Recipe = {
@@ -27,7 +28,11 @@ export type Recipe = {
 export type GroceryItems = {
   groceryItemsId: number;
   groceryListId: number;
+  recipeId: number;
   ingredientId: number;
+  name: string;
+  measurement: string;
+  packageType: string;
   quantity: number;
 };
 
@@ -51,4 +56,9 @@ export type Login = {
 
 export type UserGroceryList = User & {
   groceryListId: number;
+};
+
+export type Auth = {
+  user: UserGroceryList;
+  token: string;
 };

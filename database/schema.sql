@@ -47,6 +47,7 @@ CREATE TABLE "GroceryItems" (
   "groceryItemsId" serial PRIMARY KEY,
   "groceryListId" integer,
   "ingredientId" integer,
+  "recipeId" integer,
   "quantity" integer
 );
 
@@ -63,3 +64,5 @@ ALTER TABLE "RecipeIngredients" ADD FOREIGN KEY ("ingredientId") REFERENCES "Ing
 ALTER TABLE "GroceryItems" ADD FOREIGN KEY ("groceryListId") REFERENCES "GroceryLists" ("groceryListId");
 
 ALTER TABLE "GroceryItems" ADD FOREIGN KEY ("ingredientId") REFERENCES "Ingredients" ("ingredientId");
+
+ALTER TABLE "GroceryItems" ADD FOREIGN KEY ("recipeId") REFERENCES "Recipes" ("recipeId");

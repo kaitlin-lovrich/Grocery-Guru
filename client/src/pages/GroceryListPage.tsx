@@ -1,24 +1,28 @@
 import './GroceryList.css';
-import { type Ingredient, type GroceryList } from '../lib/dataTypes.js';
+import {
+  type Ingredient,
+  type GroceryList,
+  GroceryItems,
+} from '../lib/dataTypes.js';
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
   fetchGroceryList,
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-type GroceryListPageProps = {
-  groceryListId: number;
-};
-
-export default function GroceryListPage({
-  groceryListId,
-}: GroceryListPageProps) {
-  // const { groceryListId: groceryId } = useParams();
+// type GroceryListPageProps = {
+//   groceryListId: number;
+// };
+// {
+//   // groceryListId,
+// }: GroceryListPageProps
+export default function GroceryListPage() {
+  const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
   const [showIngredientForm, setShowIngredientForm] = useState(false);
-  // const groceryListId = Number(groceryId);
+  const groceryListId = Number(groceryId);
 
   useEffect(() => {
     async function loadGroceryListPage(groceryListId: number) {
@@ -34,9 +38,9 @@ export default function GroceryListPage({
 
   function handleSave(newGroceryItem: Ingredient) {
     setShownGroceryList((prev) => ({
-      ...prev,
+      ...prev!,
       groceryListId,
-      groceryItems: [...prev.groceryItems, newGroceryItem],
+      groceryItems: [...prev!.groceryItems, newGroceryItem as GroceryItems],
     }));
   }
 

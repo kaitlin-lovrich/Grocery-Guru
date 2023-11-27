@@ -19,18 +19,6 @@ export async function fetchRecipePage(recipeId: number): Promise<Recipe> {
   return await res.json();
 }
 
-export async function fetchGroceryList(
-  groceryListId: number
-): Promise<GroceryList> {
-  const res = await fetch(`/api/grocery-list/${groceryListId}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
-  return await res.json();
-}
-
 export async function fetchRegistrationForm(
   req: object
 ): Promise<UserGroceryList> {
@@ -48,6 +36,18 @@ export async function fetchLoginForm(req: object) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),
+  });
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchGroceryList(
+  groceryListId: number
+): Promise<GroceryList> {
+  const res = await fetch(`/api/grocery-list/${groceryListId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
   });
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();

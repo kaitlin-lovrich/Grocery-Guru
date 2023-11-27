@@ -168,11 +168,11 @@ insert into "GroceryLists" ("groceryListId", "userId")
   values ('1', '1');
 alter sequence "GroceryLists_groceryListId_seq" restart with 50;
 
-insert into "GroceryItems" ("groceryListId", "ingredientId", "quantity")
+insert into "GroceryItems" ("recipeId", "groceryListId", "ingredientId", "quantity")
   values
-    ('1', '1', '5'),
-    ('1', '2', '4'),
-    ('1', '3', '3');
+    ('3', '1', '1', '5'),
+    ('3', '1', '2', '4'),
+    ('3', '1', '3', '3');
 
 
 -- For Ingredients table:

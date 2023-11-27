@@ -17,6 +17,7 @@ import {
   UserGroceryList,
 } from './lib/index.js';
 import { nextTick } from 'node:process';
+import { log } from 'node:console';
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -90,7 +91,7 @@ app.post('/api/auth/login', async (req, res, next) => {
       from "Users"
      where "username" = $1
   `;
-    const userRes = await db.query<User>(sql, [username]);
+    const userRes = await db.query<UserGroceryList>(sql, [username]);
     const [user] = userRes.rows;
     if (!user) {
       throw new ClientError(401, 'invalid login');
@@ -99,8 +100,16 @@ app.post('/api/auth/login', async (req, res, next) => {
     if (!(await argon2.verify(hashedPassword, password))) {
       throw new ClientError(401, 'invalid login');
     }
-    const payload = { userId, username };
+    const sql2 = `
+      select * from "GroceryLists"
+      where "userId" = $1;
+    `;
+    const groceryListRes = await db.query<GroceryList>(sql2, [userId]);
+    const groceryListId = groceryListRes.rows[0].groceryListId;
+    const payload = { userId, username, groceryListId };
     const token = jwt.sign(payload, hashKey);
+
+    console.log(payload);
     res.json({ token, user: payload });
   } catch (err) {
     next(err);
@@ -195,7 +204,7 @@ app.get(
 
 app.post('/api/grocery-list', authMiddleware, async (req, res, next) => {
   try {
-    const { groceryListId, ingredientId, quantity } = req.body;
+    const { recipeId, groceryListId, ingredientId, quantity } = req.body;
     if (
       !groceryListId ||
       Number.isNaN(ingredientId) ||
@@ -204,11 +213,12 @@ app.post('/api/grocery-list', authMiddleware, async (req, res, next) => {
       throw new ClientError(400, `Invalid property`);
     }
     const sql2 = `
-        insert into "GroceryItems" ("groceryListId", "ingredientId", "quantity")
-          values ($1, $2, $3)
+        insert into "GroceryItems" ("recipeId", "groceryListId", "ingredientId", "quantity")
+          values ($1, $2, $3, $4)
           returning*;
       `;
     const groceryItemsRes = await db.query<GroceryItems>(sql2, [
+      recipeId,
       groceryListId,
       ingredientId,
       quantity,

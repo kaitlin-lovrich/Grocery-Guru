@@ -4,7 +4,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AppContext } from './AppContext';
 
 type HeaderProps = {
-  groceryListId: number;
+  groceryListId: number | undefined;
 };
 
 export default function Header({ groceryListId }: HeaderProps) {
@@ -17,6 +17,20 @@ export default function Header({ groceryListId }: HeaderProps) {
       replace: true,
     });
     handleSignOut();
+  }
+
+  function handleGroceryListClick() {
+    if (!user?.groceryListId) {
+      navigate('../../auth/login', {
+        relative: 'path',
+        replace: true,
+      });
+    } else {
+      navigate(`../../grocery-list/${groceryListId}`, {
+        relative: 'path',
+        replace: true,
+      });
+    }
   }
 
   return (
@@ -55,7 +69,8 @@ export default function Header({ groceryListId }: HeaderProps) {
         <div className="nav3buttons">
           <ul>
             <li>
-              <Link to={`grocery-list/${groceryListId}`}>GroceryList</Link>
+              <a onClick={handleGroceryListClick}>GroceryList</a>
+              {/* // Create another route to no user page or sign up page */}
             </li>
             <li>
               <Link to="/saved-recipes">Saved Recipes</Link>

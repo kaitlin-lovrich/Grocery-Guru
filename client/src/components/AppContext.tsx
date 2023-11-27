@@ -1,8 +1,8 @@
 import { createContext } from 'react';
-import { Auth, User } from '../lib/dataTypes';
+import { Auth, UserGroceryList } from '../lib/dataTypes';
 
 type AppContextValues = {
-  user: User | undefined;
+  user: UserGroceryList | undefined;
   token: string | undefined;
   handleSignIn: (auth: Auth) => void;
   handleSignOut: () => void;
