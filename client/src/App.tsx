@@ -38,7 +38,7 @@ export default function App() {
   }
 
   const contextValue = { user, token, handleSignIn, handleSignOut };
-  console.log(user);
+
   return (
     <AppContext.Provider value={contextValue}>
       <Routes>

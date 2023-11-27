@@ -19,15 +19,18 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const [groceryList, setGroceryList] = useState<GroceryList>();
   const { user } = useContext(AppContext);
+  // const navigate = useNavigate();
+
   const recipeId = Number(recipeIdStr);
 
   useEffect(() => {
     async function loadRecipePage(recipeId: number) {
-      if (!user) return;
       const recipe = await fetchRecipePage(recipeId);
       setSelectedRecipe(recipe);
-      const groceryList = await fetchGroceryList(user.groceryListId);
-      setGroceryList(groceryList);
+      if (user) {
+        const groceryList = await fetchGroceryList(user.groceryListId);
+        setGroceryList(groceryList);
+      }
     }
     loadRecipePage(Number(recipeId));
   }, [recipeId, user]);
@@ -37,13 +40,24 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
     selectedRecipe;
 
   function handleCheck(ingredient: Ingredient) {
-    // if (!groceyListId) {
-    //   navigate('../../auth/login', {
-    // relative: 'path',
-    // replace: true,
-    // });
-    // } else {}
+    // if (!user) {
+    //   return (
+    //     <>
+    //       <div>Sign in to add to Grocery List</div>
+    //       <span
+    //         onClick={() => {
+    //           navigate('../../auth/login', {
+    //             relative: 'path',
+    //             replace: true,
+    //           });
+    //         }}>
+    //         Sign In
+    //       </span>
+    //     </>
+    //   );
+    // } else {
     fetchAddToGroceryList({ groceryListId, ...ingredient, recipeId });
+    // }
   }
 
   const ingredientList = ingredients.map((ingredient) => {
