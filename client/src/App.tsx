@@ -12,7 +12,7 @@ import { AppContext } from './components/AppContext';
 const tokenKey = 'react-context-jwt';
 
 export default function App() {
-  const [groceryListId] = useState<number>(1);
+  const [groceryListId, setGroceryListId] = useState<number>(0);
   const [user, setuser] = useState<User>();
   const [token, setToken] = useState<string>();
 
@@ -29,6 +29,7 @@ export default function App() {
     localStorage.setItem(tokenKey, JSON.stringify(auth));
     setuser(auth.user);
     setToken(auth.token);
+    setGroceryListId(auth.user.userId);
   }
 
   function handleSignOut() {
@@ -51,12 +52,20 @@ export default function App() {
           />
           <Route
             path="grocery-list/:groceryListId"
-            element={<GroceryListPage />}
+            element={<GroceryListPage groceryListId={groceryListId} />}
           />
-          <Route path="auth/sign-up" element={<RegistrationForm />} />
+          <Route
+            path="auth/sign-up"
+            element={<RegistrationForm setGroceryListId={setGroceryListId} />}
+          />
           <Route
             path="auth/login"
-            element={<LoginForm groceryListId={groceryListId} />}
+            element={
+              <LoginForm
+                groceryListId={groceryListId}
+                setGroceryListId={setGroceryListId}
+              />
+            }
           />
           <Route />
         </Route>

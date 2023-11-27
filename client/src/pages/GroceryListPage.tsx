@@ -6,13 +6,19 @@ import {
   fetchGroceryList,
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 
-export default function GroceryListPage() {
-  const { groceryListId: groceryId } = useParams();
+type GroceryListPageProps = {
+  groceryListId: number;
+};
+
+export default function GroceryListPage({
+  groceryListId,
+}: GroceryListPageProps) {
+  // const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
   const [showIngredientForm, setShowIngredientForm] = useState(false);
-  const groceryListId = Number(groceryId);
+  // const groceryListId = Number(groceryId);
 
   useEffect(() => {
     async function loadGroceryListPage(groceryListId: number) {

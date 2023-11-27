@@ -32,7 +32,7 @@ export type GroceryItems = {
 };
 
 export type GroceryList = {
-  grocerListId: number;
+  groceryListId: number;
   userId: number;
   groceryItems: GroceryItems[];
 };
@@ -47,4 +47,8 @@ export type RecipeIngredient = {
 export type Login = {
   username: string;
   password: string;
+};
+
+export type UserGroceryList = User & {
+  groceryListId: number;
 };

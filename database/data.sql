@@ -166,11 +166,15 @@ insert into "Users" ("userId", "username", "hashedPassword")
   values ('1', 'Kait', '$argon2id$v=19$m=4096,t=3,p=1$OSCiWex0sLLwUW8pcbc8Sw$+z+IqIeVc6TYttEyhKUMu+MOZv/1AsWwFDTTz3zLaSI');
 insert into "GroceryLists" ("groceryListId", "userId")
   values ('1', '1');
+alter sequence "GroceryLists_groceryListId_seq" restart with 50;
+
 insert into "GroceryItems" ("groceryListId", "ingredientId", "quantity")
   values
     ('1', '1', '5'),
     ('1', '2', '4'),
     ('1', '3', '3');
+
+
 -- For Ingredients table:
 -- packageTypes: 'seasoning', 'jar', 'bottle', 'package', 'loaf', 'can', 'null'
 -- measurment: 'ounce', 'slice', ''

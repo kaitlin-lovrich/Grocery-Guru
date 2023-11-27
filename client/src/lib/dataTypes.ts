@@ -57,3 +57,7 @@ export type Auth = {
   user: User;
   token: string;
 };
+
+export type UserGroceryList = User & {
+  groceryListId: number;
+};

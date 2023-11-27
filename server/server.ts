@@ -14,6 +14,7 @@ import {
   GroceryItems,
   Login,
   User,
+  UserGroceryList,
 } from './lib/index.js';
 import { nextTick } from 'node:process';
 
@@ -57,9 +58,21 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
       values ($1, $2)
       returning *
     `;
-    const userRes = await db.query<User>(sql, [username, hashedPassword]);
+    const userRes = await db.query<UserGroceryList>(sql, [
+      username,
+      hashedPassword,
+    ]);
     const [user] = userRes.rows;
-    res.status(201).json(user);
+    const sql2 = `
+      insert into "GroceryLists" ("userId")
+        values ($1)
+        returning *
+    `;
+    const groceryListRes = await db.query<GroceryList>(sql2, [user.userId]);
+    const { groceryListId } = groceryListRes.rows[0];
+    // const userGroceryList = [...[user, ...[groceryListId]]];
+    userRes.rows[0].groceryListId = groceryListId;
+    res.json(userRes.rows[0]);
   } catch (err) {
     next(err);
   }

@@ -3,7 +3,13 @@ import { fetchRegistrationForm } from '../lib/api';
 import './Forms.css';
 import { useNavigate } from 'react-router-dom';
 
-export default function RegistrationForm() {
+type RegistrationFormProps = {
+  setGroceryListId: (id: number) => void;
+};
+
+export default function RegistrationForm({
+  setGroceryListId,
+}: RegistrationFormProps) {
   const navigate = useNavigate();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -11,13 +17,10 @@ export default function RegistrationForm() {
     try {
       const formData = new FormData(event.currentTarget);
       const userData = Object.fromEntries(formData.entries());
-      const req = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      };
-      const user = await fetchRegistrationForm(req);
+      const { ...user } = await fetchRegistrationForm(userData);
       console.log('Registered', user);
+      setGroceryListId(user.groceryListId);
+
       navigate('../../auth/login/', {
         relative: 'path',
         replace: true,

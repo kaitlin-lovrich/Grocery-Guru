@@ -5,9 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 type LoginFormProps = {
   groceryListId: number;
+  setGroceryListId: (id: number) => void;
 };
 
-export default function LoginForm({ groceryListId }: LoginFormProps) {
+export default function LoginForm({
+  groceryListId,
+  setGroceryListId,
+}: LoginFormProps) {
   const { handleSignIn } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -16,14 +20,10 @@ export default function LoginForm({ groceryListId }: LoginFormProps) {
     try {
       const formData = new FormData(event.currentTarget);
       const userData = Object.fromEntries(formData.entries());
-      const req = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      };
-      const { user, token } = await fetchLoginForm(req);
+      const { user, token } = await fetchLoginForm(userData);
       localStorage.setItem('token', token);
       handleSignIn({ user, token });
+      setGroceryListId(user.userId);
       console.log('Signed In', user, '; received token:', token);
       navigate(`../../grocery-list/${groceryListId}`, {
         relative: 'path',
