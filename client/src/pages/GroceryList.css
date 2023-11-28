@@ -8,3 +8,12 @@
 .checkbox {
   background-color: rgb(237, 147, 144);
 }
+
+.clicked-recipe-refs {
+  display: flex;
+  overflow-x: scroll;
+}
+
+.clicked-recipe-refs::-webkit-scrollbar {
+  display: none;
+}

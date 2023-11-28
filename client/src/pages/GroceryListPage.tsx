@@ -13,6 +13,7 @@ import {
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { FaX } from 'react-icons/fa6';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
@@ -70,6 +71,7 @@ export default function GroceryListPage() {
         )}
         {showIngredientForm && (
           <AddIngredientForm
+            onClick={() => handleAddIngredientButton()}
             groceryListId={groceryListId}
             onSave={(newGroceryItem) => handleSave(newGroceryItem)}
           />
@@ -77,7 +79,7 @@ export default function GroceryListPage() {
       </div>
       <div className="">
         <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
-        <div className="">
+        <div className="clicked-recipe-refs">
           {clickedRecipes.map((recipe) => {
             return (
               <div key={recipe.recipeId} className="recipe-item-container">
@@ -108,9 +110,14 @@ function AddIngredientButton({ onClick }: AddIngredientButtonProps) {
 type AddIngredientFormProps = {
   groceryListId: number;
   onSave: (ingredient: Ingredient) => void;
+  onClick: () => void;
 };
 
-function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
+function AddIngredientForm({
+  groceryListId,
+  onSave,
+  onClick,
+}: AddIngredientFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -158,7 +165,9 @@ function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
           <input type="text" name="name" />
         </label>
         <div>
-          <button type="submit">+ Add to Grocery List</button>
+          <button type="submit" onClick={onClick}>
+            + Add to Grocery List
+          </button>
         </div>
       </form>
     </>
@@ -176,6 +185,7 @@ function RecipeItem({ recipe }: RecipeItemProps) {
       <div className="recipe-item">
         <img src={recipeImage} />
         <p>{title}</p>
+        <FaX />
       </div>
     </Link>
   );
