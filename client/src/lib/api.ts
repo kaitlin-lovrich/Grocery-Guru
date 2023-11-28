@@ -1,4 +1,5 @@
 import {
+  ClickedRecipeRef,
   GroceryItems,
   GroceryList,
   Ingredient,
@@ -76,6 +77,35 @@ export async function fetchAddIngredient(req: object): Promise<Ingredient> {
       'Content-type': 'application/json',
     },
     body: JSON.stringify(req),
+  });
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchClickedRecipeRes(
+  req: object
+): Promise<ClickedRecipeRef> {
+  const res = await fetch('/api/clicked-recipe-refs', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchAllClickedRecipeRes(
+  groceryListId: number
+): Promise<ClickedRecipeRef[]> {
+  const res = await fetch(`/api/clicked-recipe-refs/${groceryListId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
   });
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();

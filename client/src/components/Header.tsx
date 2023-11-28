@@ -70,7 +70,6 @@ export default function Header({ groceryListId }: HeaderProps) {
           <ul>
             <li>
               <a onClick={handleGroceryListClick}>GroceryList</a>
-              {/* // Create another route to no user page or sign up page */}
             </li>
             <li>
               <Link to="/saved-recipes">Saved Recipes</Link>

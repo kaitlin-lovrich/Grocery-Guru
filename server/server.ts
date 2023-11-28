@@ -15,6 +15,8 @@ import {
   Login,
   User,
   UserGroceryList,
+  ClickedRecipeRef,
+  RecipeIngredient,
 } from './lib/index.js';
 import { nextTick } from 'node:process';
 import { log } from 'node:console';
@@ -151,7 +153,7 @@ app.get('/api/recipes/:recipeId', async (req, res, next) => {
         join "RecipeIngredients" using ("ingredientId")
         where "recipeId" = $1
     `;
-    const ingredientRes = await db.query<Ingredient>(sql2, [recipeId]);
+    const ingredientRes = await db.query<RecipeIngredient>(sql2, [recipeId]);
     if (!ingredientRes.rows)
       throw new ClientError(
         404,
@@ -250,18 +252,60 @@ app.post('/api/add-ingredient', authMiddleware, async (req, res, next) => {
   }
 });
 
-app.delete(
-  '/api/remove-grocery-item',
+app.post('/api/clicked-recipe-refs', authMiddleware, async (req, res, next) => {
+  try {
+    const { recipeIngredientsId } = req.body;
+    const sql = `
+      select *
+        from "Recipes"
+        join "RecipeIngredients" using ("recipeId")
+        where "recipeIngredientsId" = $1
+      `;
+    const clickedRecipesRes = await db.query<ClickedRecipeRef>(sql, [
+      recipeIngredientsId,
+    ]);
+    res.json(clickedRecipesRes.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get(
+  '/api/clicked-recipe-refs/:groceryListId',
   authMiddleware,
   async (req, res, next) => {
-    const sql = `
-      delete
-        from "GroceryLists"
-        where "ingredientId" = $1
-        returning *;
-    `;
+    try {
+      const { groceryListId } = req.params;
+      const sql = `
+        select distinct "recipeId", "title", "recipeImage"
+          from "Recipes"
+          join "RecipeIngredients" using ("recipeId")
+          join "GroceryItems" using ("recipeId")
+          where "groceryListId" = $1
+      `;
+      const clickedRecipesRes = await db.query<ClickedRecipeRef>(sql, [
+        groceryListId,
+      ]);
+      res.json(clickedRecipesRes.rows);
+    } catch (err) {
+      next(err);
+    }
   }
 );
+
+// app.delete(
+//   // INCOMPLETE
+//   '/api/remove-grocery-item',
+//   authMiddleware,
+//   async (req, res, next) => {
+//     const sql = `
+//       delete
+//         from "GroceryLists"
+//         where "ingredientId" = $1
+//         returning *;
+//     `;
+//   }
+// );
 
 /**
  * Serves React's index.html if no api route matches.

@@ -1,5 +1,9 @@
 import './RecipePage.css';
-import { GroceryList, Ingredient, type Recipe } from '../lib/dataTypes.js';
+import {
+  GroceryList,
+  RecipeIngredient,
+  type Recipe,
+} from '../lib/dataTypes.js';
 import {
   fetchAddToGroceryList,
   fetchGroceryList,
@@ -8,7 +12,6 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../components/AppContext.js';
-// import { Link } from 'react-router-dom';
 
 type RecipePageProps = {
   groceryListId: number | undefined;
@@ -19,7 +22,6 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const [groceryList, setGroceryList] = useState<GroceryList>();
   const { user } = useContext(AppContext);
-  // const navigate = useNavigate();
 
   const recipeId = Number(recipeIdStr);
 
@@ -39,7 +41,7 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
   const { title, description, recipeImage, ingredients, instructions } =
     selectedRecipe;
 
-  function handleCheck(ingredient: Ingredient) {
+  async function handleCheck(ingredient: RecipeIngredient) {
     if (!user) return;
     fetchAddToGroceryList({ groceryListId, ...ingredient, recipeId });
   }
@@ -80,10 +82,10 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
 }
 
 type CheckBoxIngredientProps = {
-  ingredient: Ingredient;
+  ingredient: RecipeIngredient;
   groceryList?: GroceryList;
   recipeId: number;
-  onClick: (ingredient: Ingredient) => void;
+  onClick: (ingredient: RecipeIngredient) => void;
 };
 
 function CheckBoxIngredient({
@@ -93,6 +95,7 @@ function CheckBoxIngredient({
   onClick,
 }: CheckBoxIngredientProps) {
   const [checked, setChecked] = useState(false);
+
   useEffect(() => {
     const isInGroceryItems = !!groceryList?.groceryItems.find((groceryItem) => {
       return (
@@ -101,9 +104,8 @@ function CheckBoxIngredient({
       );
     });
     setChecked(isInGroceryItems);
-    console.log('isInGroceryItems', isInGroceryItems);
   }, [groceryList, ingredient, recipeId]);
-  console.log('checked', checked);
+
   return (
     <div>
       <label>

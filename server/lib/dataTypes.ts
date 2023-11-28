@@ -11,6 +11,12 @@ export type Ingredient = {
   name: string;
   measurement: string;
   packageType: string;
+};
+
+export type RecipeIngredient = {
+  recipeIngredientsId: number;
+  recipeId: number;
+  ingredientId: number;
   quantity: number;
 };
 
@@ -19,7 +25,7 @@ export type Recipe = {
   userId: number;
   title: string;
   description: string;
-  ingredients: Ingredient[];
+  ingredients: RecipeIngredient[];
   recipeImage: string;
   instructions: string;
   createdAt: string;
@@ -42,13 +48,6 @@ export type GroceryList = {
   groceryItems: GroceryItems[];
 };
 
-export type RecipeIngredient = {
-  recipeIngredientsId: number;
-  recipeId: number;
-  ingredientId: number;
-  quantity: number;
-};
-
 export type Login = {
   username: string;
   password: string;
@@ -61,4 +60,14 @@ export type UserGroceryList = User & {
 export type Auth = {
   user: UserGroceryList;
   token: string;
+};
+
+export type ClickedRecipeRef = {
+  recipeId: number;
+  ingredientId: number;
+  userId: number;
+  title: string;
+  recipeImage: string;
+  recipeIngredientsId: string;
+  quantity: number;
 };
