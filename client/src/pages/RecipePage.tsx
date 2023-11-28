@@ -40,54 +40,20 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
     selectedRecipe;
 
   function handleCheck(ingredient: Ingredient) {
-    // if (!user) {
-    //   return (
-    //     <>
-    //       <div>Sign in to add to Grocery List</div>
-    //       <span
-    //         onClick={() => {
-    //           navigate('../../auth/login', {
-    //             relative: 'path',
-    //             replace: true,
-    //           });
-    //         }}>
-    //         Sign In
-    //       </span>
-    //     </>
-    //   );
-    // } else {
+    if (!user) return;
     fetchAddToGroceryList({ groceryListId, ...ingredient, recipeId });
-    // }
   }
 
   const ingredientList = ingredients.map((ingredient) => {
-    const isInGroceryItems = groceryList?.groceryItems.find((groceryItem) => {
-      return (
-        groceryItem.ingredientId === ingredient.ingredientId &&
-        groceryItem.recipeId === recipeId
-      );
-    });
-    console.log(
-      'ingredient',
-      ingredient,
-      'isinGroceryItems',
-      !!isInGroceryItems
-    );
     return (
-      <>
-        <li key={ingredient.ingredientId}>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                defaultChecked={!!isInGroceryItems}
-                onClick={() => handleCheck(ingredient)}
-              />
-              {`${ingredient.quantity} ${ingredient.name}`}
-            </label>
-          </div>
-        </li>
-      </>
+      <li key={ingredient.ingredientId}>
+        <CheckBoxIngredient
+          onClick={handleCheck}
+          ingredient={ingredient}
+          groceryList={groceryList}
+          recipeId={recipeId}
+        />
+      </li>
     );
   });
 
@@ -109,6 +75,46 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
         <h2 className="recipe-h2">Instructions</h2>
         <ol className="instructions">{instructionsList}</ol>
       </div>
+    </div>
+  );
+}
+
+type CheckBoxIngredientProps = {
+  ingredient: Ingredient;
+  groceryList?: GroceryList;
+  recipeId: number;
+  onClick: (ingredient: Ingredient) => void;
+};
+
+function CheckBoxIngredient({
+  ingredient,
+  groceryList,
+  recipeId,
+  onClick,
+}: CheckBoxIngredientProps) {
+  const [checked, setChecked] = useState(false);
+  useEffect(() => {
+    const isInGroceryItems = !!groceryList?.groceryItems.find((groceryItem) => {
+      return (
+        groceryItem.ingredientId === ingredient.ingredientId &&
+        groceryItem.recipeId === recipeId
+      );
+    });
+    setChecked(isInGroceryItems);
+    console.log('isInGroceryItems', isInGroceryItems);
+  }, [groceryList, ingredient, recipeId]);
+  console.log('checked', checked);
+  return (
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={() => setChecked(!checked)}
+          onClick={() => onClick(ingredient)}
+        />
+        {`${ingredient.quantity} ${ingredient.name}`}
+      </label>
     </div>
   );
 }

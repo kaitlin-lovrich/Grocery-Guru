@@ -164,6 +164,8 @@ insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
 
 insert into "Users" ("userId", "username", "hashedPassword")
   values ('1', 'Kait', '$argon2id$v=19$m=4096,t=3,p=1$OSCiWex0sLLwUW8pcbc8Sw$+z+IqIeVc6TYttEyhKUMu+MOZv/1AsWwFDTTz3zLaSI');
+alter sequence "Users_userId_seq" restart with 50;
+
 insert into "GroceryLists" ("groceryListId", "userId")
   values ('1', '1');
 alter sequence "GroceryLists_groceryListId_seq" restart with 50;

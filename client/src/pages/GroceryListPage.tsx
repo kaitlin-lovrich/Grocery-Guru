@@ -48,21 +48,14 @@ export default function GroceryListPage() {
   const { groceryItems } = shownGroceryList;
   const groceryList = groceryItems.map((item) => {
     return (
-      <>
-        <li key={item.ingredientId}>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                id={`${item.ingredientId}`}
-                name={item.name}
-                className="checkbox"
-              />
-              {`${item.quantity} ${item.name} ${item.packageType}`}
-            </label>
-          </div>
-        </li>
-      </>
+      <li key={`${item.ingredientId}: ${item.recipeId}`}>
+        <div>
+          <label>
+            <input type="checkbox" name={item.name} className="checkbox" />
+            {`${item.quantity} ${item.name} ${item.packageType}`}
+          </label>
+        </div>
+      </li>
     );
   });
 

@@ -250,6 +250,19 @@ app.post('/api/add-ingredient', authMiddleware, async (req, res, next) => {
   }
 });
 
+app.delete(
+  '/api/remove-grocery-item',
+  authMiddleware,
+  async (req, res, next) => {
+    const sql = `
+      delete
+        from "GroceryLists"
+        where "ingredientId" = $1
+        returning *;
+    `;
+  }
+);
+
 /**
  * Serves React's index.html if no api route matches.
  *
