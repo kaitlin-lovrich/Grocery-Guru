@@ -1,14 +1,21 @@
 import './GroceryList.css';
-import { type Ingredient, type GroceryList } from '../lib/dataTypes.js';
+import {
+  type Ingredient,
+  type GroceryList,
+  GroceryItems,
+  ClickedRecipeRef,
+} from '../lib/dataTypes.js';
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
+  fetchAllClickedRecipeRes,
   fetchGroceryList,
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export default function GroceryListPage() {
+  const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
   const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
   const [showIngredientForm, setShowIngredientForm] = useState(false);
@@ -18,6 +25,8 @@ export default function GroceryListPage() {
     async function loadGroceryListPage(groceryListId: number) {
       const groceryList = await fetchGroceryList(groceryListId);
       setShownGroceryList(groceryList);
+      const allClickedRecipes = await fetchAllClickedRecipeRes(groceryListId);
+      setClickedRecipes(allClickedRecipes);
     }
     loadGroceryListPage(Number(groceryListId));
   }, [groceryListId]);
@@ -28,9 +37,9 @@ export default function GroceryListPage() {
 
   function handleSave(newGroceryItem: Ingredient) {
     setShownGroceryList((prev) => ({
-      ...prev,
+      ...prev!,
       groceryListId,
-      groceryItems: [...prev.groceryItems, newGroceryItem],
+      groceryItems: [...prev!.groceryItems, newGroceryItem as GroceryItems],
     }));
   }
 
@@ -38,21 +47,14 @@ export default function GroceryListPage() {
   const { groceryItems } = shownGroceryList;
   const groceryList = groceryItems.map((item) => {
     return (
-      <>
-        <li key={item.ingredientId}>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                id={`${item.ingredientId}`}
-                name={item.name}
-                className="checkbox"
-              />
-              {`${item.quantity} ${item.name} ${item.packageType}`}
-            </label>
-          </div>
-        </li>
-      </>
+      <li key={`${item.ingredientId}: ${item.recipeId}`}>
+        <div>
+          <label>
+            <input type="checkbox" name={item.name} className="checkbox" />
+            {`${item.quantity} ${item.name} ${item.packageType}`}
+          </label>
+        </div>
+      </li>
     );
   });
 
@@ -72,6 +74,18 @@ export default function GroceryListPage() {
             onSave={(newGroceryItem) => handleSave(newGroceryItem)}
           />
         )}
+      </div>
+      <div className="">
+        <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
+        <div className="">
+          {clickedRecipes.map((recipe) => {
+            return (
+              <div key={recipe.recipeId} className="recipe-item-container">
+                <RecipeItem recipe={recipe} />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -148,6 +162,22 @@ function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
         </div>
       </form>
     </>
+  );
+}
+
+type RecipeItemProps = {
+  recipe: ClickedRecipeRef;
+};
+
+function RecipeItem({ recipe }: RecipeItemProps) {
+  const { recipeId, title, recipeImage } = recipe;
+  return (
+    <Link to={`/recipes/${recipeId}`}>
+      <div className="recipe-item">
+        <img src={recipeImage} />
+        <p>{title}</p>
+      </div>
+    </Link>
   );
 }
 

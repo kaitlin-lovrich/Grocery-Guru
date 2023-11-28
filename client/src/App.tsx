@@ -6,14 +6,13 @@ import GroceryListPage from './pages/GroceryListPage';
 import { useEffect, useState } from 'react';
 import RegistrationForm from './pages/RegistrationForm';
 import LoginForm from './pages/Login';
-import { Auth, User } from './lib/dataTypes';
+import { Auth, UserGroceryList } from './lib/dataTypes';
 import { AppContext } from './components/AppContext';
 
 const tokenKey = 'react-context-jwt';
 
 export default function App() {
-  const [groceryListId] = useState<number>(1);
-  const [user, setuser] = useState<User>();
+  const [user, setuser] = useState<UserGroceryList>();
   const [token, setToken] = useState<string>();
 
   useEffect(() => {
@@ -43,21 +42,20 @@ export default function App() {
   return (
     <AppContext.Provider value={contextValue}>
       <Routes>
-        <Route path="/" element={<Header groceryListId={groceryListId} />}>
+        <Route
+          path="/"
+          element={<Header groceryListId={user?.groceryListId} />}>
           <Route index element={<BrowseRecipes />} />
           <Route
             path="recipes/:recipeId"
-            element={<RecipePage groceryListId={groceryListId} />}
+            element={<RecipePage groceryListId={user?.groceryListId} />}
           />
           <Route
             path="grocery-list/:groceryListId"
             element={<GroceryListPage />}
           />
           <Route path="auth/sign-up" element={<RegistrationForm />} />
-          <Route
-            path="auth/login"
-            element={<LoginForm groceryListId={groceryListId} />}
-          />
+          <Route path="auth/login" element={<LoginForm />} />
           <Route />
         </Route>
       </Routes>

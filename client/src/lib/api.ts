@@ -1,4 +1,11 @@
-import { GroceryItems, GroceryList, Ingredient, Recipe } from './dataTypes.js';
+import {
+  ClickedRecipeRef,
+  GroceryItems,
+  GroceryList,
+  Ingredient,
+  Recipe,
+  UserGroceryList,
+} from './dataTypes.js';
 
 // tried to do try catch but got an error underlining Promise<Recipe[]>
 export async function fetchRecipes(): Promise<Recipe[]> {
@@ -13,6 +20,28 @@ export async function fetchRecipePage(recipeId: number): Promise<Recipe> {
   return await res.json();
 }
 
+export async function fetchRegistrationForm(
+  req: object
+): Promise<UserGroceryList> {
+  const res = await fetch('/api/auth/sign-up', {
+    method: 'POST',
+    headers: { 'Content-type': 'application/json' },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchLoginForm(req: object) {
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
 export async function fetchGroceryList(
   groceryListId: number
 ): Promise<GroceryList> {
@@ -21,18 +50,6 @@ export async function fetchGroceryList(
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
-  return await res.json();
-}
-
-export async function fetchRegistrationForm(req: object) {
-  const res = await fetch('/api/auth/sign-up', req);
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
-  return await res.json();
-}
-
-export async function fetchLoginForm(req: object) {
-  const res = await fetch('/api/auth/login', req);
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();
 }
@@ -60,6 +77,35 @@ export async function fetchAddIngredient(req: object): Promise<Ingredient> {
       'Content-type': 'application/json',
     },
     body: JSON.stringify(req),
+  });
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchClickedRecipeRes(
+  req: object
+): Promise<ClickedRecipeRef> {
+  const res = await fetch('/api/clicked-recipe-refs', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchAllClickedRecipeRes(
+  groceryListId: number
+): Promise<ClickedRecipeRef[]> {
+  const res = await fetch(`/api/clicked-recipe-refs/${groceryListId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
   });
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();

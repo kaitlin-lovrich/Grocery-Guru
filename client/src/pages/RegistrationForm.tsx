@@ -11,13 +11,9 @@ export default function RegistrationForm() {
     try {
       const formData = new FormData(event.currentTarget);
       const userData = Object.fromEntries(formData.entries());
-      const req = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      };
-      const user = await fetchRegistrationForm(req);
+      const { ...user } = await fetchRegistrationForm(userData);
       console.log('Registered', user);
+
       navigate('../../auth/login/', {
         relative: 'path',
         replace: true,
