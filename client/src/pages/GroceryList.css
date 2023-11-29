@@ -17,3 +17,29 @@
 .clicked-recipe-refs::-webkit-scrollbar {
   display: none;
 }
+
+.title-and-x {
+  display: flex;
+}
+
+/* .title-and-x > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.heading-and-button {
+  display: flex;
+}
+
+.x-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(252, 246, 243);
+  border: 2px solid rgb(237, 147, 144);
+  border-radius: 5px;
+  color: rgb(243, 116, 174);
+  width: 30px;
+  padding: 0.2rem 0.4rem;
+}

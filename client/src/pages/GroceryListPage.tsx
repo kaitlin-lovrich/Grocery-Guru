@@ -44,6 +44,10 @@ export default function GroceryListPage() {
     }));
   }
 
+  function consoleLogClick(event: any) {
+    console.log(event.currentTarget);
+  }
+
   if (!shownGroceryList) return null;
   const { groceryItems } = shownGroceryList;
   const groceryList = groceryItems.map((item) => {
@@ -51,7 +55,12 @@ export default function GroceryListPage() {
       <li key={`${item.ingredientId}: ${item.recipeId}`}>
         <div>
           <label>
-            <input type="checkbox" name={item.name} className="checkbox" />
+            <input
+              type="checkbox"
+              name={item.name}
+              className="checkbox"
+              onClick={(event) => consoleLogClick(event)}
+            />
             {`${item.quantity} ${item.name} ${item.packageType}`}
           </label>
         </div>
@@ -62,21 +71,29 @@ export default function GroceryListPage() {
   return (
     <div className="page">
       <div className="content-container grocery-list">
-        <h1 className="page-title">Grocery List</h1>
+        <div className="heading-and-button">
+          <h1 className="page-title">Grocery List</h1>
+          <div>
+            <button type="button" className="x-button">
+              <FaX />
+            </button>
+            <p>Remove checked items</p>
+          </div>
+        </div>
         <form id="grocery-list-form">
           <ul>{groceryList}</ul>
         </form>
         {!showIngredientForm && (
           <AddIngredientButton onClick={() => handleAddIngredientButton()} />
         )}
-        {showIngredientForm && (
-          <AddIngredientForm
-            onClick={() => handleAddIngredientButton()}
-            groceryListId={groceryListId}
-            onSave={(newGroceryItem) => handleSave(newGroceryItem)}
-          />
-        )}
       </div>
+      {showIngredientForm && (
+        <AddIngredientForm
+          onClick={() => handleAddIngredientButton()}
+          groceryListId={groceryListId}
+          onSave={(newGroceryItem) => handleSave(newGroceryItem)}
+        />
+      )}
       <div className="">
         <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
         <div className="clicked-recipe-refs">
@@ -184,8 +201,12 @@ function RecipeItem({ recipe }: RecipeItemProps) {
     <Link to={`/recipes/${recipeId}`}>
       <div className="recipe-item">
         <img src={recipeImage} />
-        <p>{title}</p>
-        <FaX />
+        <div className="recipe-item">
+          <p>{title}</p>
+          <button type="button" className="x-button">
+            <FaX />
+          </button>
+        </div>
       </div>
     </Link>
   );

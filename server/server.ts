@@ -293,19 +293,52 @@ app.get(
   }
 );
 
-// app.delete(
-//   // INCOMPLETE
-//   '/api/remove-grocery-item',
-//   authMiddleware,
-//   async (req, res, next) => {
-//     const sql = `
-//       delete
-//         from "GroceryLists"
-//         where "ingredientId" = $1
-//         returning *;
-//     `;
-//   }
-// );
+app.delete(
+  '/api/remove-grocery-item/:ingredientId',
+  authMiddleware,
+  async (req, res, next) => {
+    const { ingredientId } = req.params;
+    const { groceryListId } = req.body;
+    const sql = `
+      delete
+        from "GroceryItems"
+        where "ingredientId" = $1 and groceryListId = $2
+        returning *;
+    `;
+    const deletedIngredientsRes = await db.query<Ingredient>(sql, []);
+    res.json(deletedIngredientsRes.rows);
+  }
+);
+
+app.delete(
+  '/api/remove-grocery-item/:recipeId',
+  authMiddleware,
+  async (req, res, next) => {
+    const { recipeId } = req.params;
+    const sql = `
+      delete
+        from "GroceryItems"
+        where "recipeId" = $1
+    `;
+    // and recipeIngredientsId = $2 ???
+  }
+);
+
+// Post example sql:
+//   select *
+//     from "GroceryLists"
+//     where "groceryListId" = $1 and "userId" = $2
+// `;
+//   const groceryListRes = await db.query<GroceryList>(sql, [
+//     groceryListId,
+//     req.user?.userId,
+//   ]);
+
+//   const sql2 = `
+//   select *
+//     from "Ingredients"
+//     join "GroceryItems" using ("ingredientId")
+//     where "groceryListId" = $1
 
 /**
  * Serves React's index.html if no api route matches.
