@@ -294,35 +294,51 @@ app.get(
 );
 
 app.delete(
-  '/api/remove-grocery-item/:ingredientId',
+  '/api/remove-grocery-items',
   authMiddleware,
   async (req, res, next) => {
-    const { ingredientId } = req.params;
-    const { groceryListId } = req.body;
-    const sql = `
-      delete
-        from "GroceryItems"
-        where "ingredientId" = $1 and groceryListId = $2
-        returning *;
-    `;
-    const deletedIngredientsRes = await db.query<Ingredient>(sql, []);
-    res.json(deletedIngredientsRes.rows);
+    const { ingredientIds, groceryListId } = req.body;
+    for (let i = 0; i < ingredientIds.length; i++) {
+      const sql = `
+        delete
+          from "GroceryItems"
+          where "ingredientId" = $1 and "groceryListId" = $2
+          returning *;
+      `;
+      await db.query<Ingredient>(sql, [ingredientIds[i], groceryListId]);
+    }
+    res.sendStatus(204);
   }
 );
 
 app.delete(
-  '/api/remove-grocery-item/:recipeId',
+  '/api/remove-by-recipeId',
   authMiddleware,
   async (req, res, next) => {
-    const { recipeId } = req.params;
+    const { recipeId, groceryListId } = req.body;
     const sql = `
       delete
         from "GroceryItems"
-        where "recipeId" = $1
+        where "recipeId" = $1 and "groceryListId" = $2
     `;
-    // and recipeIngredientsId = $2 ???
+    await db.query<Ingredient>(sql, [recipeId, groceryListId]);
+    res.sendStatus(204);
   }
 );
+
+// app.delete(
+//   '/api/remove-grocery-item/:recipeIngredientsId',
+//   authMiddleware,
+//   async (req, res, next) => {
+//     const { recipeIngredientsId } = req.body;
+//     const sql = `
+//       delete
+//         from "GroceryItems"
+//         where "recipeIngredientsId" = $1
+//     `;
+//     // and recipeIngredientsId = $2 ???
+//   }
+// );
 
 // Post example sql:
 //   select *

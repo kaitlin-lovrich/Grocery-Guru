@@ -8,8 +8,9 @@ import {
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
-  fetchAllClickedRecipeRes,
+  fetchAllClickedRecipeRef,
   fetchGroceryList,
+  fetchRemoveIngredientIdItems,
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -26,7 +27,7 @@ export default function GroceryListPage() {
     async function loadGroceryListPage(groceryListId: number) {
       const groceryList = await fetchGroceryList(groceryListId);
       setShownGroceryList(groceryList);
-      const allClickedRecipes = await fetchAllClickedRecipeRes(groceryListId);
+      const allClickedRecipes = await fetchAllClickedRecipeRef(groceryListId);
       setClickedRecipes(allClickedRecipes);
     }
     loadGroceryListPage(Number(groceryListId));
@@ -44,8 +45,29 @@ export default function GroceryListPage() {
     }));
   }
 
-  function consoleLogClick(event: any) {
-    console.log(event.currentTarget);
+  // function consoleLogClick(event: any) {
+  //   console.log(event.currentTarget);
+  // }
+
+  async function handleRemove(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const checked = Array.from(formData.entries());
+
+    const checkedIngredientIds = checked.map((check) => +check[1]);
+
+    await fetchRemoveIngredientIdItems({
+      groceryListId: groceryListId,
+      ingredientIds: checkedIngredientIds,
+    });
+
+    const updatedList = shownGroceryList!.groceryItems.filter(
+      (item) => !checkedIngredientIds.includes(item.ingredientId)
+    );
+    shownGroceryList!.groceryItems = updatedList;
+
+    setShownGroceryList({ ...shownGroceryList! });
   }
 
   if (!shownGroceryList) return null;
@@ -57,9 +79,9 @@ export default function GroceryListPage() {
           <label>
             <input
               type="checkbox"
-              name={item.name}
+              name="ingredientIds"
               className="checkbox"
-              onClick={(event) => consoleLogClick(event)}
+              value={item.ingredientId}
             />
             {`${item.quantity} ${item.name} ${item.packageType}`}
           </label>
@@ -71,16 +93,16 @@ export default function GroceryListPage() {
   return (
     <div className="page">
       <div className="content-container grocery-list">
-        <div className="heading-and-button">
-          <h1 className="page-title">Grocery List</h1>
-          <div>
-            <button type="button" className="x-button">
-              <FaX />
-            </button>
-            <p>Remove checked items</p>
+        <form id="grocery-list-form" onSubmit={handleRemove}>
+          <div className="heading-and-button">
+            <h1 className="page-title">Grocery List</h1>
+            <div>
+              <button type="submit" className="x-button">
+                <FaX />
+              </button>
+              <p>Remove checked items</p>
+            </div>
           </div>
-        </div>
-        <form id="grocery-list-form">
           <ul>{groceryList}</ul>
         </form>
         {!showIngredientForm && (

@@ -42,6 +42,7 @@ export type GroceryItems = {
 };
 
 export type GroceryList = {
+  forEach(arg0: (item: any) => any): unknown;
   groceryListId: number;
   userId: number;
   groceryItems: GroceryItems[];

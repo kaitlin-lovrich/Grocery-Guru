@@ -7,16 +7,20 @@ import {
   UserGroceryList,
 } from './dataTypes.js';
 
+function handleError(res: Response) {
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+}
+
 // tried to do try catch but got an error underlining Promise<Recipe[]>
 export async function fetchRecipes(): Promise<Recipe[]> {
   const res = await fetch('/api/browse-recipes');
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
 export async function fetchRecipePage(recipeId: number): Promise<Recipe> {
   const res = await fetch(`/api/recipes/${recipeId}`);
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
@@ -28,7 +32,7 @@ export async function fetchRegistrationForm(
     headers: { 'Content-type': 'application/json' },
     body: JSON.stringify(req),
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
@@ -38,7 +42,7 @@ export async function fetchLoginForm(req: object) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
@@ -50,7 +54,7 @@ export async function fetchGroceryList(
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
@@ -65,7 +69,7 @@ export async function fetchAddToGroceryList(
     },
     body: JSON.stringify(req),
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
@@ -78,11 +82,11 @@ export async function fetchAddIngredient(req: object): Promise<Ingredient> {
     },
     body: JSON.stringify(req),
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
-export async function fetchClickedRecipeRes(
+export async function fetchClickedRecipeRef(
   req: object
 ): Promise<ClickedRecipeRef> {
   const res = await fetch('/api/clicked-recipe-refs', {
@@ -93,11 +97,11 @@ export async function fetchClickedRecipeRes(
     },
     body: JSON.stringify(req),
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
 
-export async function fetchAllClickedRecipeRes(
+export async function fetchAllClickedRecipeRef(
   groceryListId: number
 ): Promise<ClickedRecipeRef[]> {
   const res = await fetch(`/api/clicked-recipe-refs/${groceryListId}`, {
@@ -107,6 +111,44 @@ export async function fetchAllClickedRecipeRes(
       'Content-type': 'application/json',
     },
   });
-  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  handleError(res);
   return await res.json();
 }
+
+export async function fetchRemoveIngredientIdItems(req: object): Promise<void> {
+  const res = await fetch('/api/remove-grocery-items', {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(req),
+  });
+  handleError(res);
+}
+
+export async function fetchRemoveRecipeIdItems(req: object): Promise<void> {
+  const res = await fetch('/api/remove-by-recipeId', {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(req),
+  });
+  handleError(res);
+}
+
+// export async function fetchRemoveRecipeIngredientsIdItems(
+//   req: object
+// ): Promise<void> {
+//   const res = await fetch('/api/clicked-recipe-refs', {
+//     method: 'DELETE',
+//     headers: {
+//       Authorization: `Bearer ${localStorage.getItem('token')}`,
+//       'Content-type': 'application/json',
+//     },
+//     body: JSON.stringify(req),
+//   });
+//   handleError(res);
+// }
