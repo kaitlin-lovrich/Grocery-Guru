@@ -27,7 +27,8 @@ form > label {
   flex-direction: column;
 }
 
-form > label > input {
+form > label > input,
+form > label > select {
   border-radius: 3px;
   padding: 0.5rem;
   color: rgb(243, 116, 174);

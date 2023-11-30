@@ -293,19 +293,70 @@ app.get(
   }
 );
 
-// app.delete(
-//   // INCOMPLETE
-//   '/api/remove-grocery-item',
-//   authMiddleware,
-//   async (req, res, next) => {
-//     const sql = `
-//       delete
-//         from "GroceryLists"
-//         where "ingredientId" = $1
-//         returning *;
-//     `;
-//   }
-// );
+app.delete(
+  '/api/remove-grocery-items',
+  authMiddleware,
+  async (req, res, next) => {
+    const { ingredientIds, groceryListId } = req.body;
+    for (let i = 0; i < ingredientIds.length; i++) {
+      const sql = `
+        delete
+          from "GroceryItems"
+          where "ingredientId" = $1 and "groceryListId" = $2
+          returning *;
+      `;
+      await db.query<Ingredient>(sql, [ingredientIds[i], groceryListId]);
+    }
+    res.sendStatus(204);
+  }
+);
+
+app.delete(
+  '/api/remove-by-recipeId',
+  authMiddleware,
+  async (req, res, next) => {
+    const { recipeId, groceryListId } = req.body;
+    const sql = `
+      delete
+        from "GroceryItems"
+        where "recipeId" = $1 and "groceryListId" = $2
+    `;
+    await db.query<Ingredient>(sql, [recipeId, groceryListId]);
+    res.sendStatus(204);
+  }
+);
+
+app.delete(
+  '/api/remove-by-recipeIngredientsId',
+  authMiddleware,
+  async (req, res, next) => {
+    const { recipeId, ingredientId, groceryListId } = req.body;
+    const sql = `
+      delete
+        from "GroceryItems"
+        where "recipeId" = $1 and "ingredientId" = $2 and "groceryListId" = $3
+    `;
+    await db.query<Ingredient>(sql, [recipeId, ingredientId, groceryListId]);
+    console.log('recipeId', recipeId);
+    res.sendStatus(204);
+  }
+);
+
+// Post example sql:
+//   select *
+//     from "GroceryLists"
+//     where "groceryListId" = $1 and "userId" = $2
+// `;
+//   const groceryListRes = await db.query<GroceryList>(sql, [
+//     groceryListId,
+//     req.user?.userId,
+//   ]);
+
+//   const sql2 = `
+//   select *
+//     from "Ingredients"
+//     join "GroceryItems" using ("ingredientId")
+//     where "groceryListId" = $1
 
 /**
  * Serves React's index.html if no api route matches.

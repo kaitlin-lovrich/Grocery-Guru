@@ -8,11 +8,14 @@ import {
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
-  fetchAllClickedRecipeRes,
+  fetchAllClickedRecipeRef,
   fetchGroceryList,
+  fetchRemoveIngredientIdItems,
+  fetchRemoveRecipeIdItems,
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { FaX } from 'react-icons/fa6';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
@@ -25,7 +28,7 @@ export default function GroceryListPage() {
     async function loadGroceryListPage(groceryListId: number) {
       const groceryList = await fetchGroceryList(groceryListId);
       setShownGroceryList(groceryList);
-      const allClickedRecipes = await fetchAllClickedRecipeRes(groceryListId);
+      const allClickedRecipes = await fetchAllClickedRecipeRef(groceryListId);
       setClickedRecipes(allClickedRecipes);
     }
     loadGroceryListPage(Number(groceryListId));
@@ -43,6 +46,51 @@ export default function GroceryListPage() {
     }));
   }
 
+  async function handleRemove(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const checked = Array.from(formData.entries());
+    const checkedIngredientIds = checked.map((check) => +check[1]);
+    await fetchRemoveIngredientIdItems({
+      groceryListId: groceryListId,
+      ingredientIds: checkedIngredientIds,
+    });
+    const updatedList = shownGroceryList!.groceryItems.filter(
+      (item) => !checkedIngredientIds.includes(item.ingredientId)
+    );
+    shownGroceryList!.groceryItems = updatedList;
+    setShownGroceryList({ ...shownGroceryList! });
+
+    console.log('shownGroceryList', shownGroceryList);
+    console.log('clickedRecipes', clickedRecipes);
+
+    const updatedClickedRecipes = clickedRecipes.filter((recipe) => {
+      const found = shownGroceryList!.groceryItems.find(
+        (item) => item.recipeId === recipe.recipeId
+      );
+
+      return !!found;
+    });
+    setClickedRecipes(updatedClickedRecipes);
+  }
+
+  async function handleXClick(recipeId: number) {
+    await fetchRemoveRecipeIdItems({
+      groceryListId: groceryListId,
+      recipeId: recipeId,
+    });
+    const updatedList = shownGroceryList!.groceryItems.filter(
+      (item) => recipeId !== item.recipeId
+    );
+    shownGroceryList!.groceryItems = updatedList;
+    setShownGroceryList({ ...shownGroceryList! });
+    const updatedClickedRecipes = clickedRecipes.filter(
+      (item) => recipeId !== item.recipeId
+    );
+    setClickedRecipes(updatedClickedRecipes);
+  }
+
   if (!shownGroceryList) return null;
   const { groceryItems } = shownGroceryList;
   const groceryList = groceryItems.map((item) => {
@@ -50,7 +98,12 @@ export default function GroceryListPage() {
       <li key={`${item.ingredientId}: ${item.recipeId}`}>
         <div>
           <label>
-            <input type="checkbox" name={item.name} className="checkbox" />
+            <input
+              type="checkbox"
+              name="ingredientIds"
+              className="checkbox"
+              value={item.ingredientId}
+            />
             {`${item.quantity} ${item.name} ${item.packageType}`}
           </label>
         </div>
@@ -61,27 +114,41 @@ export default function GroceryListPage() {
   return (
     <div className="page">
       <div className="content-container grocery-list">
-        <h1 className="page-title">Grocery List</h1>
-        <form id="grocery-list-form">
-          <ul>{groceryList}</ul>
+        <form id="grocery-list-form" onSubmit={handleRemove}>
+          <div className="heading-and-button">
+            <h1 className="page-title">Grocery List</h1>
+            <div>
+              <div>
+                <button type="submit" className="x-button">
+                  <FaX />
+                </button>
+              </div>
+              <p>Remove checked items</p>
+            </div>
+          </div>
+          <ul className="grocery-list">{groceryList}</ul>
         </form>
         {!showIngredientForm && (
           <AddIngredientButton onClick={() => handleAddIngredientButton()} />
         )}
-        {showIngredientForm && (
-          <AddIngredientForm
-            groceryListId={groceryListId}
-            onSave={(newGroceryItem) => handleSave(newGroceryItem)}
-          />
-        )}
       </div>
+      {showIngredientForm && (
+        <AddIngredientForm
+          onClick={() => handleAddIngredientButton()}
+          groceryListId={groceryListId}
+          onSave={(newGroceryItem) => handleSave(newGroceryItem)}
+        />
+      )}
       <div className="">
         <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
-        <div className="">
+        <div className="clicked-recipe-refs">
           {clickedRecipes.map((recipe) => {
             return (
               <div key={recipe.recipeId} className="recipe-item-container">
-                <RecipeItem recipe={recipe} />
+                <RecipeItem
+                  recipe={recipe}
+                  onXClick={(recipeId) => handleXClick(recipeId)}
+                />
               </div>
             );
           })}
@@ -108,9 +175,14 @@ function AddIngredientButton({ onClick }: AddIngredientButtonProps) {
 type AddIngredientFormProps = {
   groceryListId: number;
   onSave: (ingredient: Ingredient) => void;
+  onClick: () => void;
 };
 
-function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
+function AddIngredientForm({
+  groceryListId,
+  onSave,
+  onClick,
+}: AddIngredientFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -158,7 +230,9 @@ function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
           <input type="text" name="name" />
         </label>
         <div>
-          <button type="submit">+ Add to Grocery List</button>
+          <button type="submit" onClick={onClick}>
+            + Add to Grocery List
+          </button>
         </div>
       </form>
     </>
@@ -167,17 +241,26 @@ function AddIngredientForm({ groceryListId, onSave }: AddIngredientFormProps) {
 
 type RecipeItemProps = {
   recipe: ClickedRecipeRef;
+  onXClick: (recipeId: number) => void;
 };
 
-function RecipeItem({ recipe }: RecipeItemProps) {
+function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
   return (
-    <Link to={`/recipes/${recipeId}`}>
+    <div className="recipe-item">
+      <img src={recipeImage} />
       <div className="recipe-item">
-        <img src={recipeImage} />
-        <p>{title}</p>
+        <Link to={`/recipes/${recipeId}`}>
+          <p>{title}</p>
+        </Link>
+        <button
+          type="button"
+          className="x-button"
+          onClick={() => onXClick(recipeId)}>
+          <FaX />
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }
 

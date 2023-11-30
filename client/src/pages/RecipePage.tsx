@@ -8,8 +8,9 @@ import {
   fetchAddToGroceryList,
   fetchGroceryList,
   fetchRecipePage,
+  fetchRemoveRecipeIngredientsIdItems,
 } from '../lib/api.js';
-import { useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../components/AppContext.js';
 
@@ -41,9 +42,17 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
   const { title, description, recipeImage, ingredients, instructions } =
     selectedRecipe;
 
-  async function handleCheck(ingredient: RecipeIngredient) {
+  async function handleCheck(ingredient: RecipeIngredient, checked: boolean) {
     if (!user) return;
-    fetchAddToGroceryList({ groceryListId, ...ingredient, recipeId });
+    if (checked) {
+      await fetchAddToGroceryList({ groceryListId, ...ingredient, recipeId });
+    } else {
+      await fetchRemoveRecipeIngredientsIdItems({
+        recipeId: recipeId,
+        groceryListId: groceryListId,
+        ingredientId: ingredient.ingredientId,
+      });
+    }
   }
 
   const ingredientList = ingredients.map((ingredient) => {
@@ -85,7 +94,7 @@ type CheckBoxIngredientProps = {
   ingredient: RecipeIngredient;
   groceryList?: GroceryList;
   recipeId: number;
-  onClick: (ingredient: RecipeIngredient) => void;
+  onClick: (ingredient: RecipeIngredient, checked: boolean) => void;
 };
 
 function CheckBoxIngredient({
@@ -106,15 +115,14 @@ function CheckBoxIngredient({
     setChecked(isInGroceryItems);
   }, [groceryList, ingredient, recipeId]);
 
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    setChecked(event.target.checked);
+    onClick(ingredient, event.target.checked);
+  }
   return (
     <div>
       <label>
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={() => setChecked(!checked)}
-          onClick={() => onClick(ingredient)}
-        />
+        <input type="checkbox" checked={checked} onChange={handleChange} />
         {`${ingredient.quantity} ${ingredient.name}`}
       </label>
     </div>
