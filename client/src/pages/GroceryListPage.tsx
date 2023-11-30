@@ -11,6 +11,7 @@ import {
   fetchAllClickedRecipeRef,
   fetchGroceryList,
   fetchRemoveIngredientIdItems,
+  fetchRemoveRecipeIdItems,
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -45,29 +46,49 @@ export default function GroceryListPage() {
     }));
   }
 
-  // function consoleLogClick(event: any) {
-  //   console.log(event.currentTarget);
-  // }
-
   async function handleRemove(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
     const checked = Array.from(formData.entries());
-
     const checkedIngredientIds = checked.map((check) => +check[1]);
-
     await fetchRemoveIngredientIdItems({
       groceryListId: groceryListId,
       ingredientIds: checkedIngredientIds,
     });
-
     const updatedList = shownGroceryList!.groceryItems.filter(
       (item) => !checkedIngredientIds.includes(item.ingredientId)
     );
     shownGroceryList!.groceryItems = updatedList;
-
     setShownGroceryList({ ...shownGroceryList! });
+
+    console.log('shownGroceryList', shownGroceryList);
+    console.log('clickedRecipes', clickedRecipes);
+
+    const updatedClickedRecipes = clickedRecipes.filter((recipe) => {
+      const found = shownGroceryList!.groceryItems.find(
+        (item) => item.recipeId === recipe.recipeId
+      );
+
+      return !!found;
+    });
+    setClickedRecipes(updatedClickedRecipes);
+  }
+
+  async function handleXClick(recipeId: number) {
+    await fetchRemoveRecipeIdItems({
+      groceryListId: groceryListId,
+      recipeId: recipeId,
+    });
+    const updatedList = shownGroceryList!.groceryItems.filter(
+      (item) => recipeId !== item.recipeId
+    );
+    shownGroceryList!.groceryItems = updatedList;
+    setShownGroceryList({ ...shownGroceryList! });
+    const updatedClickedRecipes = clickedRecipes.filter(
+      (item) => recipeId !== item.recipeId
+    );
+    setClickedRecipes(updatedClickedRecipes);
   }
 
   if (!shownGroceryList) return null;
@@ -122,7 +143,10 @@ export default function GroceryListPage() {
           {clickedRecipes.map((recipe) => {
             return (
               <div key={recipe.recipeId} className="recipe-item-container">
-                <RecipeItem recipe={recipe} />
+                <RecipeItem
+                  recipe={recipe}
+                  onXClick={(recipeId) => handleXClick(recipeId)}
+                />
               </div>
             );
           })}
@@ -215,22 +239,26 @@ function AddIngredientForm({
 
 type RecipeItemProps = {
   recipe: ClickedRecipeRef;
+  onXClick: (recipeId: number) => void;
 };
 
-function RecipeItem({ recipe }: RecipeItemProps) {
+function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
   return (
-    <Link to={`/recipes/${recipeId}`}>
+    <div className="recipe-item">
+      <img src={recipeImage} />
       <div className="recipe-item">
-        <img src={recipeImage} />
-        <div className="recipe-item">
+        <Link to={`/recipes/${recipeId}`}>
           <p>{title}</p>
-          <button type="button" className="x-button">
-            <FaX />
-          </button>
-        </div>
+        </Link>
+        <button
+          type="button"
+          className="x-button"
+          onClick={() => onXClick(recipeId)}>
+          <FaX />
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }
 

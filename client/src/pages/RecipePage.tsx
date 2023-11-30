@@ -85,7 +85,7 @@ type CheckBoxIngredientProps = {
   ingredient: RecipeIngredient;
   groceryList?: GroceryList;
   recipeId: number;
-  onClick: (ingredient: RecipeIngredient) => void;
+  onClick: (ingredient: RecipeIngredient, checked: boolean) => void;
 };
 
 function CheckBoxIngredient({
@@ -113,7 +113,7 @@ function CheckBoxIngredient({
           type="checkbox"
           checked={checked}
           onChange={() => setChecked(!checked)}
-          onClick={() => onClick(ingredient)}
+          onClick={() => onClick(ingredient, checked)}
         />
         {`${ingredient.quantity} ${ingredient.name}`}
       </label>
