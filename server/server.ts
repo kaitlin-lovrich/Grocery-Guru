@@ -326,19 +326,21 @@ app.delete(
   }
 );
 
-// app.delete(
-//   '/api/remove-grocery-item/:recipeIngredientsId',
-//   authMiddleware,
-//   async (req, res, next) => {
-//     const { recipeIngredientsId } = req.body;
-//     const sql = `
-//       delete
-//         from "GroceryItems"
-//         where "recipeIngredientsId" = $1
-//     `;
-//     // and recipeIngredientsId = $2 ???
-//   }
-// );
+app.delete(
+  '/api/remove-by-recipeIngredientsId',
+  authMiddleware,
+  async (req, res, next) => {
+    const { recipeId, ingredientId, groceryListId } = req.body;
+    const sql = `
+      delete
+        from "GroceryItems"
+        where "recipeId" = $1 and "ingredientId" = $2 and "groceryListId" = $3
+    `;
+    await db.query<Ingredient>(sql, [recipeId, ingredientId, groceryListId]);
+    console.log('recipeId', recipeId);
+    res.sendStatus(204);
+  }
+);
 
 // Post example sql:
 //   select *

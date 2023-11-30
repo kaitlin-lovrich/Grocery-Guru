@@ -139,16 +139,16 @@ export async function fetchRemoveRecipeIdItems(req: object): Promise<void> {
   handleError(res);
 }
 
-// export async function fetchRemoveRecipeIngredientsIdItems(
-//   req: object
-// ): Promise<void> {
-//   const res = await fetch('/api/clicked-recipe-refs', {
-//     method: 'DELETE',
-//     headers: {
-//       Authorization: `Bearer ${localStorage.getItem('token')}`,
-//       'Content-type': 'application/json',
-//     },
-//     body: JSON.stringify(req),
-//   });
-//   handleError(res);
-// }
+export async function fetchRemoveRecipeIngredientsIdItems(
+  req: object
+): Promise<void> {
+  const res = await fetch('/api/remove-by-recipeIngredientsId', {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(req),
+  });
+  handleError(res);
+}
