@@ -118,13 +118,15 @@ export default function GroceryListPage() {
           <div className="heading-and-button">
             <h1 className="page-title">Grocery List</h1>
             <div>
-              <button type="submit" className="x-button">
-                <FaX />
-              </button>
+              <div>
+                <button type="submit" className="x-button">
+                  <FaX />
+                </button>
+              </div>
               <p>Remove checked items</p>
             </div>
           </div>
-          <ul>{groceryList}</ul>
+          <ul className="grocery-list">{groceryList}</ul>
         </form>
         {!showIngredientForm && (
           <AddIngredientButton onClick={() => handleAddIngredientButton()} />
