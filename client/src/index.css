@@ -35,9 +35,14 @@ a {
 
 a:hover {
   color: rgb(50, 83, 61);
-  border-bottom: solid 3px rgb(237, 147, 144);
   cursor: pointer;
   font-weight: 600;
+}
+
+nav > a:hover,
+li > a:hover,
+a > p:hover {
+  border-bottom: solid 3px rgb(237, 147, 144);
 }
 
 .page-heading {
@@ -70,7 +75,8 @@ button {
   margin: 1rem;
 }
 
-button:hover {
+button:hover,
+button.x-button:hover {
   border: rgb(50, 83, 61) 2.5px solid;
   font-size: 1.5rem;
   color: rgb(216, 207, 175);

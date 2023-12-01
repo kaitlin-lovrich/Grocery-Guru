@@ -61,15 +61,10 @@ export default function GroceryListPage() {
     );
     shownGroceryList!.groceryItems = updatedList;
     setShownGroceryList({ ...shownGroceryList! });
-
-    console.log('shownGroceryList', shownGroceryList);
-    console.log('clickedRecipes', clickedRecipes);
-
     const updatedClickedRecipes = clickedRecipes.filter((recipe) => {
       const found = shownGroceryList!.groceryItems.find(
         (item) => item.recipeId === recipe.recipeId
       );
-
       return !!found;
     });
     setClickedRecipes(updatedClickedRecipes);
@@ -196,7 +191,6 @@ function AddIngredientForm({
         quantity,
       });
       onSave({ ...ingredientData, ...newGroceryItem });
-      console.log('newGroceryItem', newGroceryItem);
     } catch (err) {
       alert(`Error adding Ingredient: ${err}`);
     }
@@ -247,20 +241,26 @@ type RecipeItemProps = {
 function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
   return (
-    <div className="recipe-item">
-      <img src={recipeImage} />
+    <>
       <div className="recipe-item">
         <Link to={`/recipes/${recipeId}`}>
-          <p>{title}</p>
+          <img src={recipeImage} />
         </Link>
-        <button
-          type="button"
-          className="x-button"
-          onClick={() => onXClick(recipeId)}>
-          <FaX />
-        </button>
+        <div className="title-and-x">
+          <Link to={`/recipes/${recipeId}`}>
+            <p>{title}</p>
+          </Link>
+          <div>
+            <button
+              type="button"
+              className="x-button"
+              onClick={() => onXClick(recipeId)}>
+              <FaX />
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

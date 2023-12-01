@@ -1,7 +1,41 @@
+.search-bar-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: solid 1px rgb(230, 184, 156);
+  border-radius: 5px;
+  background: url('../assets/search-solid.svg') no-repeat 1rem white;
+  color: rgb(133, 133, 133);
+  font-size: 0.9rem;
+  font-family: Ruluko, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  min-width: 250px;
+  flex-basis: 25%;
+  padding-left: 2.5rem;
+  margin-left: 1rem;
+  height: 2rem;
+}
+
+.search-bar:hover {
+  cursor: pointer;
+}
+
+.search-bar:focus-visible {
+  border: rgb(230, 184, 156) 1px solid;
+  outline: rgb(230, 184, 156) 1.5px solid;
+  cursor: text;
+}
+
 .browse-recipes-page {
   padding: 0 2.3rem;
   max-width: 1280px;
   margin: auto;
+  margin-top: 0;
   height: 100vh;
 }
 
@@ -36,6 +70,10 @@
 .recipe-item {
   width: 200px;
   height: 250px;
+}
+
+.recipe-item:hover {
+  border-bottom: none !important;
 }
 
 .recipe-item > img {

@@ -11,7 +11,6 @@ function handleError(res: Response) {
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
 }
 
-// tried to do try catch but got an error underlining Promise<Recipe[]>
 export async function fetchRecipes(): Promise<Recipe[]> {
   const res = await fetch('/api/browse-recipes');
   handleError(res);

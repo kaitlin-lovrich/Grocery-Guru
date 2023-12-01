@@ -35,23 +35,7 @@ ul.nav-links {
   display: flex;
   justify-content: space-between;
   margin: 0 0 0 3rem;
-}
-
-.search-bar-container {
-  display: flex;
-  align-items: center;
-}
-
-.search-bar {
-  border: solid 1px rgb(230, 184, 156);
-  border-radius: 5px;
-  background-color: white;
-  min-width: 250px;
-  flex-basis: 25%;
-  padding-left: 1rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
+  height: 4rem;
 }
 
 .nav-buttons {
@@ -91,10 +75,3 @@ ul.nav-links {
     margin: 0 2rem;
   }
 }
-
-/*
-@media screen and (width >= 992px) {
-}
-
-@media screen and (width >= 1200px) {
-} */

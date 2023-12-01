@@ -15,12 +15,9 @@ export default function BrowseRecipes() {
     loadBrowseRecipes();
   }, [setAllRecipes]);
 
-  return (
-    <>
-      <SearchRecipesComponent allRecipes={allRecipes} />
-    </>
-  );
+  return <SearchRecipesComponent allRecipes={allRecipes} />;
 }
+
 type SearchComponentProps = {
   allRecipes: Recipe[];
 };
@@ -33,14 +30,11 @@ function SearchRecipesComponent({ allRecipes }: SearchComponentProps) {
   );
 
   return (
-    <>
-      <div className="search-bar-container">
-        <div className="search-bar">
-          <SearchBar input={input} onChangeInput={setInput} />
-        </div>
-      </div>
+    <div className="browse-recipes-page">
+      <SearchBar input={input} onChangeInput={setInput} />
+
       <RecipeList allRecipes={inputList} />
-    </>
+    </div>
   );
 }
 
@@ -54,7 +48,8 @@ function SearchBar({ input, onChangeInput }: SearchBarProps) {
     <input
       value={input}
       onChange={(e) => onChangeInput(e.currentTarget.value)}
-      className="input"></input>
+      className="search-bar"
+    />
   );
 }
 
@@ -64,7 +59,7 @@ type RecipeListProps = {
 
 function RecipeList({ allRecipes }: RecipeListProps) {
   return (
-    <div className="browse-recipes-page">
+    <>
       <h1 className="page-heading">Browse Recipes</h1>
       <div className="recipes">
         {allRecipes?.map((recipe) => {
@@ -75,7 +70,7 @@ function RecipeList({ allRecipes }: RecipeListProps) {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
 
