@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function BrowseRecipes() {
-  const [allRecipes, setAllRecipes] = useState<Recipe[]>();
+  const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
     async function loadBrowseRecipes() {
@@ -13,10 +13,53 @@ export default function BrowseRecipes() {
       setAllRecipes(recipes);
     }
     loadBrowseRecipes();
-  }, []);
+  }, [setAllRecipes]);
+
+  return <SearchRecipesComponent allRecipes={allRecipes} />;
+}
+
+type SearchComponentProps = {
+  allRecipes: Recipe[];
+};
+
+function SearchRecipesComponent({ allRecipes }: SearchComponentProps) {
+  const [input, setInput] = useState('');
+
+  const inputList = allRecipes.filter((recipe) =>
+    recipe.title.toLowerCase().match(input)
+  );
 
   return (
     <div className="browse-recipes-page">
+      <SearchBar input={input} onChangeInput={setInput} />
+
+      <RecipeList allRecipes={inputList} />
+    </div>
+  );
+}
+
+type SearchBarProps = {
+  input: string;
+  onChangeInput: (value: string) => void;
+};
+
+function SearchBar({ input, onChangeInput }: SearchBarProps) {
+  return (
+    <input
+      value={input}
+      onChange={(e) => onChangeInput(e.currentTarget.value)}
+      className="search-bar"
+    />
+  );
+}
+
+type RecipeListProps = {
+  allRecipes: Recipe[];
+};
+
+function RecipeList({ allRecipes }: RecipeListProps) {
+  return (
+    <>
       <h1 className="page-heading">Browse Recipes</h1>
       <div className="recipes">
         {allRecipes?.map((recipe) => {
@@ -27,7 +70,7 @@ export default function BrowseRecipes() {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
 

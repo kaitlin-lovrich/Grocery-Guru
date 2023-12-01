@@ -66,6 +66,7 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
       hashedPassword,
     ]);
     const [user] = userRes.rows;
+    if (!user) throw new ClientError(401, 'Invalid user');
     const sql2 = `
       insert into "GroceryLists" ("userId")
         values ($1)
@@ -73,7 +74,8 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
     `;
     const groceryListRes = await db.query<GroceryList>(sql2, [user.userId]);
     const { groceryListId } = groceryListRes.rows[0];
-    // const userGroceryList = [...[user, ...[groceryListId]]];
+    if (!groceryListId)
+      throw new ClientError(404, `Invalid user ID: ${user.userId} `);
     userRes.rows[0].groceryListId = groceryListId;
     res.json(userRes.rows[0]);
   } catch (err) {
@@ -107,11 +109,11 @@ app.post('/api/auth/login', async (req, res, next) => {
       where "userId" = $1;
     `;
     const groceryListRes = await db.query<GroceryList>(sql2, [userId]);
+    if (!groceryListRes.rows[0])
+      throw new ClientError(404, `User ID not found: ${userId}`);
     const groceryListId = groceryListRes.rows[0].groceryListId;
     const payload = { userId, username, groceryListId };
     const token = jwt.sign(payload, hashKey);
-
-    console.log(payload);
     res.json({ token, user: payload });
   } catch (err) {
     next(err);
@@ -125,6 +127,7 @@ app.get('/api/browse-recipes', async (req, res, next) => {
         from "Recipes"
     `;
     const recipesRes = await db.query<Recipe>(sql);
+    if (!recipesRes.rows) throw new ClientError(401, 'Invalid recipe request');
     res.json(recipesRes.rows);
   } catch (err) {
     next(err);
@@ -173,30 +176,31 @@ app.get(
     try {
       const groceryListId = Number(req.params.groceryListId);
       const sql = `
-      select *
-        from "GroceryLists"
-        where "groceryListId" = $1 and "userId" = $2
-    `;
+        select *
+          from "GroceryLists"
+          where "groceryListId" = $1 and "userId" = $2
+      `;
       const groceryListRes = await db.query<GroceryList>(sql, [
         groceryListId,
         req.user?.userId,
       ]);
-
+      if (!groceryListRes.rows[0])
+        throw new ClientError(
+          404,
+          `Invalid Grocery list ID: ${groceryListId} or userd ID: ${req.user?.userId}`
+        );
       const sql2 = `
-      select *
-        from "Ingredients"
-        join "GroceryItems" using ("ingredientId")
-        where "groceryListId" = $1
-    `;
-      console.log('groceryListId', groceryListId);
-      console.log('userId', req.user?.userId);
+        select *
+          from "Ingredients"
+          join "GroceryItems" using ("ingredientId")
+          where "groceryListId" = $1
+      `;
       const groceryItemsRes = await db.query<GroceryItems>(sql2, [
         groceryListId,
       ]);
-      console.log('groceryItemRes.rows', groceryItemsRes.rows);
-      console.log('groceryListRes.rows', groceryListRes.rows);
+      if (!groceryItemsRes.rows[0])
+        throw new ClientError(404, `GroceryListId not found: ${groceryListId}`);
       groceryListRes.rows[0].groceryItems = groceryItemsRes.rows;
-
       res.json(groceryListRes.rows[0]);
     } catch (err) {
       next(err);
@@ -225,7 +229,6 @@ app.post('/api/grocery-list', authMiddleware, async (req, res, next) => {
       ingredientId,
       quantity,
     ]);
-    console.log(groceryItemsRes.rows);
     res.json(groceryItemsRes.rows[0]);
   } catch (err) {
     next(err);
@@ -245,7 +248,6 @@ app.post('/api/add-ingredient', authMiddleware, async (req, res, next) => {
       measurement,
       packageType,
     ]);
-    console.log('addIngredientRes', addIngredientRes.rows[0]);
     res.json(addIngredientRes.rows[0]);
   } catch (err) {
     next(err);
@@ -297,17 +299,21 @@ app.delete(
   '/api/remove-grocery-items',
   authMiddleware,
   async (req, res, next) => {
-    const { ingredientIds, groceryListId } = req.body;
-    for (let i = 0; i < ingredientIds.length; i++) {
-      const sql = `
-        delete
-          from "GroceryItems"
-          where "ingredientId" = $1 and "groceryListId" = $2
-          returning *;
-      `;
-      await db.query<Ingredient>(sql, [ingredientIds[i], groceryListId]);
+    try {
+      const { ingredientIds, groceryListId } = req.body;
+      for (let i = 0; i < ingredientIds.length; i++) {
+        const sql = `
+          delete
+            from "GroceryItems"
+            where "ingredientId" = $1 and "groceryListId" = $2
+            returning *;
+        `;
+        await db.query<Ingredient>(sql, [ingredientIds[i], groceryListId]);
+      }
+      res.sendStatus(204);
+    } catch (err) {
+      next(err);
     }
-    res.sendStatus(204);
   }
 );
 
@@ -315,14 +321,18 @@ app.delete(
   '/api/remove-by-recipeId',
   authMiddleware,
   async (req, res, next) => {
-    const { recipeId, groceryListId } = req.body;
-    const sql = `
-      delete
-        from "GroceryItems"
-        where "recipeId" = $1 and "groceryListId" = $2
-    `;
-    await db.query<Ingredient>(sql, [recipeId, groceryListId]);
-    res.sendStatus(204);
+    try {
+      const { recipeId, groceryListId } = req.body;
+      const sql = `
+        delete
+          from "GroceryItems"
+          where "recipeId" = $1 and "groceryListId" = $2
+      `;
+      await db.query<Ingredient>(sql, [recipeId, groceryListId]);
+      res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
   }
 );
 
@@ -330,33 +340,20 @@ app.delete(
   '/api/remove-by-recipeIngredientsId',
   authMiddleware,
   async (req, res, next) => {
-    const { recipeId, ingredientId, groceryListId } = req.body;
-    const sql = `
-      delete
-        from "GroceryItems"
-        where "recipeId" = $1 and "ingredientId" = $2 and "groceryListId" = $3
-    `;
-    await db.query<Ingredient>(sql, [recipeId, ingredientId, groceryListId]);
-    console.log('recipeId', recipeId);
-    res.sendStatus(204);
+    try {
+      const { recipeId, ingredientId, groceryListId } = req.body;
+      const sql = `
+        delete
+          from "GroceryItems"
+          where "recipeId" = $1 and "ingredientId" = $2 and "groceryListId" = $3
+      `;
+      await db.query<Ingredient>(sql, [recipeId, ingredientId, groceryListId]);
+      res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
   }
 );
-
-// Post example sql:
-//   select *
-//     from "GroceryLists"
-//     where "groceryListId" = $1 and "userId" = $2
-// `;
-//   const groceryListRes = await db.query<GroceryList>(sql, [
-//     groceryListId,
-//     req.user?.userId,
-//   ]);
-
-//   const sql2 = `
-//   select *
-//     from "Ingredients"
-//     join "GroceryItems" using ("ingredientId")
-//     where "groceryListId" = $1
 
 /**
  * Serves React's index.html if no api route matches.

@@ -18,10 +18,6 @@
   display: none;
 }
 
-.title-and-x {
-  display: flex;
-}
-
 div.heading-and-button {
   display: flex;
   justify-content: flex-start;
@@ -33,6 +29,11 @@ div.heading-and-button > h1.page-title {
   width: 171px;
 }
 
+.title-and-x > div {
+  display: flex;
+  margin-top: 2rem;
+}
+
 div.heading-and-button > div {
   display: flex;
   align-items: center;
@@ -40,6 +41,23 @@ div.heading-and-button > div {
 
 div.heading-and-button > p {
   width: 207px;
+}
+
+.recipe-item > a > img {
+  width: 100%;
+  height: 160px;
+}
+
+.title-and-x {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recipe-item > div > a > p {
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  width: 100px;
 }
 
 button.x-button {
