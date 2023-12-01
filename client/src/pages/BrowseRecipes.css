@@ -95,6 +95,7 @@
 @media screen and (width <=768px) {
   .browse-recipes-page {
     margin: 3rem auto;
+    margin-top: 0;
     height: auto;
   }
 
@@ -107,6 +108,7 @@
 @media screen and (width <=992px) {
   .browse-recipes-page {
     margin: 3rem auto;
+    margin-top: 0;
     height: auto;
   }
 
