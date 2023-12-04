@@ -13,6 +13,7 @@ import {
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../components/AppContext.js';
+import { formatRecipeIngredient } from '../lib/functions.js';
 
 type RecipePageProps = {
   groceryListId: number | undefined;
@@ -123,7 +124,7 @@ function CheckBoxIngredient({
     <div>
       <label>
         <input type="checkbox" checked={checked} onChange={handleChange} />
-        {`${ingredient.quantity} ${ingredient.name}`}
+        {formatRecipeIngredient(ingredient)}
       </label>
     </div>
   );
