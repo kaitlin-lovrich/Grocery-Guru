@@ -71,3 +71,15 @@ export type ClickedRecipeRef = {
   recipeIngredientsId: string;
   quantity: number;
 };
+
+export type SavedRecipeItems = {
+  savedRecipeItems: number;
+  savedRecipesListsId: number;
+  recipeId: number;
+};
+
+export type SavedRecipesList = {
+  savedRecipesListsId: number;
+  userId: number;
+  savedRecipeItems: SavedRecipeItems[];
+};

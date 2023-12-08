@@ -17,6 +17,8 @@ import {
   UserGroceryList,
   ClickedRecipeRef,
   RecipeIngredient,
+  SavedRecipeItems,
+  SavedRecipesList,
 } from './lib/index.js';
 import { nextTick } from 'node:process';
 import { log } from 'node:console';
@@ -199,7 +201,7 @@ app.get(
         groceryListId,
       ]);
       if (!groceryItemsRes.rows[0])
-        throw new ClientError(404, `GroceryListId not found: ${groceryListId}`);
+        throw new ClientError(404, 'groceryItems not found');
       groceryListRes.rows[0].groceryItems = groceryItemsRes.rows;
       res.json(groceryListRes.rows[0]);
     } catch (err) {
@@ -349,6 +351,45 @@ app.delete(
       `;
       await db.query<Ingredient>(sql, [recipeId, ingredientId, groceryListId]);
       res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.get(
+  '/api/saved-recipes/:savedRecipesListId',
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const savedRecipesListId = Number(req.params.savedRecipesListId);
+      const sql1 = `
+        select *
+          from "SavedRecipesLists"
+          where "savedRecipesListsId" = $1 and "userId" = $2
+      `;
+      const savedRecipesListRes = await db.query<SavedRecipesList>(sql1, [
+        savedRecipesListId,
+        req.user?.userId,
+      ]);
+      if (!savedRecipesListRes.rows[0])
+        throw new ClientError(
+          404,
+          `Invalid SavedRecipesLists ID: ${savedRecipesListId} or user ID: ${req.user?.userId}`
+        );
+      const sql2 = `
+        select *
+          from "Recipes"
+          join "SavedRecipeItems" using ("recipeId")
+          where "savedRecipesListsId" = $1
+      `;
+      const savedRecipeItemsRes = await db.query<SavedRecipeItems>(sql2, [
+        savedRecipesListId,
+      ]);
+      if (!savedRecipeItemsRes.rows[0])
+        throw new ClientError(404, 'savedRecipeItems not found');
+      savedRecipesListRes.rows[0].savedRecipeItems = savedRecipeItemsRes.rows;
+      res.json(savedRecipesListRes.rows[0]);
     } catch (err) {
       next(err);
     }

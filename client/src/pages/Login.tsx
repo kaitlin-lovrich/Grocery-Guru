@@ -13,6 +13,7 @@ export default function LoginForm() {
       const formData = new FormData(event.currentTarget);
       const userData = Object.fromEntries(formData.entries());
       const { user, token } = await fetchLoginForm(userData);
+      console.log('userData', userData);
       localStorage.setItem('token', token);
       handleSignIn({ user, token });
       console.log('Signed In', user, '; received token:', token);
@@ -23,6 +24,20 @@ export default function LoginForm() {
     } catch (err) {
       alert(`Error signing in: ${err}`);
     }
+  }
+
+  async function handleGuestSignIn() {
+    const { user, token } = await fetchLoginForm({
+      username: 'Guest',
+      password: 'G',
+    });
+    localStorage.setItem('token', token);
+    handleSignIn({ user, token });
+    console.log('Signed In', user, '; received token:', token);
+    navigate(`../../grocery-list/${user.groceryListId}`, {
+      relative: 'path',
+      replace: true,
+    });
   }
 
   return (
@@ -40,6 +55,11 @@ export default function LoginForm() {
           </label>
           <div>
             <button type="submit">Sign In</button>
+          </div>
+          <div>
+            <button type="button" onClick={handleGuestSignIn}>
+              Continue as Guest
+            </button>
           </div>
         </form>
       </div>

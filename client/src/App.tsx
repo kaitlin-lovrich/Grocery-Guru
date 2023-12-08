@@ -8,6 +8,7 @@ import RegistrationForm from './pages/RegistrationForm';
 import LoginForm from './pages/Login';
 import { Auth, UserGroceryList } from './lib/dataTypes';
 import { AppContext } from './components/AppContext';
+import SavedRecipesPage from './pages/SavedRecipesPage';
 
 const tokenKey = 'react-context-jwt';
 
@@ -53,6 +54,10 @@ export default function App() {
           <Route
             path="grocery-list/:groceryListId"
             element={<GroceryListPage />}
+          />
+          <Route
+            path="saved-recipes/:savedRecipeListId"
+            element={<SavedRecipesPage />}
           />
           <Route path="auth/sign-up" element={<RegistrationForm />} />
           <Route path="auth/login" element={<LoginForm />} />

@@ -16,6 +16,7 @@ import {
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaX } from 'react-icons/fa6';
+import { formatGroceryListItem } from '../lib/functions.js';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
@@ -34,7 +35,7 @@ export default function GroceryListPage() {
     loadGroceryListPage(Number(groceryListId));
   }, [groceryListId]);
 
-  function handleAddIngredientButton() {
+  function handleAddItemButton() {
     setShowIngredientForm(!showIngredientForm);
   }
 
@@ -99,7 +100,7 @@ export default function GroceryListPage() {
               className="checkbox"
               value={item.ingredientId}
             />
-            {`${item.quantity} ${item.name} ${item.packageType}`}
+            {formatGroceryListItem(item)}
           </label>
         </div>
       </li>
@@ -124,12 +125,12 @@ export default function GroceryListPage() {
           <ul className="grocery-list">{groceryList}</ul>
         </form>
         {!showIngredientForm && (
-          <AddIngredientButton onClick={() => handleAddIngredientButton()} />
+          <AddIngredientButton onClick={() => handleAddItemButton()} />
         )}
       </div>
       {showIngredientForm && (
         <AddIngredientForm
-          onClick={() => handleAddIngredientButton()}
+          handleAddItemButton={handleAddItemButton}
           groceryListId={groceryListId}
           onSave={(newGroceryItem) => handleSave(newGroceryItem)}
         />
@@ -161,7 +162,7 @@ function AddIngredientButton({ onClick }: AddIngredientButtonProps) {
   return (
     <div>
       <button type="button" onClick={onClick}>
-        + Add Ingredient
+        + Add Item
       </button>
     </div>
   );
@@ -170,13 +171,13 @@ function AddIngredientButton({ onClick }: AddIngredientButtonProps) {
 type AddIngredientFormProps = {
   groceryListId: number;
   onSave: (ingredient: Ingredient) => void;
-  onClick: () => void;
+  handleAddItemButton: () => void;
 };
 
 function AddIngredientForm({
   groceryListId,
   onSave,
-  onClick,
+  handleAddItemButton,
 }: AddIngredientFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -191,6 +192,7 @@ function AddIngredientForm({
         quantity,
       });
       onSave({ ...ingredientData, ...newGroceryItem });
+      handleAddItemButton();
     } catch (err) {
       alert(`Error adding Ingredient: ${err}`);
     }
@@ -205,18 +207,18 @@ function AddIngredientForm({
         </label>
         <label>
           Measurement
-          <input type="text" value="ounce" name="measurement" />
+          <input type="text" name="measurement" />
         </label>
         <label>
           Package Type
           <select name="packageType">
-            <option value="seasoning">seasoning</option>
-            <option value="package">package</option>
-            <option value="loaf">loaf</option>
-            <option value="jar">jar</option>
-            <option value="can">can</option>
-            <option value="bottle">bottle</option>
-            <option value="">none</option>
+            <option>seasoning</option>
+            <option>package</option>
+            <option>loaf</option>
+            <option>jar</option>
+            <option>can</option>
+            <option>bottle</option>
+            <option>none</option>
           </select>
         </label>
         <label>
@@ -224,9 +226,7 @@ function AddIngredientForm({
           <input type="text" name="name" />
         </label>
         <div>
-          <button type="submit" onClick={onClick}>
-            + Add to Grocery List
-          </button>
+          <button type="submit">+ Add to Grocery List</button>
         </div>
       </form>
     </>
@@ -267,8 +267,8 @@ function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
 // function EmptyGroceryListMessage() {
 //   return (
 //     <span>
-//       Grocery empty. Add some stuff by checking off an ingredient on a recipe's
-//       page or click 'Add Ingredient' below!
+//       Grocery List empty. Add some stuff by checking off an ingredient on a recipe's
+//       page or click '+ Add Item' below!
 //     </span>
 //   );
 // }
