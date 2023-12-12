@@ -55,6 +55,7 @@ export type Login = {
 
 export type UserGroceryList = User & {
   groceryListId: number;
+  savedRecipesListId: number;
 };
 
 export type Auth = {
@@ -70,4 +71,17 @@ export type ClickedRecipeRef = {
   recipeImage: string;
   recipeIngredientsId: string;
   quantity: number;
+};
+
+export type SavedRecipeItems = Recipe & {
+  savedRecipeItems: number;
+  savedRecipesListId: number;
+  recipeId: number;
+};
+
+export type SavedRecipesList = {
+  forEach(arg0: (item: any) => any): unknown;
+  savedRecipesListId: number;
+  userId: number;
+  savedRecipeItems: SavedRecipeItems[];
 };

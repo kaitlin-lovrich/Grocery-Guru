@@ -17,6 +17,8 @@ import {
   UserGroceryList,
   ClickedRecipeRef,
   RecipeIngredient,
+  SavedRecipeItems,
+  SavedRecipesList,
 } from './lib/index.js';
 import { nextTick } from 'node:process';
 import { log } from 'node:console';
@@ -76,7 +78,21 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
     const { groceryListId } = groceryListRes.rows[0];
     if (!groceryListId)
       throw new ClientError(404, `Invalid user ID: ${user.userId} `);
+    const sql3 = `
+      insert into "SavedRecipesLists" ("userId")
+        values ($1)
+        returning *
+    `;
+    const savedRecipesListRes = await db.query<SavedRecipesList>(sql3, [
+      user.userId,
+    ]);
+    const { savedRecipesListId } = savedRecipesListRes.rows[0];
+    console.log('savedRecipesListRes.rows[0]:', savedRecipesListRes.rows[0]);
+    console.log('savedRecipesListId', !savedRecipesListId);
+    if (!savedRecipesListId)
+      throw new ClientError(404, `Invalid ID: ${savedRecipesListId} `);
     userRes.rows[0].groceryListId = groceryListId;
+    userRes.rows[0].savedRecipesListId = savedRecipesListId;
     res.json(userRes.rows[0]);
   } catch (err) {
     next(err);
@@ -93,8 +109,8 @@ app.post('/api/auth/login', async (req, res, next) => {
     select "userId",
            "hashedPassword"
       from "Users"
-     where "username" = $1
-  `;
+      where "username" = $1
+    `;
     const userRes = await db.query<UserGroceryList>(sql, [username]);
     const [user] = userRes.rows;
     if (!user) {
@@ -106,13 +122,21 @@ app.post('/api/auth/login', async (req, res, next) => {
     }
     const sql2 = `
       select * from "GroceryLists"
-      where "userId" = $1;
+        where "userId" = $1
     `;
     const groceryListRes = await db.query<GroceryList>(sql2, [userId]);
     if (!groceryListRes.rows[0])
       throw new ClientError(404, `User ID not found: ${userId}`);
     const groceryListId = groceryListRes.rows[0].groceryListId;
-    const payload = { userId, username, groceryListId };
+    const sql3 = `
+      select * from "SavedRecipesLists"
+        where "userId" = $1
+    `;
+    const savedRecipesListRes = await db.query<SavedRecipesList>(sql3, [
+      userId,
+    ]);
+    const savedRecipesListId = savedRecipesListRes.rows[0].savedRecipesListId;
+    const payload = { userId, username, groceryListId, savedRecipesListId };
     const token = jwt.sign(payload, hashKey);
     res.json({ token, user: payload });
   } catch (err) {
@@ -198,8 +222,6 @@ app.get(
       const groceryItemsRes = await db.query<GroceryItems>(sql2, [
         groceryListId,
       ]);
-      if (!groceryItemsRes.rows[0])
-        throw new ClientError(404, `GroceryListId not found: ${groceryListId}`);
       groceryListRes.rows[0].groceryItems = groceryItemsRes.rows;
       res.json(groceryListRes.rows[0]);
     } catch (err) {
@@ -349,6 +371,45 @@ app.delete(
       `;
       await db.query<Ingredient>(sql, [recipeId, ingredientId, groceryListId]);
       res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.get(
+  '/api/saved-recipes/:savedRecipesListId',
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const savedRecipesListId = Number(req.params.savedRecipesListId);
+      const sql1 = `
+        select *
+          from "SavedRecipesLists"
+          where "savedRecipesListId" = $1 and "userId" = $2
+      `;
+      const savedRecipesListRes = await db.query<SavedRecipesList>(sql1, [
+        savedRecipesListId,
+        req.user?.userId,
+      ]);
+      if (!savedRecipesListRes.rows[0])
+        throw new ClientError(
+          404,
+          `Invalid SavedRecipesLists ID: ${savedRecipesListId} or user ID: ${req.user?.userId}`
+        );
+      const sql2 = `
+        select *
+          from "Recipes"
+          join "SavedRecipeItems" using ("recipeId")
+          where "savedRecipesListId" = $1
+      `;
+      const savedRecipeItemsRes = await db.query<SavedRecipeItems>(sql2, [
+        savedRecipesListId,
+      ]);
+      if (!savedRecipeItemsRes.rows[0])
+        throw new ClientError(404, 'savedRecipeItems not found');
+      savedRecipesListRes.rows[0].savedRecipeItems = savedRecipeItemsRes.rows;
+      res.json(savedRecipesListRes.rows[0]);
     } catch (err) {
       next(err);
     }

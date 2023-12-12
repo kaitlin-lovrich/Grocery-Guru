@@ -162,19 +162,56 @@ insert into "RecipeIngredients" ("recipeId", "ingredientId", "quantity")
     ('5', '19', '1'), -- gruyere cheese
     ('5', '20', '1'); -- parsley
 
+-- User Kait
 insert into "Users" ("userId", "username", "hashedPassword")
   values ('1', 'Kait', '$argon2id$v=19$m=4096,t=3,p=1$OSCiWex0sLLwUW8pcbc8Sw$+z+IqIeVc6TYttEyhKUMu+MOZv/1AsWwFDTTz3zLaSI');
+-- Guest User
+insert into "Users" ("userId", "username", "hashedPassword")
+  values ('2', 'Guest', '$argon2id$v=19$m=4096,t=3,p=1$VccfZdMsiC3k+WBwmGeflg$hEONHKy4hicnJQyntPMX39PWAtiq/eBLnEamVtQS1lM');
+
 alter sequence "Users_userId_seq" restart with 50;
 
+-- User Kait
 insert into "GroceryLists" ("groceryListId", "userId")
   values ('1', '1');
+-- Guest User
+insert into "GroceryLists" ("groceryListId", "userId")
+  values ('2', '2');
+
 alter sequence "GroceryLists_groceryListId_seq" restart with 50;
 
+-- User Kait
 insert into "GroceryItems" ("recipeId", "groceryListId", "ingredientId", "quantity")
   values
     ('3', '1', '1', '5'),
     ('3', '1', '2', '4'),
     ('3', '1', '3', '3');
+-- Guest User
+insert into "GroceryItems" ("recipeId", "groceryListId", "ingredientId", "quantity")
+  values
+    ('3', '2', '1', '5'),
+    ('3', '2', '2', '4'),
+    ('3', '2', '3', '3');
+
+-- User Kait
+insert into "SavedRecipesLists" ("savedRecipesListId", "userId")
+  values ('1', '1');
+-- Guest User
+insert into "SavedRecipesLists" ("savedRecipesListId", "userId")
+  values ('2', '2');
+
+alter sequence "SavedRecipesLists_savedRecipesListId_seq" restart with 50;
+
+-- User Kait
+insert into "SavedRecipeItems" ("savedRecipesListId", "recipeId")
+  values
+    ('1', '5'),
+    ('1', '1');
+-- Guest User
+insert into "SavedRecipeItems" ("savedRecipesListId", "recipeId")
+  values
+    ('2', '5'),
+    ('2', '1');
 
 
 -- For Ingredients table:

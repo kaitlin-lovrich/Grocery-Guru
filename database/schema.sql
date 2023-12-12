@@ -51,6 +51,17 @@ CREATE TABLE "GroceryItems" (
   "quantity" integer
 );
 
+CREATE TABLE "SavedRecipesLists" (
+  "savedRecipesListId" serial PRIMARY KEY,
+  "userId" integer
+);
+
+CREATE TABLE "SavedRecipeItems" (
+  "savedRecipeItems" serial PRIMARY KEY,
+  "savedRecipesListId" integer,
+  "recipeId" integer
+);
+
 COMMENT ON COLUMN "Recipes"."description" IS 'Recipe description';
 
 ALTER TABLE "Recipes" ADD FOREIGN KEY ("userId") REFERENCES "Users" ("userId");
@@ -66,3 +77,9 @@ ALTER TABLE "GroceryItems" ADD FOREIGN KEY ("groceryListId") REFERENCES "Grocery
 ALTER TABLE "GroceryItems" ADD FOREIGN KEY ("ingredientId") REFERENCES "Ingredients" ("ingredientId");
 
 ALTER TABLE "GroceryItems" ADD FOREIGN KEY ("recipeId") REFERENCES "Recipes" ("recipeId");
+
+ALTER TABLE "SavedRecipesLists" ADD FOREIGN KEY ("userId") REFERENCES "Users" ("userId");
+
+ALTER TABLE "SavedRecipeItems" ADD FOREIGN KEY ("savedRecipesListId") REFERENCES "SavedRecipesLists" ("savedRecipesListId");
+
+ALTER TABLE "SavedRecipeItems" ADD FOREIGN KEY ("recipeId") REFERENCES "Recipes" ("recipeId");

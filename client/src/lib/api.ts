@@ -4,6 +4,7 @@ import {
   GroceryList,
   Ingredient,
   Recipe,
+  SavedRecipesList,
   UserGroceryList,
 } from './dataTypes.js';
 
@@ -150,4 +151,16 @@ export async function fetchRemoveRecipeIngredientsIdItems(
     body: JSON.stringify(req),
   });
   handleError(res);
+}
+
+export async function fetchSavedRecipes(
+  savedRecipesListId: number
+): Promise<SavedRecipesList> {
+  const res = await fetch(`/api/saved-recipes/${savedRecipesListId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  handleError(res);
+  return await res.json();
 }

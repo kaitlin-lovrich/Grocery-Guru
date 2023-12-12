@@ -8,6 +8,7 @@ import RegistrationForm from './pages/RegistrationForm';
 import LoginForm from './pages/Login';
 import { Auth, UserGroceryList } from './lib/dataTypes';
 import { AppContext } from './components/AppContext';
+import SavedRecipesPage from './pages/SavedRecipesPage';
 
 const tokenKey = 'react-context-jwt';
 
@@ -44,7 +45,12 @@ export default function App() {
       <Routes>
         <Route
           path="/"
-          element={<Header groceryListId={user?.groceryListId} />}>
+          element={
+            <Header
+              groceryListId={user?.groceryListId}
+              savedRecipesListId={user?.savedRecipesListId}
+            />
+          }>
           <Route index element={<BrowseRecipes />} />
           <Route
             path="recipes/:recipeId"
@@ -53,6 +59,10 @@ export default function App() {
           <Route
             path="grocery-list/:groceryListId"
             element={<GroceryListPage />}
+          />
+          <Route
+            path="saved-recipes/:savedRecipesListId"
+            element={<SavedRecipesPage />}
           />
           <Route path="auth/sign-up" element={<RegistrationForm />} />
           <Route path="auth/login" element={<LoginForm />} />
