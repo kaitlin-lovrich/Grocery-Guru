@@ -75,12 +75,13 @@ export type ClickedRecipeRef = {
 
 export type SavedRecipeItems = Recipe & {
   savedRecipeItems: number;
-  savedRecipesListsId: number;
+  savedRecipesListId: number;
   recipeId: number;
 };
 
 export type SavedRecipesList = {
-  savedRecipesListsId: number;
+  forEach(arg0: (item: any) => any): unknown;
+  savedRecipesListId: number;
   userId: number;
   savedRecipeItems: SavedRecipeItems[];
 };

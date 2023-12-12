@@ -194,21 +194,21 @@ insert into "GroceryItems" ("recipeId", "groceryListId", "ingredientId", "quanti
     ('3', '2', '3', '3');
 
 -- User Kait
-insert into "SavedRecipesLists" ("savedRecipesListsId", "userId")
+insert into "SavedRecipesLists" ("savedRecipesListId", "userId")
   values ('1', '1');
 -- Guest User
-insert into "SavedRecipesLists" ("savedRecipesListsId", "userId")
+insert into "SavedRecipesLists" ("savedRecipesListId", "userId")
   values ('2', '2');
 
-alter sequence "SavedRecipesLists_savedRecipesListsId_seq" restart with 50;
+alter sequence "SavedRecipesLists_savedRecipesListId_seq" restart with 50;
 
 -- User Kait
-insert into "SavedRecipeItems" ("savedRecipesListsId", "recipeId")
+insert into "SavedRecipeItems" ("savedRecipesListId", "recipeId")
   values
     ('1', '5'),
     ('1', '1');
 -- Guest User
-insert into "SavedRecipeItems" ("savedRecipesListsId", "recipeId")
+insert into "SavedRecipeItems" ("savedRecipesListId", "recipeId")
   values
     ('2', '5'),
     ('2', '1');

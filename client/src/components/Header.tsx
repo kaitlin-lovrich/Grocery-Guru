@@ -5,9 +5,13 @@ import { AppContext } from './AppContext';
 
 type HeaderProps = {
   groceryListId: number | undefined;
+  savedRecipesListId: number | undefined;
 };
 
-export default function Header({ groceryListId }: HeaderProps) {
+export default function Header({
+  groceryListId,
+  savedRecipesListId,
+}: HeaderProps) {
   const { user, handleSignOut } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -27,6 +31,22 @@ export default function Header({ groceryListId }: HeaderProps) {
       });
     } else {
       navigate(`../../grocery-list/${groceryListId}`, {
+        relative: 'path',
+        replace: true,
+      });
+    }
+  }
+
+  function handleSavedRecipesClick() {
+    if (!user?.savedRecipesListId) {
+      navigate('../../auth/login', {
+        relative: 'path',
+        replace: true,
+      });
+      console.log('user:', user);
+      console.log('user.savedRecipesListId:', user?.savedRecipesListId);
+    } else {
+      navigate(`../../saved-recipes/${savedRecipesListId}`, {
         relative: 'path',
         replace: true,
       });
@@ -66,7 +86,7 @@ export default function Header({ groceryListId }: HeaderProps) {
               <a onClick={handleGroceryListClick}>GroceryList</a>
             </li>
             <li>
-              <Link to="/saved-recipes">Saved Recipes</Link>
+              <a onClick={handleSavedRecipesClick}>Saved Recipes</a>
             </li>
             <li>
               <Link to="/">Browse Recipes</Link>

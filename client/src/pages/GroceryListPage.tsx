@@ -87,7 +87,7 @@ export default function GroceryListPage() {
     setClickedRecipes(updatedClickedRecipes);
   }
 
-  if (!shownGroceryList) return null;
+  if (!shownGroceryList) return <EmptyGroceryListMessage />;
   const { groceryItems } = shownGroceryList;
   const groceryList = groceryItems.map((item) => {
     return (
@@ -264,11 +264,11 @@ function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
   );
 }
 
-// function EmptyGroceryListMessage() {
-//   return (
-//     <span>
-//       Grocery List empty. Add some stuff by checking off an ingredient on a recipe's
-//       page or click '+ Add Item' below!
-//     </span>
-//   );
-// }
+function EmptyGroceryListMessage() {
+  return (
+    <span>
+      Grocery List empty. Add some stuff by checking off an ingredient on a
+      recipe's page or click '+ Add Item' below!
+    </span>
+  );
+}

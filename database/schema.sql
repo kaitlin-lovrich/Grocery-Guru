@@ -52,13 +52,13 @@ CREATE TABLE "GroceryItems" (
 );
 
 CREATE TABLE "SavedRecipesLists" (
-  "savedRecipesListsId" serial PRIMARY KEY,
+  "savedRecipesListId" serial PRIMARY KEY,
   "userId" integer
 );
 
 CREATE TABLE "SavedRecipeItems" (
   "savedRecipeItems" serial PRIMARY KEY,
-  "savedRecipesListsId" integer,
+  "savedRecipesListId" integer,
   "recipeId" integer
 );
 
@@ -80,6 +80,6 @@ ALTER TABLE "GroceryItems" ADD FOREIGN KEY ("recipeId") REFERENCES "Recipes" ("r
 
 ALTER TABLE "SavedRecipesLists" ADD FOREIGN KEY ("userId") REFERENCES "Users" ("userId");
 
-ALTER TABLE "SavedRecipeItems" ADD FOREIGN KEY ("savedRecipesListsId") REFERENCES "SavedRecipesLists" ("savedRecipesListsId");
+ALTER TABLE "SavedRecipeItems" ADD FOREIGN KEY ("savedRecipesListId") REFERENCES "SavedRecipesLists" ("savedRecipesListId");
 
 ALTER TABLE "SavedRecipeItems" ADD FOREIGN KEY ("recipeId") REFERENCES "Recipes" ("recipeId");

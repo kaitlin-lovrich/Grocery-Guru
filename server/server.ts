@@ -78,7 +78,21 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
     const { groceryListId } = groceryListRes.rows[0];
     if (!groceryListId)
       throw new ClientError(404, `Invalid user ID: ${user.userId} `);
+    const sql3 = `
+      insert into "SavedRecipesLists" ("userId")
+        values ($1)
+        returning *
+    `;
+    const savedRecipesListRes = await db.query<SavedRecipesList>(sql3, [
+      user.userId,
+    ]);
+    const { savedRecipesListId } = savedRecipesListRes.rows[0];
+    console.log('savedRecipesListRes.rows[0]:', savedRecipesListRes.rows[0]);
+    console.log('savedRecipesListId', !savedRecipesListId);
+    if (!savedRecipesListId)
+      throw new ClientError(404, `Invalid ID: ${savedRecipesListId} `);
     userRes.rows[0].groceryListId = groceryListId;
+    userRes.rows[0].savedRecipesListId = savedRecipesListId;
     res.json(userRes.rows[0]);
   } catch (err) {
     next(err);
@@ -95,8 +109,8 @@ app.post('/api/auth/login', async (req, res, next) => {
     select "userId",
            "hashedPassword"
       from "Users"
-     where "username" = $1
-  `;
+      where "username" = $1
+    `;
     const userRes = await db.query<UserGroceryList>(sql, [username]);
     const [user] = userRes.rows;
     if (!user) {
@@ -108,13 +122,21 @@ app.post('/api/auth/login', async (req, res, next) => {
     }
     const sql2 = `
       select * from "GroceryLists"
-      where "userId" = $1;
+        where "userId" = $1
     `;
     const groceryListRes = await db.query<GroceryList>(sql2, [userId]);
     if (!groceryListRes.rows[0])
       throw new ClientError(404, `User ID not found: ${userId}`);
     const groceryListId = groceryListRes.rows[0].groceryListId;
-    const payload = { userId, username, groceryListId };
+    const sql3 = `
+      select * from "SavedRecipesLists"
+        where "userId" = $1
+    `;
+    const savedRecipesListRes = await db.query<SavedRecipesList>(sql3, [
+      userId,
+    ]);
+    const savedRecipesListId = savedRecipesListRes.rows[0].savedRecipesListId;
+    const payload = { userId, username, groceryListId, savedRecipesListId };
     const token = jwt.sign(payload, hashKey);
     res.json({ token, user: payload });
   } catch (err) {
@@ -200,8 +222,6 @@ app.get(
       const groceryItemsRes = await db.query<GroceryItems>(sql2, [
         groceryListId,
       ]);
-      if (!groceryItemsRes.rows[0])
-        throw new ClientError(404, 'groceryItems not found');
       groceryListRes.rows[0].groceryItems = groceryItemsRes.rows;
       res.json(groceryListRes.rows[0]);
     } catch (err) {
@@ -366,7 +386,7 @@ app.get(
       const sql1 = `
         select *
           from "SavedRecipesLists"
-          where "savedRecipesListsId" = $1 and "userId" = $2
+          where "savedRecipesListId" = $1 and "userId" = $2
       `;
       const savedRecipesListRes = await db.query<SavedRecipesList>(sql1, [
         savedRecipesListId,
@@ -381,7 +401,7 @@ app.get(
         select *
           from "Recipes"
           join "SavedRecipeItems" using ("recipeId")
-          where "savedRecipesListsId" = $1
+          where "savedRecipesListId" = $1
       `;
       const savedRecipeItemsRes = await db.query<SavedRecipeItems>(sql2, [
         savedRecipesListId,

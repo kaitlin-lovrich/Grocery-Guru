@@ -10,31 +10,31 @@ import { Link, useParams } from 'react-router-dom';
 
 export default function SavedRecipesPage() {
   const [savedRecipesList, setSavedRecipesList] = useState<SavedRecipesList>();
-  const [savedRecipeItems, setSavedRecipeItems] = useState<SavedRecipeItems[]>(
-    []
-  );
+  // const [savedRecipeItems, setSavedRecipeItems] = useState<SavedRecipeItems[]>(
+  //   []
+  // );
   const { savedRecipesListId: savedRecipesId } = useParams();
   const savedRecipesListId = Number(savedRecipesId);
 
   useEffect(() => {
-    async function loadSavedRecipesPage() {
+    async function loadSavedRecipesPage(savedRecipesListId: number) {
       const savedRecipes = await fetchSavedRecipes(savedRecipesListId);
       setSavedRecipesList(savedRecipes);
     }
-    loadSavedRecipesPage();
+    loadSavedRecipesPage(Number(savedRecipesListId));
   }, [savedRecipesListId]);
 
-  return <SearchRecipesComponent savedRecipeItems={savedRecipeItems} />;
+  return <SearchRecipesComponent savedRecipesList={savedRecipesList} />;
 }
 
 type SearchComponentProps = {
-  savedRecipesList: SavedRecipesList;
+  savedRecipesList: SavedRecipesList | undefined;
 };
 
 function SearchRecipesComponent({ savedRecipesList }: SearchComponentProps) {
   const [input, setInput] = useState('');
 
-  const inputList = savedRecipesList.savedRecipeItems.filter((recipe) =>
+  const inputList = savedRecipesList?.savedRecipeItems.filter((recipe) =>
     recipe.title.toLowerCase().match(input)
   );
 
@@ -42,7 +42,7 @@ function SearchRecipesComponent({ savedRecipesList }: SearchComponentProps) {
     <div className="browse-recipes-page">
       <SearchBar input={input} onChangeInput={setInput} />
 
-      <RecipeList savedRecipesList={inputList} />
+      <RecipeList savedRecipeItems={inputList} />
     </div>
   );
 }
@@ -63,15 +63,15 @@ function SearchBar({ input, onChangeInput }: SearchBarProps) {
 }
 
 type RecipeListProps = {
-  savedRecipesList: SavedRecipesList;
+  savedRecipeItems: SavedRecipeItems[] | undefined;
 };
 
-function RecipeList({ savedRecipesList }: RecipeListProps) {
+function RecipeList({ savedRecipeItems }: RecipeListProps) {
   return (
     <>
       <h1 className="page-heading">Saved Recipes</h1>
       <div className="recipes">
-        {savedRecipesList?.savedRecipeItems.map((recipe) => {
+        {savedRecipeItems?.map((recipe) => {
           return (
             <div key={recipe.recipeId} className="recipe-item-container">
               <RecipeItem recipe={recipe} />

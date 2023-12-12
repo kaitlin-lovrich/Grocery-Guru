@@ -45,7 +45,12 @@ export default function App() {
       <Routes>
         <Route
           path="/"
-          element={<Header groceryListId={user?.groceryListId} />}>
+          element={
+            <Header
+              groceryListId={user?.groceryListId}
+              savedRecipesListId={user?.savedRecipesListId}
+            />
+          }>
           <Route index element={<BrowseRecipes />} />
           <Route
             path="recipes/:recipeId"
@@ -56,7 +61,7 @@ export default function App() {
             element={<GroceryListPage />}
           />
           <Route
-            path="saved-recipes/:savedRecipeListId"
+            path="saved-recipes/:savedRecipesListId"
             element={<SavedRecipesPage />}
           />
           <Route path="auth/sign-up" element={<RegistrationForm />} />
