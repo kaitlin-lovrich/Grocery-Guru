@@ -1,8 +1,10 @@
 import './BrowseRecipes.css';
 import { type Recipe } from '../lib/dataTypes.js';
 import { fetchRecipes } from '../lib/api.js';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaHeart, FaRegHeart } from 'react-icons/fa6';
+import { AppContext } from '../components/AppContext.js';
 
 export default function BrowseRecipes() {
   const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
@@ -25,15 +27,15 @@ type SearchComponentProps = {
 function SearchRecipesComponent({ allRecipes }: SearchComponentProps) {
   const [input, setInput] = useState('');
 
-  const inputList = allRecipes.filter((recipe) =>
-    recipe.title.toLowerCase().match(input)
+  const searchedRecipeList = allRecipes.filter((recipe) =>
+    recipe.title.toLowerCase().match(input.toLowerCase())
   );
 
   return (
     <div className="browse-recipes-page">
       <SearchBar input={input} onChangeInput={setInput} />
 
-      <RecipeList allRecipes={inputList} />
+      <RecipeList allRecipes={searchedRecipeList} />
     </div>
   );
 }
@@ -80,14 +82,25 @@ type RecipeItemProps = {
 
 function RecipeItem({ recipe }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
+  const { handleHeartClick, user, savedRecipesList } = useContext(AppContext);
+
   return (
     <>
-      <Link to={`/recipes/${recipeId}`}>
-        <div className="recipe-item">
-          <img src={recipeImage} />
+      <div className="recipe-item">
+        <img src={recipeImage} />
+        <span className="heart-outline">
+          {!savedRecipesList.savedRecipeItems.find(
+            (recipe) => recipe.recipeId === recipeId
+          ) ? (
+            <FaRegHeart onClick={() => handleHeartClick(recipeId, user!)} />
+          ) : (
+            <FaHeart onClick={() => handleHeartClick(recipeId, user!)} />
+          )}
+        </span>
+        <Link to={`/recipes/${recipeId}`}>
           <p>{title}</p>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </>
   );
 }

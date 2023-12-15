@@ -4,6 +4,7 @@ import {
   GroceryList,
   Ingredient,
   Recipe,
+  SavedRecipeItems,
   SavedRecipesList,
   UserGroceryList,
 } from './dataTypes.js';
@@ -163,4 +164,31 @@ export async function fetchSavedRecipes(
   });
   handleError(res);
   return await res.json();
+}
+
+export async function fetchAddToSavedRecipesList(
+  req: object
+): Promise<SavedRecipeItems> {
+  const res = await fetch('/api/saved-recipes', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(req),
+  });
+  handleError(res);
+  return await res.json();
+}
+
+export async function fetchRemoveSavedRecipe(req: object): Promise<void> {
+  const res = await fetch('/api/remove-saved-recipe', {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(req),
+  });
+  handleError(res);
 }

@@ -406,10 +406,48 @@ app.get(
       const savedRecipeItemsRes = await db.query<SavedRecipeItems>(sql2, [
         savedRecipesListId,
       ]);
-      if (!savedRecipeItemsRes.rows[0])
-        throw new ClientError(404, 'savedRecipeItems not found');
       savedRecipesListRes.rows[0].savedRecipeItems = savedRecipeItemsRes.rows;
       res.json(savedRecipesListRes.rows[0]);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.post('/api/saved-recipes', authMiddleware, async (req, res, next) => {
+  try {
+    const { recipeId, savedRecipesListId } = req.body;
+    if (!savedRecipesListId) {
+      throw new ClientError(400, `Invalid property`);
+    }
+    const sql2 = `
+        insert into "SavedRecipeItems" ("recipeId", "savedRecipesListId")
+          values ($1, $2)
+          returning *
+      `;
+    const savedRecipeItemsRes = await db.query<SavedRecipeItems>(sql2, [
+      recipeId,
+      savedRecipesListId,
+    ]);
+    res.json(savedRecipeItemsRes.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete(
+  '/api/remove-saved-recipe',
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const { recipeId, savedRecipesListId } = req.body;
+      const sql = `
+        delete
+          from "SavedRecipeItems"
+          where "recipeId" = $1 and "savedRecipesListId" = $2
+      `;
+      await db.query<Ingredient>(sql, [recipeId, savedRecipesListId]);
+      res.sendStatus(204);
     } catch (err) {
       next(err);
     }

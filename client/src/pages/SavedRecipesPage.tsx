@@ -5,14 +5,15 @@ import {
   SavedRecipeItems,
 } from '../lib/dataTypes.js';
 import { fetchSavedRecipes } from '../lib/api.js';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { FaRegHeart } from 'react-icons/fa6';
+import { AppContext } from '../components/AppContext.js';
 
 export default function SavedRecipesPage() {
-  const [savedRecipesList, setSavedRecipesList] = useState<SavedRecipesList>();
-  // const [savedRecipeItems, setSavedRecipeItems] = useState<SavedRecipeItems[]>(
-  //   []
-  // );
+  // const [savedRecipesList, setSavedRecipesList] = useState<SavedRecipesList>();
+  const { savedRecipesList, setSavedRecipesList } = useContext(AppContext);
+
   const { savedRecipesListId: savedRecipesId } = useParams();
   const savedRecipesListId = Number(savedRecipesId);
 
@@ -22,7 +23,7 @@ export default function SavedRecipesPage() {
       setSavedRecipesList(savedRecipes);
     }
     loadSavedRecipesPage(Number(savedRecipesListId));
-  }, [savedRecipesListId]);
+  }, [savedRecipesListId, setSavedRecipesList]);
 
   return <SearchRecipesComponent savedRecipesList={savedRecipesList} />;
 }
@@ -34,15 +35,15 @@ type SearchComponentProps = {
 function SearchRecipesComponent({ savedRecipesList }: SearchComponentProps) {
   const [input, setInput] = useState('');
 
-  const inputList = savedRecipesList?.savedRecipeItems.filter((recipe) =>
-    recipe.title.toLowerCase().match(input)
+  const searchedRecipeList = savedRecipesList?.savedRecipeItems.filter(
+    (recipe) => recipe.title.toLowerCase().match(input.toLowerCase())
   );
 
   return (
     <div className="browse-recipes-page">
       <SearchBar input={input} onChangeInput={setInput} />
 
-      <RecipeList savedRecipeItems={inputList} />
+      <RecipeList savedRecipeItems={searchedRecipeList} />
     </div>
   );
 }
@@ -74,7 +75,7 @@ function RecipeList({ savedRecipeItems }: RecipeListProps) {
         {savedRecipeItems?.map((recipe) => {
           return (
             <div key={recipe.recipeId} className="recipe-item-container">
-              <RecipeItem recipe={recipe} />
+              <RecipeItem recipe={recipe} savedRecipeItems={savedRecipeItems} />
             </div>
           );
         })}
@@ -85,18 +86,23 @@ function RecipeList({ savedRecipeItems }: RecipeListProps) {
 
 type RecipeItemProps = {
   recipe: Recipe;
+  savedRecipeItems: SavedRecipeItems[] | undefined;
 };
 
 function RecipeItem({ recipe }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
+
   return (
     <>
-      <Link to={`/recipes/${recipeId}`}>
-        <div className="recipe-item">
-          <img src={recipeImage} />
+      <div className="recipe-item">
+        <img src={recipeImage} />
+        <span className="heart-outline">
+          <FaRegHeart />
+        </span>
+        <Link to={`/recipes/${recipeId}`}>
           <p>{title}</p>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </>
   );
 }

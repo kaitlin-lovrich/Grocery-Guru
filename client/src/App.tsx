@@ -6,15 +6,22 @@ import GroceryListPage from './pages/GroceryListPage';
 import { useEffect, useState } from 'react';
 import RegistrationForm from './pages/RegistrationForm';
 import LoginForm from './pages/Login';
-import { Auth, UserGroceryList } from './lib/dataTypes';
+import { Auth, SavedRecipesList, UserGroceryList } from './lib/dataTypes';
 import { AppContext } from './components/AppContext';
 import SavedRecipesPage from './pages/SavedRecipesPage';
+import { fetchAddToSavedRecipesList } from './lib/api';
 
 const tokenKey = 'react-context-jwt';
 
 export default function App() {
   const [user, setuser] = useState<UserGroceryList>();
   const [token, setToken] = useState<string>();
+  const [savedRecipesList, setSavedRecipesList] = useState<SavedRecipesList>({
+    savedRecipesListId: 0,
+    userId: 0,
+    savedRecipeItems: [],
+  });
+  const [solidHeart, setSolidHeart] = useState(false);
 
   useEffect(() => {
     const auth = localStorage.getItem(tokenKey);
@@ -38,7 +45,28 @@ export default function App() {
     console.log('Signed out');
   }
 
-  const contextValue = { user, token, handleSignIn, handleSignOut };
+  async function handleHeartClick(recipeId: number, user: UserGroceryList) {
+    const found = savedRecipesList.savedRecipeItems.find(
+      (recipe) => recipe.recipeId === recipeId
+    );
+    if (found !== undefined) return;
+    const savedRecipesListId = user.savedRecipesListId;
+    await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
+    // savedRecipesList.savedRecipeItems.recipeId = 0;
+    // setSolidHeart(!solidHeart);
+  }
+
+  const contextValue = {
+    user,
+    token,
+    handleSignIn,
+    handleSignOut,
+    savedRecipesList,
+    solidHeart,
+    handleHeartClick,
+    setSavedRecipesList,
+    setSolidHeart,
+  };
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -72,3 +100,18 @@ export default function App() {
     </AppContext.Provider>
   );
 }
+
+// async function handleHeartClick(recipeId: number, user: UserGroceryList) {
+//   const found = savedRecipesList.savedRecipeItems.find((recipe) => {
+//     console.log('find id:', recipe.recipeId);
+//     recipe.recipeId === recipeId;
+//   });
+//   console.log('recipeId', recipeId);
+//   console.log('user', user);
+//   console.log(savedRecipesList);
+//   console.log('savedRecipeItems', savedRecipesList.savedRecipeItems);
+//   console.log('found', found);
+//   if (found !== undefined) return;
+//   const savedRecipeListId = user.savedRecipesListId;
+//   await fetchAddToSavedRecipesList({ recipeId, savedRecipeListId });
+// }

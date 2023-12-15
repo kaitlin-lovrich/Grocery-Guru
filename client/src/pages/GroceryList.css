@@ -79,6 +79,10 @@ ul.grocery-list {
   padding-top: 0;
 }
 
+p > span.pink {
+  padding: 5rem 0 0;
+}
+
 @media screen and (width <= 768px) {
   button.x-button {
     margin: 0 1rem 0 0;

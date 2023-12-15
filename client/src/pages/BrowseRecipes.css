@@ -70,6 +70,7 @@
 .recipe-item {
   width: 200px;
   height: 250px;
+  position: relative;
 }
 
 .recipe-item:hover {

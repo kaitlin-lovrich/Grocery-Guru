@@ -15,14 +15,14 @@ import {
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FaX } from 'react-icons/fa6';
+import { FaRegHeart, FaX } from 'react-icons/fa6';
 import { formatGroceryListItem } from '../lib/functions.js';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
-  const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
   const [showIngredientForm, setShowIngredientForm] = useState(false);
+  const { groceryListId: groceryId } = useParams();
   const groceryListId = Number(groceryId);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function GroceryListPage() {
     setClickedRecipes(updatedClickedRecipes);
   }
 
-  if (!shownGroceryList) return <EmptyGroceryListMessage />;
+  if (!shownGroceryList) return <LoadingMessage />;
   const { groceryItems } = shownGroceryList;
   const groceryList = groceryItems.map((item) => {
     return (
@@ -122,7 +122,13 @@ export default function GroceryListPage() {
               <p>Remove checked items</p>
             </div>
           </div>
-          <ul className="grocery-list">{groceryList}</ul>
+          <ul className="grocery-list">
+            {groceryList.length === 0 ? (
+              <EmptyGroceryListMessage />
+            ) : (
+              groceryList
+            )}
+          </ul>
         </form>
         {!showIngredientForm && (
           <AddIngredientButton onClick={() => handleAddItemButton()} />
@@ -240,12 +246,19 @@ type RecipeItemProps = {
 
 function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
+  // const { handleHeartClick } = useContext(AppContext);
+
+  // handleHeartClick(recipe.recipeId);
+
   return (
     <>
       <div className="recipe-item">
         <Link to={`/recipes/${recipeId}`}>
           <img src={recipeImage} />
         </Link>
+        <span className="heart-outline">
+          <FaRegHeart />
+        </span>
         <div className="title-and-x">
           <Link to={`/recipes/${recipeId}`}>
             <p>{title}</p>
@@ -264,11 +277,27 @@ function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
   );
 }
 
+function LoadingMessage() {
+  return (
+    <div className="content-container">
+      <div className="page">
+        <h1 className="page-heading">Loading...</h1>
+      </div>
+    </div>
+  );
+}
+
 function EmptyGroceryListMessage() {
   return (
-    <span>
-      Grocery List empty. Add some stuff by checking off an ingredient on a
-      recipe's page or click '+ Add Item' below!
-    </span>
+    <div>
+      <p>Grocery List empty.</p>
+      <br />
+      <p>
+        <span className="pink">
+          Add items by checking an ingredient on a recipe's page or click 'Add
+          Item' below!
+        </span>
+      </p>
+    </div>
   );
 }
