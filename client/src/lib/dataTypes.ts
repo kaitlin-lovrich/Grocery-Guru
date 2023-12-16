@@ -6,6 +6,7 @@ export type User = {
   createdAt: any;
 };
 
+
 export type Ingredient = {
   ingredientId: number;
   name: string;

@@ -1,10 +1,11 @@
 import './BrowseRecipes.css';
-import { type Recipe } from '../lib/dataTypes.js';
-import { fetchRecipes } from '../lib/api.js';
+import { UserGroceryList, type Recipe } from '../lib/dataTypes.js';
+import { fetchRecipes, fetchSavedRecipes } from '../lib/api.js';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6';
 import { AppContext } from '../components/AppContext.js';
+import SavedRecipesPage from './SavedRecipesPage.js';
 
 export default function BrowseRecipes() {
   const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
@@ -59,12 +60,21 @@ type RecipeListProps = {
   allRecipes: Recipe[];
 };
 
-function RecipeList({ allRecipes }: RecipeListProps) {
+async function RecipeList({ allRecipes }: RecipeListProps) {
+  const { user } = useContext(AppContext);
+
+  const savedRecipes = await fetchSavedRecipes(user!.savedRecipesListId);
+
   return (
     <>
       <h1 className="page-heading">Browse Recipes</h1>
       <div className="recipes">
         {allRecipes?.map((recipe) => {
+          for (let i = 0; i < allRecipes.length; i++) {
+            if (recipe.recipeId === savedRecipes.savedRecipeItems[i].recipeId)
+              console.log(recipe);
+          }
+
           return (
             <div key={recipe.recipeId} className="recipe-item-container">
               <RecipeItem recipe={recipe} />
@@ -82,19 +92,19 @@ type RecipeItemProps = {
 
 function RecipeItem({ recipe }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
-  const { handleHeartClick, user, savedRecipesList } = useContext(AppContext);
+  const { handleHeartClick, user, solidHeart } = useContext(AppContext);
 
   return (
     <>
       <div className="recipe-item">
         <img src={recipeImage} />
         <span className="heart-outline">
-          {!savedRecipesList.savedRecipeItems.find(
-            (recipe) => recipe.recipeId === recipeId
-          ) ? (
+          {!solidHeart ? (
+            // !savedRecipesList.savedRecipeItems.find(
+            //   (recipe) => recipe.recipeId === recipeId
             <FaRegHeart onClick={() => handleHeartClick(recipeId, user!)} />
           ) : (
-            <FaHeart onClick={() => handleHeartClick(recipeId, user!)} />
+            <FaHeart />
           )}
         </span>
         <Link to={`/recipes/${recipeId}`}>

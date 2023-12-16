@@ -9,7 +9,7 @@ import LoginForm from './pages/Login';
 import { Auth, SavedRecipesList, UserGroceryList } from './lib/dataTypes';
 import { AppContext } from './components/AppContext';
 import SavedRecipesPage from './pages/SavedRecipesPage';
-import { fetchAddToSavedRecipesList } from './lib/api';
+import { fetchAddToSavedRecipesList, fetchSavedRecipes } from './lib/api';
 
 const tokenKey = 'react-context-jwt';
 
@@ -46,14 +46,15 @@ export default function App() {
   }
 
   async function handleHeartClick(recipeId: number, user: UserGroceryList) {
-    const found = savedRecipesList.savedRecipeItems.find(
+    const savedRecipes = await fetchSavedRecipes(user.savedRecipesListId);
+    const found = savedRecipes.savedRecipeItems.find(
       (recipe) => recipe.recipeId === recipeId
     );
-    if (found !== undefined) return;
+    console.log('found', found);
+    if (found) return;
     const savedRecipesListId = user.savedRecipesListId;
+    console.log('savedRecipesListId', savedRecipesListId);
     await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
-    // savedRecipesList.savedRecipeItems.recipeId = 0;
-    // setSolidHeart(!solidHeart);
   }
 
   const contextValue = {

@@ -425,10 +425,12 @@ app.post('/api/saved-recipes', authMiddleware, async (req, res, next) => {
           values ($1, $2)
           returning *
       `;
+
     const savedRecipeItemsRes = await db.query<SavedRecipeItems>(sql2, [
       recipeId,
       savedRecipesListId,
     ]);
+    console.log(savedRecipeItemsRes.rows[0]);
     res.json(savedRecipeItemsRes.rows[0]);
   } catch (err) {
     next(err);

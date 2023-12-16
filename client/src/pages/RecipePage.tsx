@@ -120,6 +120,7 @@ function CheckBoxIngredient({
     setChecked(event.target.checked);
     onClick(ingredient, event.target.checked);
   }
+
   return (
     <div>
       <label>
