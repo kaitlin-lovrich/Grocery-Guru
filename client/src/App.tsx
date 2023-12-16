@@ -14,47 +14,52 @@ import { fetchAddToSavedRecipesList, fetchSavedRecipes } from './lib/api';
 const tokenKey = 'react-context-jwt';
 
 export default function App() {
-  const [user, setuser] = useState<UserGroceryList>();
+  const [user, setUser] = useState<UserGroceryList>();
   const [token, setToken] = useState<string>();
   const [savedRecipesList, setSavedRecipesList] = useState<SavedRecipesList>({
     savedRecipesListId: 0,
     userId: 0,
     savedRecipeItems: [],
   });
-  const [solidHeart, setSolidHeart] = useState(false);
+  const [solidHeart, setSolidHeart] = useState(true);
 
   useEffect(() => {
     const auth = localStorage.getItem(tokenKey);
     if (auth) {
       const a = JSON.parse(auth);
-      setuser(a.user);
+      setUser(a.user);
       setToken(a.token);
     }
   }, []);
 
   function handleSignIn(auth: Auth) {
     localStorage.setItem(tokenKey, JSON.stringify(auth));
-    setuser(auth.user);
+    setUser(auth.user);
     setToken(auth.token);
   }
 
   function handleSignOut() {
     localStorage.removeItem(tokenKey);
-    setuser(undefined);
+    setUser(undefined);
     setToken(undefined);
     console.log('Signed out');
   }
 
   async function handleHeartClick(recipeId: number, user: UserGroceryList) {
-    const savedRecipes = await fetchSavedRecipes(user.savedRecipesListId);
-    const found = savedRecipes.savedRecipeItems.find(
-      (recipe) => recipe.recipeId === recipeId
-    );
-    console.log('found', found);
-    if (found) return;
-    const savedRecipesListId = user.savedRecipesListId;
-    console.log('savedRecipesListId', savedRecipesListId);
-    await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
+    if (user) {
+      const savedRecipes = await fetchSavedRecipes(user.savedRecipesListId);
+      const found = savedRecipes.savedRecipeItems.find(
+        (recipe) => recipe.recipeId === recipeId
+      );
+      console.log('found', found);
+      if (found) return;
+      const savedRecipesListId = user.savedRecipesListId;
+      console.log('savedRecipesListId', savedRecipesListId);
+      await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
+      setSolidHeart(true);
+    } else {
+      alert('You must be signed in to save a recipe');
+    }
   }
 
   const contextValue = {

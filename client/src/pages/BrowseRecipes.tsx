@@ -1,11 +1,10 @@
 import './BrowseRecipes.css';
-import { UserGroceryList, type Recipe } from '../lib/dataTypes.js';
+import { type Recipe } from '../lib/dataTypes.js';
 import { fetchRecipes, fetchSavedRecipes } from '../lib/api.js';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6';
 import { AppContext } from '../components/AppContext.js';
-import SavedRecipesPage from './SavedRecipesPage.js';
 
 export default function BrowseRecipes() {
   const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
@@ -60,48 +59,74 @@ type RecipeListProps = {
   allRecipes: Recipe[];
 };
 
-async function RecipeList({ allRecipes }: RecipeListProps) {
-  const { user } = useContext(AppContext);
+function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
+  const { user, savedRecipesList, setSavedRecipesList } =
+    useContext(AppContext);
+  // const [savedRecipes, setSavedRecipes] = useState<SavedRecipesList | null>(null);
 
-  const savedRecipes = await fetchSavedRecipes(user!.savedRecipesListId);
+  useEffect(() => {
+    async function fetchSavedRecipesData() {
+      try {
+        if (user && user.savedRecipesListId) {
+          const savedRecipesData = await fetchSavedRecipes(
+            user.savedRecipesListId
+          );
+          setSavedRecipesList(savedRecipesData);
+        }
+      } catch (error) {
+        // Handle the error, e.g., set an error state or log the error
+        console.error('Error fetching saved recipes:', error);
+      }
+    }
+
+    fetchSavedRecipesData();
+  }, [setSavedRecipesList, user]);
+
+  const allRecipesList = allRecipes.map((recipe) => {
+    const isSaved = savedRecipesList?.savedRecipeItems.some(
+      (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
+    );
+
+    return (
+      <div key={recipe.recipeId} className="recipe-item-container">
+        <RecipeItem recipe={recipe} saved={isSaved || false} />
+      </div>
+    );
+  });
 
   return (
     <>
       <h1 className="page-heading">Browse Recipes</h1>
-      <div className="recipes">
-        {allRecipes?.map((recipe) => {
-          for (let i = 0; i < allRecipes.length; i++) {
-            if (recipe.recipeId === savedRecipes.savedRecipeItems[i].recipeId)
-              console.log(recipe);
-          }
-
-          return (
-            <div key={recipe.recipeId} className="recipe-item-container">
-              <RecipeItem recipe={recipe} />
-            </div>
-          );
-        })}
-      </div>
+      <div className="recipes">{allRecipesList}</div>
     </>
   );
 }
 
+// ... (your existing components)
+
+// if ( ==[index].recipeId)
+//   setSolidHeart(!solidHeart);
+// return (
+//   <div key={recipe.recipeId} className="recipe-item-container">
+//     <RecipeItem recipe={recipe} saved={solidHeart} />
+//   </div>
+// );
+
 type RecipeItemProps = {
   recipe: Recipe;
+  saved: boolean;
 };
 
-function RecipeItem({ recipe }: RecipeItemProps) {
+function RecipeItem({ recipe, saved }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
-  const { handleHeartClick, user, solidHeart } = useContext(AppContext);
+  const { handleHeartClick, user } = useContext(AppContext);
 
   return (
     <>
       <div className="recipe-item">
         <img src={recipeImage} />
         <span className="heart-outline">
-          {!solidHeart ? (
-            // !savedRecipesList.savedRecipeItems.find(
-            //   (recipe) => recipe.recipeId === recipeId
+          {!saved ? (
             <FaRegHeart onClick={() => handleHeartClick(recipeId, user!)} />
           ) : (
             <FaHeart />
