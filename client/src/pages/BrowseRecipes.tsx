@@ -8,14 +8,35 @@ import { AppContext } from '../components/AppContext.js';
 
 export default function BrowseRecipes() {
   const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+  const { user, setSavedRecipesList } = useContext(AppContext);
 
   useEffect(() => {
     async function loadBrowseRecipes() {
-      const recipes = await fetchRecipes();
-      setAllRecipes(recipes);
+      try {
+        const recipes = await fetchRecipes();
+        setAllRecipes(recipes);
+        console.log('recipes', recipes);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    async function fetchSavedRecipesData() {
+      try {
+        if (user && user.savedRecipesListId) {
+          const savedRecipesData = await fetchSavedRecipes(
+            user.savedRecipesListId
+          );
+          setSavedRecipesList(savedRecipesData);
+          console.log('savedRecipesData', savedRecipesData);
+        }
+      } catch (error) {
+        // Handle the error, e.g., set an error state or log the error
+        console.error('Error fetching saved recipes:', error);
+      }
     }
     loadBrowseRecipes();
-  }, [setAllRecipes]);
+    fetchSavedRecipesData();
+  }, [setAllRecipes, setSavedRecipesList, user]);
 
   return <SearchRecipesComponent allRecipes={allRecipes} />;
 }
@@ -60,27 +81,26 @@ type RecipeListProps = {
 };
 
 function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
-  const { user, savedRecipesList, setSavedRecipesList } =
-    useContext(AppContext);
-  // const [savedRecipes, setSavedRecipes] = useState<SavedRecipesList | null>(null);
+  const { savedRecipesList } = useContext(AppContext);
 
-  useEffect(() => {
-    async function fetchSavedRecipesData() {
-      try {
-        if (user && user.savedRecipesListId) {
-          const savedRecipesData = await fetchSavedRecipes(
-            user.savedRecipesListId
-          );
-          setSavedRecipesList(savedRecipesData);
-        }
-      } catch (error) {
-        // Handle the error, e.g., set an error state or log the error
-        console.error('Error fetching saved recipes:', error);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchSavedRecipesData() {
+  //     try {
+  //       if (user && user.savedRecipesListId) {
+  //         const savedRecipesData = await fetchSavedRecipes(
+  //           user.savedRecipesListId
+  //         );
+  //         setSavedRecipesList(savedRecipesData);
+  //         console.log('savedRecipesData', savedRecipesData);
+  //       }
+  //     } catch (error) {
+  //       // Handle the error, e.g., set an error state or log the error
+  //       console.error('Error fetching saved recipes:', error);
+  //     }
+  //   }
 
-    fetchSavedRecipesData();
-  }, [setSavedRecipesList, user]);
+  //   fetchSavedRecipesData();
+  // }, [setSavedRecipesList, user]);
 
   const allRecipesList = allRecipes.map((recipe) => {
     const isSaved = savedRecipesList?.savedRecipeItems.some(
@@ -101,16 +121,6 @@ function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
     </>
   );
 }
-
-// ... (your existing components)
-
-// if ( ==[index].recipeId)
-//   setSolidHeart(!solidHeart);
-// return (
-//   <div key={recipe.recipeId} className="recipe-item-container">
-//     <RecipeItem recipe={recipe} saved={solidHeart} />
-//   </div>
-// );
 
 type RecipeItemProps = {
   recipe: Recipe;
@@ -139,3 +149,46 @@ function RecipeItem({ recipe, saved }: RecipeItemProps) {
     </>
   );
 }
+
+// function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
+//   const { user, savedRecipesList, setSavedRecipesList } =
+//     useContext(AppContext);
+
+//   useEffect(() => {
+//     async function fetchSavedRecipesData() {
+//       try {
+//         if (user && user.savedRecipesListId) {
+//           const savedRecipesData = await fetchSavedRecipes(
+//             user.savedRecipesListId
+//           );
+//           setSavedRecipesList(savedRecipesData);
+//           console.log('savedRecipesData', savedRecipesData);
+//         }
+//       } catch (error) {
+//         // Handle the error, e.g., set an error state or log the error
+//         console.error('Error fetching saved recipes:', error);
+//       }
+//     }
+
+//     fetchSavedRecipesData();
+//   }, [setSavedRecipesList, user]);
+
+//   const allRecipesList = allRecipes.map((recipe) => {
+//     const isSaved = savedRecipesList?.savedRecipeItems.some(
+//       (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
+//     );
+
+//     return (
+//       <div key={recipe.recipeId} className="recipe-item-container">
+//         <RecipeItem recipe={recipe} saved={isSaved || false} />
+//       </div>
+//     );
+//   });
+
+//   return (
+//     <>
+//       <h1 className="page-heading">Browse Recipes</h1>
+//       <div className="recipes">{allRecipesList}</div>
+//     </>
+//   );
+// }
