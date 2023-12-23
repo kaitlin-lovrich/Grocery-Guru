@@ -38,7 +38,11 @@ export default function BrowseRecipes() {
     fetchSavedRecipesData();
   }, [setAllRecipes, setSavedRecipesList, user]);
 
-  return <SearchRecipesComponent allRecipes={allRecipes} />;
+  return (
+    <>
+      <SearchRecipesComponent allRecipes={allRecipes} />
+    </>
+  );
 }
 
 type SearchComponentProps = {
@@ -55,7 +59,7 @@ function SearchRecipesComponent({ allRecipes }: SearchComponentProps) {
   return (
     <div className="browse-recipes-page">
       <SearchBar input={input} onChangeInput={setInput} />
-
+      <h1 className="page-heading">Browse Recipes</h1>
       <RecipeList allRecipes={searchedRecipeList} />
     </div>
   );
@@ -83,25 +87,6 @@ type RecipeListProps = {
 function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
   const { savedRecipesList } = useContext(AppContext);
 
-  // useEffect(() => {
-  //   async function fetchSavedRecipesData() {
-  //     try {
-  //       if (user && user.savedRecipesListId) {
-  //         const savedRecipesData = await fetchSavedRecipes(
-  //           user.savedRecipesListId
-  //         );
-  //         setSavedRecipesList(savedRecipesData);
-  //         console.log('savedRecipesData', savedRecipesData);
-  //       }
-  //     } catch (error) {
-  //       // Handle the error, e.g., set an error state or log the error
-  //       console.error('Error fetching saved recipes:', error);
-  //     }
-  //   }
-
-  //   fetchSavedRecipesData();
-  // }, [setSavedRecipesList, user]);
-
   const allRecipesList = allRecipes.map((recipe) => {
     const isSaved = savedRecipesList?.savedRecipeItems.some(
       (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
@@ -116,7 +101,6 @@ function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
 
   return (
     <>
-      <h1 className="page-heading">Browse Recipes</h1>
       <div className="recipes">{allRecipesList}</div>
     </>
   );
