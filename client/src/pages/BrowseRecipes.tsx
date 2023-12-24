@@ -15,27 +15,18 @@ export default function BrowseRecipes() {
       try {
         const recipes = await fetchRecipes();
         setAllRecipes(recipes);
-        console.log('recipes', recipes);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    async function fetchSavedRecipesData() {
-      try {
+
         if (user && user.savedRecipesListId) {
           const savedRecipesData = await fetchSavedRecipes(
             user.savedRecipesListId
           );
           setSavedRecipesList(savedRecipesData);
-          console.log('savedRecipesData', savedRecipesData);
         }
       } catch (error) {
-        // Handle the error, e.g., set an error state or log the error
-        console.error('Error fetching saved recipes:', error);
+        console.error('Error fetching data:', error);
       }
     }
     loadBrowseRecipes();
-    fetchSavedRecipesData();
   }, [setAllRecipes, setSavedRecipesList, user]);
 
   return (
@@ -60,7 +51,7 @@ function SearchRecipesComponent({ allRecipes }: SearchComponentProps) {
     <div className="browse-recipes-page">
       <SearchBar input={input} onChangeInput={setInput} />
       <h1 className="page-heading">Browse Recipes</h1>
-      <RecipeList allRecipes={searchedRecipeList} />
+      <RecipeList shownRecipes={searchedRecipeList} />
     </div>
   );
 }
@@ -81,13 +72,13 @@ function SearchBar({ input, onChangeInput }: SearchBarProps) {
 }
 
 type RecipeListProps = {
-  allRecipes: Recipe[];
+  shownRecipes: Recipe[];
 };
 
-function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
+function RecipeList({ shownRecipes }: RecipeListProps): JSX.Element {
   const { savedRecipesList } = useContext(AppContext);
 
-  const allRecipesList = allRecipes.map((recipe) => {
+  const shownRecipesList = shownRecipes.map((recipe) => {
     const isSaved = savedRecipesList?.savedRecipeItems.some(
       (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
     );
@@ -101,7 +92,7 @@ function RecipeList({ allRecipes }: RecipeListProps): JSX.Element {
 
   return (
     <>
-      <div className="recipes">{allRecipesList}</div>
+      <div className="recipes">{shownRecipesList}</div>
     </>
   );
 }

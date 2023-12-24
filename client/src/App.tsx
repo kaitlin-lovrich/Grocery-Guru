@@ -56,7 +56,7 @@ export default function App() {
       const savedRecipesListId = user.savedRecipesListId;
       console.log('savedRecipesListId', savedRecipesListId);
       await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
-      setSolidHeart(true);
+      // setSolidHeart(true);
     } else {
       alert('You must be signed in to save a recipe');
     }
