@@ -25,7 +25,6 @@ export default function App() {
     userId: 0,
     savedRecipeItems: [],
   });
-  const [solidHeart, setSolidHeart] = useState(false);
 
   useEffect(() => {
     const auth = localStorage.getItem(tokenKey);
@@ -53,29 +52,18 @@ export default function App() {
     if (user) {
       const savedRecipes = await fetchSavedRecipes(user.savedRecipesListId);
       const savedRecipesListId = user.savedRecipesListId;
-      console.log('handlehearClick user is true');
-      if (solidHeart !== true) {
-        console.log('handlehearClick solidHeart is false');
-        const found = savedRecipes.savedRecipeItems.find(
-          (recipe) => recipe.recipeId === recipeId
-        );
-        console.log('found', found);
-        if (found) return;
-        console.log('handlehearClick found is truthy. found:', found);
-
+      // Check if the recipe is already in the saved list
+      const isRecipeSaved = savedRecipes.savedRecipeItems.find(
+        (recipe) => recipe.recipeId === recipeId
+      );
+      if (isRecipeSaved === undefined) {
+        // If not saved, add it to the saved list
         await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
-        setSolidHeart(!solidHeart);
-        console.log(
-          'handleHeartClick setSolidHeart(!solidHeart):',
-          !solidHeart
-        );
       } else {
+        // If already saved, remove it from the saved list
         await fetchRemoveSavedRecipe({ recipeId, savedRecipesListId });
-        setSolidHeart(!solidHeart);
-        console.log('handleHeartClick else !solidHeart:', !solidHeart);
       }
     } else {
-      console.log('handlehearClick user is false');
       alert('You must be signed in to save a recipe');
     }
   }
@@ -86,10 +74,8 @@ export default function App() {
     handleSignIn,
     handleSignOut,
     savedRecipesList,
-    solidHeart,
     handleHeartClick,
     setSavedRecipesList,
-    setSolidHeart,
   };
 
   return (
@@ -118,24 +104,8 @@ export default function App() {
           />
           <Route path="auth/sign-up" element={<RegistrationForm />} />
           <Route path="auth/login" element={<LoginForm />} />
-          <Route />
         </Route>
       </Routes>
     </AppContext.Provider>
   );
 }
-
-// async function handleHeartClick(recipeId: number, user: UserGroceryList) {
-//   const found = savedRecipesList.savedRecipeItems.find((recipe) => {
-//     console.log('find id:', recipe.recipeId);
-//     recipe.recipeId === recipeId;
-//   });
-//   console.log('recipeId', recipeId);
-//   console.log('user', user);
-//   console.log(savedRecipesList);
-//   console.log('savedRecipeItems', savedRecipesList.savedRecipeItems);
-//   console.log('found', found);
-//   if (found !== undefined) return;
-//   const savedRecipeListId = user.savedRecipesListId;
-//   await fetchAddToSavedRecipesList({ recipeId, savedRecipeListId });
-// }
