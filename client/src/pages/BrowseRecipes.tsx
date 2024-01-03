@@ -85,7 +85,7 @@ function RecipeList({ shownRecipes }: RecipeListProps): JSX.Element {
 
     return (
       <div key={recipe.recipeId} className="recipe-item-container">
-        <RecipeItem recipe={recipe} saved={isSaved || false} />
+        <RecipeItem recipe={recipe} saved={isSaved} />
       </div>
     );
   });
@@ -104,17 +104,27 @@ type RecipeItemProps = {
 
 function RecipeItem({ recipe, saved }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
-  const { handleHeartClick, user } = useContext(AppContext);
+  const { handleHeartClick, user, savedRecipesList, setSolidHeart } =
+    useContext(AppContext);
+
+  useEffect(() => {
+    const isInSavedRecipeItems = !!savedRecipesList?.savedRecipeItems.find(
+      (savedRecipeItem) => {
+        return savedRecipeItem.recipeId === recipeId;
+      }
+    );
+    setSolidHeart(isInSavedRecipeItems);
+  }, [recipeId, savedRecipesList, setSolidHeart]);
 
   return (
     <>
       <div className="recipe-item">
         <img src={recipeImage} />
         <span className="heart-outline">
-          {!saved ? (
+          {saved ? (
             <FaRegHeart onClick={() => handleHeartClick(recipeId, user!)} />
           ) : (
-            <FaHeart />
+            <FaHeart onClick={() => handleHeartClick(recipeId, user!)} />
           )}
         </span>
         <Link to={`/recipes/${recipeId}`}>

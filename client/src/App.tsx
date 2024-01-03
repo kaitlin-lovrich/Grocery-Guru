@@ -9,7 +9,11 @@ import LoginForm from './pages/Login';
 import { Auth, SavedRecipesList, UserGroceryList } from './lib/dataTypes';
 import { AppContext } from './components/AppContext';
 import SavedRecipesPage from './pages/SavedRecipesPage';
-import { fetchAddToSavedRecipesList, fetchSavedRecipes } from './lib/api';
+import {
+  fetchAddToSavedRecipesList,
+  fetchRemoveSavedRecipe,
+  fetchSavedRecipes,
+} from './lib/api';
 
 const tokenKey = 'react-context-jwt';
 
@@ -21,7 +25,7 @@ export default function App() {
     userId: 0,
     savedRecipeItems: [],
   });
-  const [solidHeart, setSolidHeart] = useState(true);
+  const [solidHeart, setSolidHeart] = useState(false);
 
   useEffect(() => {
     const auth = localStorage.getItem(tokenKey);
@@ -48,16 +52,30 @@ export default function App() {
   async function handleHeartClick(recipeId: number, user: UserGroceryList) {
     if (user) {
       const savedRecipes = await fetchSavedRecipes(user.savedRecipesListId);
-      const found = savedRecipes.savedRecipeItems.find(
-        (recipe) => recipe.recipeId === recipeId
-      );
-      console.log('found', found);
-      if (found) return;
       const savedRecipesListId = user.savedRecipesListId;
-      console.log('savedRecipesListId', savedRecipesListId);
-      await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
-      // setSolidHeart(true);
+      console.log('handlehearClick user is true');
+      if (solidHeart !== true) {
+        console.log('handlehearClick solidHeart is false');
+        const found = savedRecipes.savedRecipeItems.find(
+          (recipe) => recipe.recipeId === recipeId
+        );
+        console.log('found', found);
+        if (found) return;
+        console.log('handlehearClick found is truthy. found:', found);
+
+        await fetchAddToSavedRecipesList({ recipeId, savedRecipesListId });
+        setSolidHeart(!solidHeart);
+        console.log(
+          'handleHeartClick setSolidHeart(!solidHeart):',
+          !solidHeart
+        );
+      } else {
+        await fetchRemoveSavedRecipe({ recipeId, savedRecipesListId });
+        setSolidHeart(!solidHeart);
+        console.log('handleHeartClick else !solidHeart:', !solidHeart);
+      }
     } else {
+      console.log('handlehearClick user is false');
       alert('You must be signed in to save a recipe');
     }
   }
