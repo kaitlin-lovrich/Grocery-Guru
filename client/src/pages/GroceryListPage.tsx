@@ -246,16 +246,11 @@ type RecipeItemProps = {
 
 function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
   const { recipeId, title, recipeImage } = recipe;
-  // const { handleHeartClick } = useContext(AppContext);
-
-  // handleHeartClick(recipe.recipeId);
 
   return (
     <>
       <div className="recipe-item">
-        <Link to={`/recipes/${recipeId}`}>
-          <img src={recipeImage} />
-        </Link>
+        <img src={recipeImage} alt="recipe image" />
         <span className="heart-outline">
           <FaRegHeart />
         </span>

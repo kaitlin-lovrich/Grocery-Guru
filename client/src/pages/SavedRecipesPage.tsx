@@ -95,7 +95,7 @@ function RecipeItem({ recipe }: RecipeItemProps) {
   return (
     <>
       <div className="recipe-item">
-        <img src={recipeImage} />
+        <img src={recipeImage} alt="recipe image" />
         <span className="heart-outline">
           <FaRegHeart />
         </span>

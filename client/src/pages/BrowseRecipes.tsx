@@ -119,7 +119,7 @@ function RecipeItem({ recipe, saved }: RecipeItemProps) {
   return (
     <>
       <div className="recipe-item">
-        <img src={recipeImage} />
+        <img src={recipeImage} alt="recipe image" />
         <span className="heart-outline">
           {isSaved ? (
             <FaHeart onClick={toggleSave} />
@@ -127,9 +127,11 @@ function RecipeItem({ recipe, saved }: RecipeItemProps) {
             <FaRegHeart onClick={toggleSave} />
           )}
         </span>
-        <Link to={`/recipes/${recipeId}`}>
-          <p>{title}</p>
-        </Link>
+        <div className="title-and-x">
+          <Link to={`/recipes/${recipeId}`}>
+            <p>{title}</p>
+          </Link>
+        </div>
       </div>
     </>
   );
