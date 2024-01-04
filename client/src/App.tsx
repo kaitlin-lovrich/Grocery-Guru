@@ -20,6 +20,7 @@ const tokenKey = 'react-context-jwt';
 export default function App() {
   const [user, setUser] = useState<UserGroceryList>();
   const [token, setToken] = useState<string>();
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   const [savedRecipesList, setSavedRecipesList] = useState<SavedRecipesList>({
     savedRecipesListId: 0,
     userId: 0,
@@ -71,10 +72,12 @@ export default function App() {
   const contextValue = {
     user,
     token,
+    isSaved,
     handleSignIn,
     handleSignOut,
     savedRecipesList,
     handleHeartClick,
+    setIsSaved,
     setSavedRecipesList,
   };
 

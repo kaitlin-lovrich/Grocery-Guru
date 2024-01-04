@@ -7,7 +7,6 @@ import { AppContext } from './AppContext';
 
 type RecipeItemProps = {
   recipe: Recipe | ClickedRecipeRef; // Accommodate both Recipe and ClickedRecipeRef
-  onHeartClick: () => void; // For handling heart icon click
   saved: boolean; // Determine if the recipe is saved or not
   onXClick?: (recipeId: number) => void; // Optional, for handling X button click
 };

@@ -64,7 +64,7 @@ export default function Header({
         <ul className="nav-links">
           <li>
             {user ? (
-              <Link to="">{`Merry Christmas ${user?.username}! `}</Link> // link to user profile eventually
+              <Link to="">{`Hi ${user?.username} `}</Link> // link to user profile eventually
             ) : (
               <Link to="auth/sign-up">Sign Up</Link>
             )}

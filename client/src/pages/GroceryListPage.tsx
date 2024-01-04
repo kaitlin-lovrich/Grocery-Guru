@@ -14,9 +14,10 @@ import {
   fetchRemoveRecipeIdItems,
 } from '../lib/api.js';
 import { FormEvent, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { FaRegHeart, FaX } from 'react-icons/fa6';
+import { useParams } from 'react-router-dom';
+import { FaX } from 'react-icons/fa6';
 import { formatGroceryListItem } from '../lib/functions.js';
+import RecipeItem from '../components/RecipeItem.js';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
@@ -145,10 +146,15 @@ export default function GroceryListPage() {
         <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
         <div className="clicked-recipe-refs">
           {clickedRecipes.map((recipe) => {
+            // const isSaved = clickedRecipes.some(
+            //   (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
+            // );
+
             return (
               <div key={recipe.recipeId} className="recipe-item-container">
                 <RecipeItem
                   recipe={recipe}
+                  saved={false}
                   onXClick={(recipeId) => handleXClick(recipeId)}
                 />
               </div>
@@ -235,39 +241,6 @@ function AddIngredientForm({
           <button type="submit">+ Add to Grocery List</button>
         </div>
       </form>
-    </>
-  );
-}
-
-type RecipeItemProps = {
-  recipe: ClickedRecipeRef;
-  onXClick: (recipeId: number) => void;
-};
-
-function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
-  const { recipeId, title, recipeImage } = recipe;
-
-  return (
-    <>
-      <div className="recipe-item">
-        <img src={recipeImage} alt="recipe image" />
-        <span className="heart-outline">
-          <FaRegHeart />
-        </span>
-        <div className="title-and-x">
-          <Link to={`/recipes/${recipeId}`}>
-            <p>{title}</p>
-          </Link>
-          <div>
-            <button
-              type="button"
-              className="x-button"
-              onClick={() => onXClick(recipeId)}>
-              <FaX />
-            </button>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

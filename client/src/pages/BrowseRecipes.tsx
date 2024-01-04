@@ -2,9 +2,8 @@ import './BrowseRecipes.css';
 import { type Recipe } from '../lib/dataTypes.js';
 import { fetchRecipes, fetchSavedRecipes } from '../lib/api.js';
 import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaHeart, FaRegHeart } from 'react-icons/fa6';
 import { AppContext } from '../components/AppContext.js';
+import RecipeItem from '../components/RecipeItem.js';
 
 export default function BrowseRecipes() {
   const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
@@ -93,46 +92,6 @@ function RecipeList({ shownRecipes }: RecipeListProps): JSX.Element {
   return (
     <>
       <div className="recipes">{shownRecipesList}</div>
-    </>
-  );
-}
-
-type RecipeItemProps = {
-  recipe: Recipe;
-  saved: boolean;
-};
-
-function RecipeItem({ recipe, saved }: RecipeItemProps) {
-  const { recipeId, title, recipeImage } = recipe;
-  const { handleHeartClick, user } = useContext(AppContext);
-  const [isSaved, setIsSaved] = useState(saved);
-
-  useEffect(() => {
-    setIsSaved(saved);
-  }, [saved]);
-
-  const toggleSave = () => {
-    handleHeartClick(recipeId, user!, !isSaved);
-    setIsSaved(!isSaved);
-  };
-
-  return (
-    <>
-      <div className="recipe-item">
-        <img src={recipeImage} alt="recipe image" />
-        <span className="heart-outline">
-          {isSaved ? (
-            <FaHeart onClick={toggleSave} />
-          ) : (
-            <FaRegHeart onClick={toggleSave} />
-          )}
-        </span>
-        <div className="title-and-x">
-          <Link to={`/recipes/${recipeId}`}>
-            <p>{title}</p>
-          </Link>
-        </div>
-      </div>
     </>
   );
 }
