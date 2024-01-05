@@ -13,11 +13,12 @@ import {
   fetchRemoveIngredientIdItems,
   fetchRemoveRecipeIdItems,
 } from '../lib/api.js';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaX } from 'react-icons/fa6';
 import { formatGroceryListItem } from '../lib/functions.js';
 import RecipeItem from '../components/RecipeItem.js';
+import { AppContext } from '../components/AppContext.js';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
@@ -143,24 +144,13 @@ export default function GroceryListPage() {
         />
       )}
       <div className="">
-        <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
-        <div className="clicked-recipe-refs">
-          {clickedRecipes.map((recipe) => {
-            // const isSaved = clickedRecipes.some(
-            //   (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
-            // );
-
-            return (
-              <div key={recipe.recipeId} className="recipe-item-container">
-                <RecipeItem
-                  recipe={recipe}
-                  saved={false}
-                  onXClick={(recipeId) => handleXClick(recipeId)}
-                />
-              </div>
-            );
-          })}
-        </div>
+        {clickedRecipes.length !== 0 && (
+          <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
+        )}
+        <RecipeList
+          clickedRecipes={clickedRecipes}
+          onXClick={(recipeId) => handleXClick(recipeId)}
+        />
       </div>
     </div>
   );
@@ -268,4 +258,34 @@ function EmptyGroceryListMessage() {
       </p>
     </div>
   );
+}
+
+type RecipeListProps = {
+  clickedRecipes: ClickedRecipeRef[];
+  onXClick: (recipeId: number) => void;
+};
+
+function RecipeList({
+  clickedRecipes,
+  onXClick,
+}: RecipeListProps): JSX.Element {
+  const { savedRecipesList } = useContext(AppContext);
+
+  const clickedRecipesList = clickedRecipes.map((recipe) => {
+    const isSaved = savedRecipesList?.savedRecipeItems.some(
+      (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
+    );
+
+    return (
+      <div key={recipe.recipeId} className="recipe-item-container">
+        <RecipeItem
+          recipe={recipe}
+          saved={isSaved}
+          onXClick={(recipeId) => onXClick(recipeId)}
+        />
+      </div>
+    );
+  });
+
+  return <div className="clicked-recipe-refs">{clickedRecipesList}</div>;
 }
