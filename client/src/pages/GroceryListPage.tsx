@@ -12,28 +12,53 @@ import {
   fetchGroceryList,
   fetchRemoveIngredientIdItems,
   fetchRemoveRecipeIdItems,
+  fetchSavedRecipes,
 } from '../lib/api.js';
-import { FormEvent, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { FormEvent, useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { FaX } from 'react-icons/fa6';
 import { formatGroceryListItem } from '../lib/functions.js';
+import RecipeItem from '../components/RecipeItem.js';
+import { AppContext } from '../components/AppContext.js';
+import LoadingMessage from '../components/LoadingMessage.js';
+// import LoadingMessage from '../components/LoadingMessage.js';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
-  const { groceryListId: groceryId } = useParams();
   const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
   const [showIngredientForm, setShowIngredientForm] = useState(false);
+  const { user, setSavedRecipesList, isLoading, setIsLoading } =
+    useContext(AppContext);
+  const { groceryListId: groceryId } = useParams();
   const groceryListId = Number(groceryId);
 
+  const clickedRecipesArray = clickedRecipes.map((recipe) => ({ ...recipe }));
+
   useEffect(() => {
+    setIsLoading(true);
     async function loadGroceryListPage(groceryListId: number) {
-      const groceryList = await fetchGroceryList(groceryListId);
-      setShownGroceryList(groceryList);
-      const allClickedRecipes = await fetchAllClickedRecipeRef(groceryListId);
-      setClickedRecipes(allClickedRecipes);
+      try {
+        console.log('calling fetch');
+        const groceryList = await fetchGroceryList(groceryListId);
+        setShownGroceryList(groceryList);
+        const allClickedRecipes = await fetchAllClickedRecipeRef(groceryListId);
+        setClickedRecipes(allClickedRecipes);
+        if (user && user.savedRecipesListId) {
+          const savedRecipesData = await fetchSavedRecipes(
+            user.savedRecipesListId
+          );
+          setSavedRecipesList(savedRecipesData);
+        }
+        console.log('done calling fetch');
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+        console.log('setloading is set to false');
+      }
     }
     loadGroceryListPage(Number(groceryListId));
-  }, [groceryListId]);
+  }, [groceryListId, setIsLoading, setSavedRecipesList, user]);
 
   function handleAddItemButton() {
     setShowIngredientForm(!showIngredientForm);
@@ -87,7 +112,7 @@ export default function GroceryListPage() {
     setClickedRecipes(updatedClickedRecipes);
   }
 
-  if (!shownGroceryList) return <EmptyGroceryListMessage />;
+  if (!shownGroceryList || isLoading) return <LoadingMessage />;
   const { groceryItems } = shownGroceryList;
   const groceryList = groceryItems.map((item) => {
     return (
@@ -122,7 +147,13 @@ export default function GroceryListPage() {
               <p>Remove checked items</p>
             </div>
           </div>
-          <ul className="grocery-list">{groceryList}</ul>
+          <ul className="grocery-list">
+            {groceryList.length === 0 ? (
+              <EmptyGroceryListMessage />
+            ) : (
+              groceryList
+            )}
+          </ul>
         </form>
         {!showIngredientForm && (
           <AddIngredientButton onClick={() => handleAddItemButton()} />
@@ -136,19 +167,13 @@ export default function GroceryListPage() {
         />
       )}
       <div className="">
-        <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
-        <div className="clicked-recipe-refs">
-          {clickedRecipes.map((recipe) => {
-            return (
-              <div key={recipe.recipeId} className="recipe-item-container">
-                <RecipeItem
-                  recipe={recipe}
-                  onXClick={(recipeId) => handleXClick(recipeId)}
-                />
-              </div>
-            );
-          })}
-        </div>
+        {clickedRecipes.length !== 0 && (
+          <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
+        )}
+        <RecipeList
+          clickedRecipesArray={clickedRecipesArray}
+          onXClick={(recipeId) => handleXClick(recipeId)}
+        />
       </div>
     </div>
   );
@@ -233,42 +258,47 @@ function AddIngredientForm({
   );
 }
 
-type RecipeItemProps = {
-  recipe: ClickedRecipeRef;
-  onXClick: (recipeId: number) => void;
-};
-
-function RecipeItem({ recipe, onXClick }: RecipeItemProps) {
-  const { recipeId, title, recipeImage } = recipe;
+function EmptyGroceryListMessage() {
   return (
-    <>
-      <div className="recipe-item">
-        <Link to={`/recipes/${recipeId}`}>
-          <img src={recipeImage} />
-        </Link>
-        <div className="title-and-x">
-          <Link to={`/recipes/${recipeId}`}>
-            <p>{title}</p>
-          </Link>
-          <div>
-            <button
-              type="button"
-              className="x-button"
-              onClick={() => onXClick(recipeId)}>
-              <FaX />
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
+    <div>
+      <p>Grocery List empty.</p>
+      <br />
+      <p>
+        <span className="pink">
+          Add items by checking an ingredient on a recipe's page or click 'Add
+          Item' below!
+        </span>
+      </p>
+    </div>
   );
 }
 
-function EmptyGroceryListMessage() {
-  return (
-    <span>
-      Grocery List empty. Add some stuff by checking off an ingredient on a
-      recipe's page or click '+ Add Item' below!
-    </span>
-  );
+type RecipeListProps = {
+  clickedRecipesArray: ClickedRecipeRef[];
+  onXClick: (recipeId: number) => void;
+};
+
+function RecipeList({
+  clickedRecipesArray,
+  onXClick,
+}: RecipeListProps): JSX.Element {
+  const { savedRecipesList } = useContext(AppContext);
+
+  const clickedRecipesList = clickedRecipesArray.map((recipe) => {
+    const isSaved = savedRecipesList?.savedRecipeItems.some(
+      (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
+    );
+
+    return (
+      <div key={recipe.recipeId} className="recipe-item-container">
+        <RecipeItem
+          recipe={recipe}
+          saved={isSaved}
+          onXClick={(recipeId) => onXClick(recipeId)}
+        />
+      </div>
+    );
+  });
+
+  return <div className="clicked-recipe-refs">{clickedRecipesList}</div>;
 }

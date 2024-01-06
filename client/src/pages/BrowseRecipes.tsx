@@ -1,21 +1,38 @@
 import './BrowseRecipes.css';
 import { type Recipe } from '../lib/dataTypes.js';
-import { fetchRecipes } from '../lib/api.js';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { fetchRecipes, fetchSavedRecipes } from '../lib/api.js';
+import { useContext, useEffect, useState } from 'react';
+import { AppContext } from '../components/AppContext.js';
+import RecipeItem from '../components/RecipeItem.js';
 
 export default function BrowseRecipes() {
   const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+  const { user, setSavedRecipesList } = useContext(AppContext);
 
   useEffect(() => {
     async function loadBrowseRecipes() {
-      const recipes = await fetchRecipes();
-      setAllRecipes(recipes);
+      try {
+        const recipes = await fetchRecipes();
+        setAllRecipes(recipes);
+
+        if (user && user.savedRecipesListId) {
+          const savedRecipesData = await fetchSavedRecipes(
+            user.savedRecipesListId
+          );
+          setSavedRecipesList(savedRecipesData);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     }
     loadBrowseRecipes();
-  }, [setAllRecipes]);
+  }, [setAllRecipes, setSavedRecipesList, user]);
 
-  return <SearchRecipesComponent allRecipes={allRecipes} />;
+  return (
+    <>
+      <SearchRecipesComponent allRecipes={allRecipes} />
+    </>
+  );
 }
 
 type SearchComponentProps = {
@@ -25,15 +42,15 @@ type SearchComponentProps = {
 function SearchRecipesComponent({ allRecipes }: SearchComponentProps) {
   const [input, setInput] = useState('');
 
-  const inputList = allRecipes.filter((recipe) =>
-    recipe.title.toLowerCase().match(input)
+  const searchedRecipeList = allRecipes.filter((recipe) =>
+    recipe.title.toLowerCase().match(input.toLowerCase())
   );
 
   return (
     <div className="browse-recipes-page">
       <SearchBar input={input} onChangeInput={setInput} />
-
-      <RecipeList allRecipes={inputList} />
+      <h1 className="page-heading">Browse Recipes</h1>
+      <RecipeList shownRecipes={searchedRecipeList} />
     </div>
   );
 }
@@ -54,40 +71,27 @@ function SearchBar({ input, onChangeInput }: SearchBarProps) {
 }
 
 type RecipeListProps = {
-  allRecipes: Recipe[];
+  shownRecipes: Recipe[];
 };
 
-function RecipeList({ allRecipes }: RecipeListProps) {
-  return (
-    <>
-      <h1 className="page-heading">Browse Recipes</h1>
-      <div className="recipes">
-        {allRecipes?.map((recipe) => {
-          return (
-            <div key={recipe.recipeId} className="recipe-item-container">
-              <RecipeItem recipe={recipe} />
-            </div>
-          );
-        })}
+function RecipeList({ shownRecipes }: RecipeListProps): JSX.Element {
+  const { savedRecipesList } = useContext(AppContext);
+
+  const shownRecipesList = shownRecipes.map((recipe) => {
+    const isSaved = savedRecipesList?.savedRecipeItems.some(
+      (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
+    );
+
+    return (
+      <div key={recipe.recipeId} className="recipe-item-container">
+        <RecipeItem recipe={recipe} saved={isSaved} />
       </div>
-    </>
-  );
-}
+    );
+  });
 
-type RecipeItemProps = {
-  recipe: Recipe;
-};
-
-function RecipeItem({ recipe }: RecipeItemProps) {
-  const { recipeId, title, recipeImage } = recipe;
   return (
     <>
-      <Link to={`/recipes/${recipeId}`}>
-        <div className="recipe-item">
-          <img src={recipeImage} />
-          <p>{title}</p>
-        </div>
-      </Link>
+      <div className="recipes">{shownRecipesList}</div>
     </>
   );
 }

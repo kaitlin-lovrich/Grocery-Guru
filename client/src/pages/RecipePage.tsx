@@ -80,7 +80,7 @@ export default function RecipePage({ groceryListId }: RecipePageProps) {
         <h1 className="page-title">{title}</h1>
         <p>{description}</p>
         <div className="recipe-image">
-          <img src={recipeImage} />
+          <img src={recipeImage} alt="recipe image" />
         </div>
         <h2 className="recipe-h2">Ingredients</h2>
         <ul>{ingredientList}</ul>
@@ -120,6 +120,7 @@ function CheckBoxIngredient({
     setChecked(event.target.checked);
     onClick(ingredient, event.target.checked);
   }
+
   return (
     <div>
       <label>

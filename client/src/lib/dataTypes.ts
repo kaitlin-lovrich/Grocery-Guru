@@ -6,6 +6,7 @@ export type User = {
   createdAt: any;
 };
 
+
 export type Ingredient = {
   ingredientId: number;
   name: string;
@@ -80,7 +81,7 @@ export type SavedRecipeItems = Recipe & {
 };
 
 export type SavedRecipesList = {
-  forEach(arg0: (item: any) => any): unknown;
+  // forEach(arg0: (item: any) => any): unknown;
   savedRecipesListId: number;
   userId: number;
   savedRecipeItems: SavedRecipeItems[];
