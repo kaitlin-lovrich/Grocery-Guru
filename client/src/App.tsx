@@ -14,12 +14,14 @@ import {
   fetchRemoveSavedRecipe,
   fetchSavedRecipes,
 } from './lib/api';
+// import LoadingMessage from './components/LoadingMessage';
 
 const tokenKey = 'react-context-jwt';
 
 export default function App() {
   const [user, setUser] = useState<UserGroceryList>();
   const [token, setToken] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [savedRecipesList, setSavedRecipesList] = useState<SavedRecipesList>({
     savedRecipesListId: 0,
@@ -28,6 +30,7 @@ export default function App() {
   });
 
   useEffect(() => {
+    console.log('app use effect fired');
     const auth = localStorage.getItem(tokenKey);
     if (auth) {
       const a = JSON.parse(auth);
@@ -35,6 +38,11 @@ export default function App() {
       setToken(a.token);
     }
   }, []);
+
+  // console.log('rendering app', isLoading);
+  // if (isLoading) {
+  //   return <LoadingMessage />;
+  // }
 
   function handleSignIn(auth: Auth) {
     localStorage.setItem(tokenKey, JSON.stringify(auth));
@@ -72,11 +80,13 @@ export default function App() {
   const contextValue = {
     user,
     token,
+    isLoading,
     isSaved,
     handleSignIn,
     handleSignOut,
     savedRecipesList,
     handleHeartClick,
+    setIsLoading,
     setIsSaved,
     setSavedRecipesList,
   };
