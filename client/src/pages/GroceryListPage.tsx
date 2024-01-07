@@ -38,7 +38,6 @@ export default function GroceryListPage() {
     setIsLoading(true);
     async function loadGroceryListPage(groceryListId: number) {
       try {
-        console.log('calling fetch');
         const groceryList = await fetchGroceryList(groceryListId);
         setShownGroceryList(groceryList);
         const allClickedRecipes = await fetchAllClickedRecipeRef(groceryListId);
@@ -49,12 +48,10 @@ export default function GroceryListPage() {
           );
           setSavedRecipesList(savedRecipesData);
         }
-        console.log('done calling fetch');
       } catch (err) {
         console.error(err);
       } finally {
         setIsLoading(false);
-        console.log('setloading is set to false');
       }
     }
     loadGroceryListPage(Number(groceryListId));
