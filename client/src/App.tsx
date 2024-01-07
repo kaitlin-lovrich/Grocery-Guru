@@ -14,7 +14,6 @@ import {
   fetchRemoveSavedRecipe,
   fetchSavedRecipes,
 } from './lib/api';
-// import LoadingMessage from './components/LoadingMessage';
 
 const tokenKey = 'react-context-jwt';
 
@@ -30,7 +29,6 @@ export default function App() {
   });
 
   useEffect(() => {
-    console.log('app use effect fired');
     const auth = localStorage.getItem(tokenKey);
     if (auth) {
       const a = JSON.parse(auth);
@@ -38,11 +36,6 @@ export default function App() {
       setToken(a.token);
     }
   }, []);
-
-  // console.log('rendering app', isLoading);
-  // if (isLoading) {
-  //   return <LoadingMessage />;
-  // }
 
   function handleSignIn(auth: Auth) {
     localStorage.setItem(tokenKey, JSON.stringify(auth));
