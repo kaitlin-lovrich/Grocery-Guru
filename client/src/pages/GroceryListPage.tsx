@@ -21,7 +21,6 @@ import { formatGroceryListItem } from '../lib/functions.js';
 import RecipeItem from '../components/RecipeItem.js';
 import { AppContext } from '../components/AppContext.js';
 import LoadingMessage from '../components/LoadingMessage.js';
-// import LoadingMessage from '../components/LoadingMessage.js';
 
 export default function GroceryListPage() {
   const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
