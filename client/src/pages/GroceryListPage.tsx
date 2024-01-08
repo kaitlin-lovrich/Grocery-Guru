@@ -109,8 +109,27 @@ export default function GroceryListPage() {
   }
 
   if (!shownGroceryList || isLoading) return <LoadingMessage />;
+
   const { groceryItems } = shownGroceryList;
-  const groceryList = groceryItems.map((item) => {
+
+  type AggGroceryItems = {
+    [name: string]: GroceryItems;
+  };
+
+  const aggregatedGroceryItems = groceryItems.reduce<AggGroceryItems>(
+    (acc, item) => {
+      const name = item.name;
+      if (!acc[name]) {
+        acc[name] = { ...item };
+      } else {
+        acc[name].quantity += item.quantity;
+      }
+      return acc;
+    },
+    {}
+  );
+
+  const groceryList = Object.values(aggregatedGroceryItems).map((item) => {
     return (
       <li key={`${item.ingredientId}: ${item.recipeId}`}>
         <div>
@@ -127,6 +146,24 @@ export default function GroceryListPage() {
       </li>
     );
   });
+
+  // const groceryList = groceryItems.map((item) => {
+  //   return (
+  //     <li key={`${item.ingredientId}: ${item.recipeId}`}>
+  //       <div>
+  //         <label>
+  //           <input
+  //             type="checkbox"
+  //             name="ingredientIds"
+  //             className="checkbox"
+  //             value={item.ingredientId}
+  //           />
+  //           {formatGroceryListItem(item)}
+  //         </label>
+  //       </div>
+  //     </li>
+  //   );
+  // });
 
   return (
     <div className="page">
