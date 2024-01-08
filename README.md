@@ -4,6 +4,8 @@
 ## Overview
 Grocery-Guru, a comprehensive full-stack web application, caters to culinary enthusiasts by enabling seamless recipe browsing and automated grocery list generation through a simple click-to-add feature for desired ingredients. It ensures a streamlined user experience for adding and removing items from their grocery list.
 
+![Grocery Guru Walk through](https://github.com/kaitlin-lovrich/Grocery-Guru/assets/69818777/7a95133b-4fb0-47d5-830c-50618cf57bf7)
+
 ## Useage
 1. Click the link up above. You should be automatically signed in as me, Kait! If not, navigate to `Login` and click `Continue as Guest`.
 2. You will be redirected to your `Grocery List` page and you will see some ingredients already in your list!
@@ -14,7 +16,7 @@ Grocery-Guru, a comprehensive full-stack web application, caters to culinary ent
 7. You can also `remove ingredients` by checking them off on your list and clicking the `✖️ icon` at the top of the list.
 8. If you wish to add your own items to the `grocery list`, click `Add Item` and fill out the item form. You do not need to include the measurement.
 
-* Happy Shopping! *
+**Happy Shopping!!**
 
 
 <!-- ## Key features
