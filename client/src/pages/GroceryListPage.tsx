@@ -260,7 +260,6 @@ function AddIngredientForm({
             <option>jar</option>
             <option>can</option>
             <option>bottle</option>
-            <option>none</option>
           </select>
         </label>
         <label>
