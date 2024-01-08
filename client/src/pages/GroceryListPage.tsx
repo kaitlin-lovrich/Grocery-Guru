@@ -147,38 +147,22 @@ export default function GroceryListPage() {
     );
   });
 
-  // const groceryList = groceryItems.map((item) => {
-  //   return (
-  //     <li key={`${item.ingredientId}: ${item.recipeId}`}>
-  //       <div>
-  //         <label>
-  //           <input
-  //             type="checkbox"
-  //             name="ingredientIds"
-  //             className="checkbox"
-  //             value={item.ingredientId}
-  //           />
-  //           {formatGroceryListItem(item)}
-  //         </label>
-  //       </div>
-  //     </li>
-  //   );
-  // });
-
   return (
     <div className="page">
       <div className="content-container grocery-list">
         <form id="grocery-list-form" onSubmit={handleRemove}>
           <div className="heading-and-button">
             <h1 className="page-title">Grocery List</h1>
-            <div>
+            {groceryList.length !== 0 && (
               <div>
-                <button type="submit" className="x-button">
-                  <FaX />
-                </button>
+                <div>
+                  <button type="submit" className="x-button">
+                    <FaX />
+                  </button>
+                </div>
+                <p>Remove checked items</p>
               </div>
-              <p>Remove checked items</p>
-            </div>
+            )}
           </div>
           <ul className="grocery-list">
             {groceryList.length === 0 ? (
