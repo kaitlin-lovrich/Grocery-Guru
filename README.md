@@ -1,4 +1,4 @@
-# [Grocery-Guru]([[https://github.com/kaitlin-lovrich/Grocery-Guru](http://grocery-guru-dev.us-west-2.elasticbeanstalk.com/)](http://grocery-guru-dev.us-west-2.elasticbeanstalk.com/grocery-list/1))
+# [Grocery-Guru](http://grocery-guru-dev.us-west-2.elasticbeanstalk.com/)
 
 
 ## Overview
