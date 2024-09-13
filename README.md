@@ -1,12 +1,14 @@
 # [Grocery-Guru](http://grocery-guru-dev.us-west-2.elasticbeanstalk.com/)
 
+## A comprehensive full-stack web application, caters to culinary enthusiasts by enabling seamless recipe browsing and automated grocery list generation through a simple click-to-add feature for desired ingredients. It ensures a streamlined user experience for adding and removing items from their grocery list.
 
-## Overview
-Grocery-Guru, a comprehensive full-stack web application, caters to culinary enthusiasts by enabling seamless recipe browsing and automated grocery list generation through a simple click-to-add feature for desired ingredients. It ensures a streamlined user experience for adding and removing items from their grocery list.
+### Built with: `React` + `TypeScript` + `PostgreSQL` + `ExpressJS` + `NodeJS` + `Vite`
+### Deployed with: `AWS`
+### Tools: `Figma` + `React Hooks` + `DBdiagram` + `favicon.io` 
 
 ![Grocery Guru Walk through](https://github.com/kaitlin-lovrich/Grocery-Guru/assets/69818777/7a95133b-4fb0-47d5-830c-50618cf57bf7)
 
-## Useage
+## Usage
 1. Click the link up above. You should be automatically signed in as me, Kait! If not, navigate to `Login` and click `Continue as Guest`.
 2. You will be redirected to your `Grocery List` page and you will see some ingredients already in your list!
 3. Click on `Browse Recipes` to browse through recipes.
@@ -18,10 +20,6 @@ Grocery-Guru, a comprehensive full-stack web application, caters to culinary ent
 
 **Happy Shopping!!**
 
-
-<!-- ## Key features
-
-## Getting Started -->
 
 
 
