@@ -48,13 +48,18 @@ export default function RecipeItem({
         </Link>
 
         {onXClick && (
-          <button
-            type="button"
-            className="x-button"
-            onClick={() => onXClick(recipeId)}
-            aria-label="Remove recipe">
-            <FaX />
-          </button>
+          <div className="x-button-div">
+            <button
+              type="button"
+              className="x-button"
+              onClick={() => onXClick(recipeId)}
+              aria-label="Remove recipe">
+              <FaX />
+            </button>
+            <div className="x-button-message">
+              <p>Remove all ingredients associated with recipe</p>
+            </div>
+          </div>
         )}
       </div>
     </div>

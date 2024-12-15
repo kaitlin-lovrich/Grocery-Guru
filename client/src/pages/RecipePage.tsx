@@ -124,7 +124,12 @@ function CheckBoxIngredient({
   return (
     <div>
       <label>
-        <input type="checkbox" checked={checked} onChange={handleChange} />
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={handleChange}
+          className="checkbox"
+        />
         {formatRecipeIngredient(ingredient)}
       </label>
     </div>
