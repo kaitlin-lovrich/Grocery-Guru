@@ -101,6 +101,10 @@ span.heart-outline:hover {
   cursor: pointer;
 }
 
+.checkbox {
+  accent-color: rgb(237, 147, 144);
+}
+
 @media screen and (width < 768px) {
   .page {
     margin: auto;
@@ -128,7 +132,6 @@ span.heart-outline:hover {
   }
 
   .content-container {
-    margin: 2rem auto;
     padding: 2rem;
   }
 }
@@ -139,7 +142,6 @@ span.heart-outline:hover {
   }
 
   .content-container {
-    margin: 3rem auto;
     padding: 3rem;
   }
 }

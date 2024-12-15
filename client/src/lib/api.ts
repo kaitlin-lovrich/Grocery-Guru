@@ -9,7 +9,6 @@ import {
   UserGroceryList,
 } from './dataTypes.js';
 
-
 function handleError(res: Response) {
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
 }
@@ -116,7 +115,6 @@ export async function fetchAllClickedRecipeRef(
   handleError(res);
   return await res.json();
 }
-
 
 export async function fetchRemoveIngredientIdItems(req: object): Promise<void> {
   const res = await fetch('/api/remove-grocery-items', {

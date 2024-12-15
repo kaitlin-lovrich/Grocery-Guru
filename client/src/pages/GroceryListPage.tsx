@@ -68,16 +68,17 @@ export default function GroceryListPage() {
     }));
   }
 
-  async function handleRemove(event: FormEvent<HTMLFormElement>) {
+  // Removes a single item from the grocery list
+  async function handleRemoveItem(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const formData = new FormData(form);
-    const checked = Array.from(formData.entries());
-    const checkedIngredientIds = checked.map((check) => +check[1]);
+    const formData = new FormData(form); // Collects the form's checked inputs
+    const checked = Array.from(formData.entries()); // Array of key, value pairs ex. ['ingredientId', '123']
+    const checkedIngredientIds = checked.map((check) => +check[1]); // Array of values converted to numbers ex. [101, 102]
     await fetchRemoveIngredientIdItems({
       groceryListId: groceryListId,
       ingredientIds: checkedIngredientIds,
-    });
+    }); // Sends an API to the groceryListId and the array of checkedIngredientIds
     const updatedList = shownGroceryList!.groceryItems.filter(
       (item) => !checkedIngredientIds.includes(item.ingredientId)
     );
@@ -116,6 +117,7 @@ export default function GroceryListPage() {
     [name: string]: GroceryItems;
   };
 
+  // // Adds ingredient quantities together if ingredients appear in the list more than once
   const aggregatedGroceryItems = groceryItems.reduce<AggGroceryItems>(
     (acc, item) => {
       const name = item.name;
@@ -150,7 +152,7 @@ export default function GroceryListPage() {
   return (
     <div className="page">
       <div className="content-container grocery-list">
-        <form id="grocery-list-form" onSubmit={handleRemove}>
+        <form id="grocery-list-form" onSubmit={handleRemoveItem}>
           <div className="heading-and-button">
             <h1 className="page-title">Grocery List</h1>
             {groceryList.length !== 0 && (
@@ -185,9 +187,9 @@ export default function GroceryListPage() {
       )}
       <div className="">
         {clickedRecipes.length !== 0 && (
-          <h1 className="page-heading">Recipe Ingredients Referenced:</h1>
+          <h1 className="page-heading">Recipes Referenced:</h1>
         )}
-        <RecipeList
+        <RecipeReferenceList
           clickedRecipesArray={clickedRecipesArray}
           onXClick={(recipeId) => handleXClick(recipeId)}
         />
@@ -289,15 +291,15 @@ function EmptyGroceryListMessage() {
   );
 }
 
-type RecipeListProps = {
+type RecipeReferenceListProps = {
   clickedRecipesArray: ClickedRecipeRef[];
   onXClick: (recipeId: number) => void;
 };
 
-function RecipeList({
+function RecipeReferenceList({
   clickedRecipesArray,
   onXClick,
-}: RecipeListProps): JSX.Element {
+}: RecipeReferenceListProps): JSX.Element {
   const { savedRecipesList } = useContext(AppContext);
 
   const clickedRecipesList = clickedRecipesArray.map((recipe) => {
