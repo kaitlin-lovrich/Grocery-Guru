@@ -107,11 +107,12 @@ export default function GroceryListPage() {
     const updatedList = displayedGroceryList!.groceryItems.filter(
       (item) => recipeId !== item.recipeId
     );
+    // Replaces groceryItems with the updated list
     displayedGroceryList!.groceryItems = updatedList;
     // Updates the state that displays the user's grocery list on the client side
     setDisplayedGroceryList({ ...displayedGroceryList! });
 
-    // Recipe is removed from the checkedRecipes state to update RecipesReferencedList
+    // Creates a new list with the clicked recipe removed
     const updatedCheckedRecipes = checkedRecipes.filter(
       (item) => recipeId !== item.recipeId
     );
