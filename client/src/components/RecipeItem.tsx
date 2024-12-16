@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { FaX } from 'react-icons/fa6';
-import { Recipe, ClickedRecipeRef } from '../lib/dataTypes';
+import { Recipe, CheckedRecipeRef } from '../lib/dataTypes';
 import { useState, useEffect, useContext } from 'react';
 import { AppContext } from './AppContext';
 
 type RecipeItemProps = {
-  recipe: Recipe | ClickedRecipeRef; // Accommodate both Recipe and ClickedRecipeRef
+  recipe: Recipe | CheckedRecipeRef; // Accommodate both Recipe and CheckedRecipeRef
   saved: boolean; // Determine if the recipe is saved or not
   onXClick?: (recipeId: number) => void; // Optional, for handling X button click
 };

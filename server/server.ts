@@ -16,7 +16,7 @@ import {
   Login,
   User,
   UserGroceryList,
-  ClickedRecipeRef,
+  CheckedRecipeRef,
   RecipeIngredient,
   SavedRecipeItems,
   SavedRecipesList,
@@ -286,7 +286,7 @@ app.post('/api/clicked-recipe-refs', authMiddleware, async (req, res, next) => {
         join "RecipeIngredients" using ("recipeId")
         where "recipeIngredientsId" = $1
       `;
-    const clickedRecipesRes = await db.query<ClickedRecipeRef>(sql, [
+    const clickedRecipesRes = await db.query<CheckedRecipeRef>(sql, [
       recipeIngredientsId,
     ]);
     res.json(clickedRecipesRes.rows[0]);
@@ -308,7 +308,7 @@ app.get(
           join "GroceryItems" using ("recipeId")
           where "groceryListId" = $1
       `;
-      const clickedRecipesRes = await db.query<ClickedRecipeRef>(sql, [
+      const clickedRecipesRes = await db.query<CheckedRecipeRef>(sql, [
         groceryListId,
       ]);
       res.json(clickedRecipesRes.rows);

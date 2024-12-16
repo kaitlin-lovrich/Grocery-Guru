@@ -63,7 +63,7 @@ export type Auth = {
   token: string;
 };
 
-export type ClickedRecipeRef = {
+export type CheckedRecipeRef = {
   recipeId: number;
   ingredientId: number;
   userId: number;
