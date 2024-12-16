@@ -340,18 +340,19 @@ app.delete(
   }
 );
 
+// Removes grocery items in the database where the recipeId matches the given recipe and belongs to the current grocery list
 app.delete(
   '/api/remove-by-recipeId',
   authMiddleware,
   async (req, res, next) => {
     try {
-      const { recipeId, groceryListId } = req.body;
+      const { recipeId, groceryListId } = req.body; // Extract Request Data from the from the request body
       const sql = `
         delete
           from "GroceryItems"
           where "recipeId" = $1 and "groceryListId" = $2
-      `;
-      await db.query<Ingredient>(sql, [recipeId, groceryListId]);
+      `; // SQL query
+      await db.query<Ingredient>(sql, [recipeId, groceryListId]); // Executes SQL Query with the specified parameters
       res.sendStatus(204);
     } catch (err) {
       next(err);
