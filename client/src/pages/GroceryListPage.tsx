@@ -3,12 +3,12 @@ import {
   type Ingredient,
   type GroceryList,
   GroceryItems,
-  ClickedRecipeRef,
+  CheckedRecipeRef,
 } from '../lib/dataTypes.js';
 import {
   fetchAddIngredient,
   fetchAddToGroceryList,
-  fetchAllClickedRecipeRef,
+  fetchAllCheckedRecipeRef,
   fetchGroceryList,
   fetchRemoveIngredientIdItems,
   fetchRemoveRecipeIdItems,
@@ -23,24 +23,25 @@ import { AppContext } from '../components/AppContext.js';
 import LoadingMessage from '../components/LoadingMessage.js';
 
 export default function GroceryListPage() {
-  const [clickedRecipes, setClickedRecipes] = useState<ClickedRecipeRef[]>([]);
-  const [shownGroceryList, setShownGroceryList] = useState<GroceryList>();
+  const [checkedRecipes, setCheckedRecipes] = useState<CheckedRecipeRef[]>([]);
+  const [displayedGroceryList, setDisplayedGroceryList] =
+    useState<GroceryList>();
   const [showIngredientForm, setShowIngredientForm] = useState(false);
   const { user, setSavedRecipesList, isLoading, setIsLoading } =
     useContext(AppContext);
   const { groceryListId: groceryId } = useParams();
   const groceryListId = Number(groceryId);
 
-  const clickedRecipesArray = clickedRecipes.map((recipe) => ({ ...recipe }));
+  const checkedRecipesArray = checkedRecipes.map((recipe) => ({ ...recipe }));
 
   useEffect(() => {
     setIsLoading(true);
     async function loadGroceryListPage(groceryListId: number) {
       try {
         const groceryList = await fetchGroceryList(groceryListId);
-        setShownGroceryList(groceryList);
-        const allClickedRecipes = await fetchAllClickedRecipeRef(groceryListId);
-        setClickedRecipes(allClickedRecipes);
+        setDisplayedGroceryList(groceryList);
+        const allCheckedRecipes = await fetchAllCheckedRecipeRef(groceryListId);
+        setCheckedRecipes(allCheckedRecipes);
         if (user && user.savedRecipesListId) {
           const savedRecipesData = await fetchSavedRecipes(
             user.savedRecipesListId
@@ -61,15 +62,15 @@ export default function GroceryListPage() {
   }
 
   function handleSave(newGroceryItem: Ingredient) {
-    setShownGroceryList((prev) => ({
+    setDisplayedGroceryList((prev) => ({
       ...prev!,
       groceryListId,
       groceryItems: [...prev!.groceryItems, newGroceryItem as GroceryItems],
     }));
   }
 
-  // Removes a single item from the grocery list
-  async function handleRemoveItem(event: FormEvent<HTMLFormElement>) {
+  // Removes all checked items from the grocery list
+  async function handleRemoveChecked(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form); // Collects the form's checked inputs
@@ -79,39 +80,47 @@ export default function GroceryListPage() {
       groceryListId: groceryListId,
       ingredientIds: checkedIngredientIds,
     }); // Sends an API to the groceryListId and the array of checkedIngredientIds
-    const updatedList = shownGroceryList!.groceryItems.filter(
+    const updatedList = displayedGroceryList!.groceryItems.filter(
       (item) => !checkedIngredientIds.includes(item.ingredientId)
     );
-    shownGroceryList!.groceryItems = updatedList;
-    setShownGroceryList({ ...shownGroceryList! });
-    const updatedClickedRecipes = clickedRecipes.filter((recipe) => {
-      const found = shownGroceryList!.groceryItems.find(
+    displayedGroceryList!.groceryItems = updatedList;
+    setDisplayedGroceryList({ ...displayedGroceryList! });
+    const updatedCheckedRecipes = checkedRecipes.filter((recipe) => {
+      const found = displayedGroceryList!.groceryItems.find(
         (item) => item.recipeId === recipe.recipeId
       );
       return !!found;
     });
-    setClickedRecipes(updatedClickedRecipes);
+    setCheckedRecipes(updatedCheckedRecipes);
   }
 
+  // Removes of all grocery list items associated with a specific recipe
   async function handleXClick(recipeId: number) {
+    // Sends a DELETE request to the server with the groceryListId and recipeId in the request body.
     await fetchRemoveRecipeIdItems({
       groceryListId: groceryListId,
       recipeId: recipeId,
     });
-    const updatedList = shownGroceryList!.groceryItems.filter(
+
+    // Removes grocery items where the items' recipeId matches the recipeId being removed
+    // If the Id's do not match, expression returns true and `item` gets stored in updatedList
+    const updatedList = displayedGroceryList!.groceryItems.filter(
       (item) => recipeId !== item.recipeId
     );
-    shownGroceryList!.groceryItems = updatedList;
-    setShownGroceryList({ ...shownGroceryList! });
-    const updatedClickedRecipes = clickedRecipes.filter(
+    displayedGroceryList!.groceryItems = updatedList;
+    // Updates the state that displays the user's grocery list on the client side
+    setDisplayedGroceryList({ ...displayedGroceryList! });
+
+    // Recipe is removed from the checkedRecipes state to update RecipesReferencedList
+    const updatedCheckedRecipes = checkedRecipes.filter(
       (item) => recipeId !== item.recipeId
     );
-    setClickedRecipes(updatedClickedRecipes);
+    setCheckedRecipes(updatedCheckedRecipes);
   }
 
-  if (!shownGroceryList || isLoading) return <LoadingMessage />;
+  if (!displayedGroceryList || isLoading) return <LoadingMessage />;
 
-  const { groceryItems } = shownGroceryList;
+  const { groceryItems } = displayedGroceryList;
 
   type AggGroceryItems = {
     [name: string]: GroceryItems;
@@ -135,7 +144,7 @@ export default function GroceryListPage() {
     return (
       <li key={`${item.ingredientId}: ${item.recipeId}`}>
         <div>
-          <label>
+          <label className="checkbox-label">
             <input
               type="checkbox"
               name="ingredientIds"
@@ -152,7 +161,7 @@ export default function GroceryListPage() {
   return (
     <div className="page">
       <div className="content-container grocery-list">
-        <form id="grocery-list-form" onSubmit={handleRemoveItem}>
+        <form id="grocery-list-form" onSubmit={handleRemoveChecked}>
           <div className="heading-and-button">
             <h1 className="page-title">Grocery List</h1>
             {groceryList.length !== 0 && (
@@ -186,11 +195,11 @@ export default function GroceryListPage() {
         />
       )}
       <div className="">
-        {clickedRecipes.length !== 0 && (
+        {checkedRecipes.length !== 0 && (
           <h1 className="page-heading">Recipes Referenced:</h1>
         )}
         <RecipeReferenceList
-          clickedRecipesArray={clickedRecipesArray}
+          checkedRecipesArray={checkedRecipesArray}
           onXClick={(recipeId) => handleXClick(recipeId)}
         />
       </div>
@@ -292,17 +301,17 @@ function EmptyGroceryListMessage() {
 }
 
 type RecipeReferenceListProps = {
-  clickedRecipesArray: ClickedRecipeRef[];
+  checkedRecipesArray: CheckedRecipeRef[];
   onXClick: (recipeId: number) => void;
 };
 
 function RecipeReferenceList({
-  clickedRecipesArray,
+  checkedRecipesArray,
   onXClick,
 }: RecipeReferenceListProps): JSX.Element {
   const { savedRecipesList } = useContext(AppContext);
 
-  const clickedRecipesList = clickedRecipesArray.map((recipe) => {
+  const checkedRecipesList = checkedRecipesArray.map((recipe) => {
     const isSaved = savedRecipesList?.savedRecipeItems.some(
       (savedRecipe) => savedRecipe.recipeId === recipe.recipeId
     );
@@ -318,5 +327,5 @@ function RecipeReferenceList({
     );
   });
 
-  return <div className="clicked-recipe-refs">{clickedRecipesList}</div>;
+  return <div className="clicked-recipe-refs">{checkedRecipesList}</div>;
 }

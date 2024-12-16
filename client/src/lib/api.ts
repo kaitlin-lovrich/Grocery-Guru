@@ -1,5 +1,5 @@
 import {
-  ClickedRecipeRef,
+  CheckedRecipeRef,
   GroceryItems,
   GroceryList,
   Ingredient,
@@ -8,6 +8,8 @@ import {
   SavedRecipesList,
   UserGroceryList,
 } from './dataTypes.js';
+
+// API caller functions
 
 function handleError(res: Response) {
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
@@ -87,9 +89,9 @@ export async function fetchAddIngredient(req: object): Promise<Ingredient> {
   return await res.json();
 }
 
-export async function fetchClickedRecipeRef(
+export async function fetchCheckedRecipeRef(
   req: object
-): Promise<ClickedRecipeRef> {
+): Promise<CheckedRecipeRef> {
   const res = await fetch('/api/clicked-recipe-refs', {
     method: 'POST',
     headers: {
@@ -102,9 +104,9 @@ export async function fetchClickedRecipeRef(
   return await res.json();
 }
 
-export async function fetchAllClickedRecipeRef(
+export async function fetchAllCheckedRecipeRef(
   groceryListId: number
-): Promise<ClickedRecipeRef[]> {
+): Promise<CheckedRecipeRef[]> {
   const res = await fetch(`/api/clicked-recipe-refs/${groceryListId}`, {
     method: 'GET',
     headers: {
@@ -132,10 +134,10 @@ export async function fetchRemoveRecipeIdItems(req: object): Promise<void> {
   const res = await fetch('/api/remove-by-recipeId', {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-      'Content-type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Authenticate using Bearer token
+      'Content-type': 'application/json', // Sends in JSON format
     },
-    body: JSON.stringify(req),
+    body: JSON.stringify(req), // Converts req object to a string
   });
   handleError(res);
 }

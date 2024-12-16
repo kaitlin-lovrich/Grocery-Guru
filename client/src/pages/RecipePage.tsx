@@ -123,7 +123,7 @@ function CheckBoxIngredient({
 
   return (
     <div>
-      <label>
+      <label className="checkbox-label">
         <input
           type="checkbox"
           checked={checked}
