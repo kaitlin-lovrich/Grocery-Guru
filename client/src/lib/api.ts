@@ -131,6 +131,7 @@ export async function fetchRemoveIngredientIdItems(req: object): Promise<void> {
 }
 
 export async function fetchRemoveRecipeIdItems(req: object): Promise<void> {
+  // Sends an HTTP request to the server at the endpoint /api/remove-by-recipeId
   const res = await fetch('/api/remove-by-recipeId', {
     method: 'DELETE',
     headers: {
