@@ -340,7 +340,7 @@ app.delete(
   }
 );
 
-// Removes grocery items in the database where the recipeId matches the given recipe and belongs to the current grocery list
+// Route handler removes grocery items in the database where the recipeId matches the given recipe and belongs to the current grocery list
 app.delete(
   '/api/remove-by-recipeId',
   authMiddleware,
