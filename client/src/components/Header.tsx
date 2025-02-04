@@ -43,8 +43,6 @@ export default function Header({
         relative: 'path',
         replace: true,
       });
-      console.log('user:', user);
-      console.log('user.savedRecipesListId:', user?.savedRecipesListId);
     } else {
       navigate(`../../saved-recipes/${savedRecipesListId}`, {
         relative: 'path',
