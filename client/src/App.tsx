@@ -47,7 +47,6 @@ export default function App() {
     localStorage.removeItem(tokenKey);
     setUser(undefined);
     setToken(undefined);
-    console.log('Signed out');
   }
 
   async function handleHeartClick(recipeId: number, user: UserGroceryList) {
